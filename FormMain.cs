@@ -1,0 +1,400 @@
+using IncidentesAI.Plugins;
+using IncidentesAI.Properties;
+using IncidentesAI.Services;
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Connectors.OpenAI;
+using System.Data;
+using System.Text;
+
+namespace IncidentesAI
+{
+    public partial class FormMain : Form
+    {
+        private Kernel _kernel;
+        private List<string> _historicoPerguntas = new List<string>();
+        private int _indiceHistorico = -1;
+        private readonly string _caminhoArquivoHistorico = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "historico.txt");
+        public FormMain()
+        {
+            InitializeComponent();
+
+            chkFiltrarData.Checked = false;
+            dtpInicio.Enabled = false;
+            dtpFim.Enabled = false;
+
+            CarregarHistoricoDoArquivo();
+
+            SetupKernel();
+        }
+
+        private void SetupKernel()
+        {
+            // Carrega as variáveis do arquivo .env para o ambiente
+            DotNetEnv.Env.Load();
+
+            string apiKey = Environment.GetEnvironmentVariable("MISTRAL_API_KEY");
+            string modelId = Environment.GetEnvironmentVariable("MISTRAL_MODEL");
+            string endpoint = Environment.GetEnvironmentVariable("MISTRAL_ENDPOINT");
+
+            var builder = Kernel.CreateBuilder();
+            builder.AddOpenAIChatCompletion(
+                modelId: modelId,
+                apiKey: apiKey,
+                endpoint: new Uri(endpoint)
+            );
+
+            builder.Plugins.AddFromObject(new ExcelPlugin(this.dgvIncidentes));
+            _kernel = builder.Build();
+        }
+
+        private void CarregarHistoricoDoArquivo()
+        {
+            if (File.Exists(_caminhoArquivoHistorico))
+            {
+                _historicoPerguntas = File.ReadAllLines(_caminhoArquivoHistorico).ToList();
+                _indiceHistorico = _historicoPerguntas.Count;
+            }
+        }
+
+        private void SalvarPerguntaNoHistorico(string pergunta)
+        {
+            if (string.IsNullOrWhiteSpace(pergunta)) return;
+
+            // Adiciona na lista e reseta o índice para o final
+            _historicoPerguntas.Add(pergunta);
+            _indiceHistorico = _historicoPerguntas.Count;
+
+            // Salva no arquivo (Append)
+            File.AppendAllLines(_caminhoArquivoHistorico, new[] { pergunta });
+        }
+
+        public void CarregarDados()
+        {
+            try
+            {
+                string caminhoDb = Properties.Settings.Default.UltimoCaminhoBanco;
+                var dataService = new IncidenteDataService(caminhoDb);
+                DataTable dt = dataService.ObterTodosIncidentes();
+                dgvIncidentes.DataSource = dt;
+                ConfigurarLayoutGrid();
+
+                PreencherCombosFiltro();
+
+                //RenderizarGraficos();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao carregar dados: " + ex.Message);
+            }
+        }
+
+        private void ConfigurarLayoutGrid()
+        {
+            if (dgvIncidentes.Columns.Count > 0)
+            {
+                dgvIncidentes.ReadOnly = true;
+
+                dgvIncidentes.AllowUserToAddRows = false;
+                dgvIncidentes.AllowUserToDeleteRows = false;
+
+                // ocultando o id
+                if (dgvIncidentes.Columns.Contains("Id"))
+                    dgvIncidentes.Columns["Id"].Visible = false;
+
+                dgvIncidentes.Columns["Number"].HeaderText = "Chamado";
+                dgvIncidentes.Columns["AssignmentGroup"].HeaderText = "Grupo de Atribuição";
+                dgvIncidentes.Columns["State"].HeaderText = "Status";
+                dgvIncidentes.Columns["Caller"].HeaderText = "Solicitante";
+                dgvIncidentes.Columns["AssignedTo"].HeaderText = "Atribuído a";
+                dgvIncidentes.Columns["Priority"].HeaderText = "Prioridade";
+                dgvIncidentes.Columns["Created"].HeaderText = "Data de Criação";
+                dgvIncidentes.Columns["ShortDescription"].HeaderText = "Descrição";
+                dgvIncidentes.Columns["ConfigurationItem"].HeaderText = "Item de Configuração";
+                dgvIncidentes.Columns["Email"].HeaderText = "E-mail";
+
+                dgvIncidentes.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
+                dgvIncidentes.Columns["Number"].Frozen = true;
+
+                dgvIncidentes.MultiSelect = false;
+            }
+        }
+
+        private void PreencherCombosFiltro()
+        {
+            string caminhoDb = Properties.Settings.Default.UltimoCaminhoBanco;
+
+            if (string.IsNullOrEmpty(caminhoDb) || !System.IO.File.Exists(caminhoDb))
+                return;
+
+            try
+            {
+                var dataService = new IncidenteDataService(caminhoDb);
+
+                var itensCI = dataService.ObterItensConfiguracaoUnicos();
+                cboConfigurationItem.Items.Clear();
+                cboConfigurationItem.Items.Add("--- Todos ---");
+                cboConfigurationItem.Items.AddRange(itensCI.ToArray());
+                cboConfigurationItem.SelectedIndex = 0;
+
+                var itensStatus = dataService.ObterStatusUnicos();
+                cboStatus.Items.Clear();
+                cboStatus.Items.Add("--- Todos ---");
+                cboStatus.Items.AddRange(itensStatus.ToArray());
+                cboStatus.SelectedIndex = 0;
+
+                var itensCaller = dataService.ObterCallersUnicos();
+                cboCaller.Items.Clear();
+                cboCaller.Items.Add("--- Todos ---");
+                cboCaller.Items.AddRange(itensCaller.ToArray());
+                cboCaller.SelectedIndex = 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao carregar filtros: " + ex.Message);
+            }
+        }
+
+        private void FiltrarDados()
+        {
+            DataTable dt = (DataTable)dgvIncidentes.DataSource;
+            if (dt == null) return;
+
+            List<string> condicoes = new List<string>();
+
+            string num = txtNumber.Text.Trim();
+            string desc = txtShortDescription.Text.Trim();
+
+            if (!string.IsNullOrEmpty(num))
+                condicoes.Add(string.Format("Number LIKE '%{0}%'", num));
+
+            if (!string.IsNullOrEmpty(desc))
+                condicoes.Add(string.Format("ShortDescription LIKE '%{0}%'", desc));
+
+            if (cboConfigurationItem.SelectedIndex > 0)
+                condicoes.Add(string.Format("ConfigurationItem = '{0}'", cboConfigurationItem.Text.Replace("'", "''")));
+
+            if (cboStatus.SelectedIndex > 0)
+                condicoes.Add(string.Format("State = '{0}'", cboStatus.Text.Replace("'", "''")));
+
+            if (cboCaller.SelectedIndex > 0)
+                condicoes.Add(string.Format("Caller = '{0}'", cboCaller.Text.Replace("'", "''")));
+
+            if (chkFiltrarData.Checked)
+            {
+                string dataInicio = dtpInicio.Value.ToString("MM/dd/yyyy");
+                string dataFim = dtpFim.Value.ToString("MM/dd/yyyy");
+
+                condicoes.Add(string.Format("Created >= #{0} 00:00:00# AND Created <= #{1} 23:59:59#", dataInicio, dataFim));
+            }
+
+            dt.DefaultView.RowFilter = condicoes.Count > 0 ? string.Join(" AND ", condicoes) : "";
+
+            // Atualização da Label de Contagem
+            if (condicoes.Count == 0)
+            {
+                lblCntFilter.Text = "";
+            }
+            else
+            {
+                int totalFiltrado = dt.DefaultView.Count;
+                int totalGeral = dt.Rows.Count;
+
+                if (totalFiltrado == 0)
+                {
+                    lblCntFilter.Text = "Nenhum registro encontrado.";
+                    lblCntFilter.ForeColor = Color.Red;
+                }
+                else
+                {
+                    lblCntFilter.Text = $"Encontrado: {totalFiltrado} de {totalGeral}";
+                    lblCntFilter.ForeColor = Color.Green;
+                }
+            }
+        }
+
+        private void AdicionarTextoFormatado(string autor, string texto, Color corTexto)
+        {
+            string dataHora = $"[{DateTime.Now:HH:mm}] ";
+            txtHistorico.SelectionStart = txtHistorico.TextLength;
+            txtHistorico.SelectionFont = new Font(txtHistorico.Font, FontStyle.Bold);
+            txtHistorico.SelectionColor = Color.Gray;
+            txtHistorico.AppendText($"\n\n{dataHora}");
+
+            txtHistorico.SelectionColor = corTexto;
+            txtHistorico.AppendText($"{autor}: ");
+
+            string[] partes = texto.Split(new string[] { "**" }, StringSplitOptions.None);
+            for (int i = 0; i < partes.Length; i++)
+            {
+                txtHistorico.SelectionStart = txtHistorico.TextLength;
+                txtHistorico.SelectionFont = new Font(txtHistorico.Font, (i % 2 != 0) ? FontStyle.Bold : FontStyle.Regular);
+                txtHistorico.SelectionColor = corTexto;
+                txtHistorico.AppendText(partes[i]);
+            }
+
+            txtHistorico.ScrollToCaret();
+
+        }
+
+        private void FormMain_Load(object sender, EventArgs e) => CarregarDados();
+
+        private void btnFiltrar_Click(object sender, EventArgs e)
+        {
+            FiltrarDados();
+        }
+
+        private void btnLimpar_Click(object sender, EventArgs e)
+        {
+            txtNumber.Text = "";
+            txtShortDescription.Text = "";
+
+            cboConfigurationItem.SelectedIndex = 0;
+            cboStatus.SelectedIndex = 0;
+            cboCaller.SelectedIndex = 0;
+
+            chkFiltrarData.Checked = false;
+            dtpInicio.Value = DateTime.Now.AddDays(-30);
+            dtpFim.Value = DateTime.Now;
+
+            FiltrarDados();
+        }
+
+        private void chkFiltrarData_CheckedChanged(object sender, EventArgs e)
+        {
+            // Habilita/Desabilita os calendários
+            dtpInicio.Enabled = chkFiltrarData.Checked;
+            dtpFim.Enabled = chkFiltrarData.Checked;
+
+            if (chkFiltrarData.Checked)
+            {
+                chkFiltrarData.ForeColor = Color.Blue;
+                chkFiltrarData.Text = "Filtrando por período:";
+            }
+            else
+            {
+                chkFiltrarData.ForeColor = Color.Black;
+                chkFiltrarData.Text = "Filtrar por período de criação";
+            }
+
+            FiltrarDados();
+        }
+
+        private async void btnProcessar_Click(object sender, EventArgs e)
+        {
+            string userPrompt = txtPergunta.Text;
+
+            if (string.IsNullOrWhiteSpace(userPrompt))
+            {
+                MessageBox.Show("Por favor, digite uma pergunta ou comando.");
+                return;
+            }
+
+            SalvarPerguntaNoHistorico(userPrompt);
+
+            AdicionarTextoFormatado("Usuário", userPrompt, Color.Black);
+            btnProcessar.Enabled = false;
+            lblStatus.Text = "Consultando Mistral AI...";
+            Cursor = Cursors.WaitCursor;
+
+            try
+            {
+                string caminhoDb = Properties.Settings.Default.UltimoCaminhoBanco;
+                var dataService = new IncidenteDataService(caminhoDb);
+                string contextoDados = dataService.ObterContextoParaIA(25);
+
+                string systemMessage = Properties.Settings.Default.PromptIA;
+
+                StringBuilder fullPrompt = new StringBuilder();
+                fullPrompt.AppendLine("### INSTRUÇÕES DE SISTEMA ###");
+                fullPrompt.AppendLine(systemMessage);
+                fullPrompt.AppendLine("\n### DADOS DOS TICKETS (CONTEXTO) ###");
+                fullPrompt.AppendLine(contextoDados);
+                fullPrompt.AppendLine("\n### PERGUNTA DO USUÁRIO ###");
+                fullPrompt.AppendLine(userPrompt);
+
+                double tempValue = 0.1;
+                try
+                {
+                    string tempConfig = Properties.Settings.Default.TemperaturaIA.ToString().Replace(",", ".");
+                    tempValue = double.Parse(tempConfig, System.Globalization.CultureInfo.InvariantCulture);
+                }
+                catch { tempValue = 0.1; }
+
+                var settings = new OpenAIPromptExecutionSettings
+                {
+                    ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions,
+                    Temperature = tempValue
+                };
+
+                var arguments = new KernelArguments(settings);
+
+                try
+                {
+                    var resposta = await _kernel.InvokePromptAsync(fullPrompt.ToString(), arguments);
+
+                    lblStatus.Text = "Pronto!";
+                    AdicionarTextoFormatado("IA", resposta.ToString(), Color.DarkMagenta);
+                    txtPergunta.Clear();
+                }
+                catch (HttpOperationException httpEx)
+                {
+                    MessageBox.Show($"Erro na API Mistral:\n{httpEx.ResponseContent}");
+                    lblStatus.Text = "Erro na API.";
+                }
+            }
+            catch (Exception ex)
+            {
+                string erroMensagem = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+                MessageBox.Show($"Erro: {erroMensagem}");
+                lblStatus.Text = "Erro na operação.";
+            }
+            finally
+            {
+                btnProcessar.Enabled = true;
+                Cursor = Cursors.Default;
+            }
+        }
+
+        private void btnPrompt_Click(object sender, EventArgs e)
+        {
+            FormPrompt formPrompt = new FormPrompt();
+            formPrompt.ShowDialog();
+        }
+
+        private void btnHistoricoUp_Click(object sender, EventArgs e)
+        {
+            if (_historicoPerguntas.Count > 0 && _indiceHistorico > 0)
+            {
+                _indiceHistorico--;
+                txtPergunta.Text = _historicoPerguntas[_indiceHistorico];
+            }
+        }
+
+        private void btnHistoricoDown_Click(object sender, EventArgs e)
+        {
+            if (_indiceHistorico < _historicoPerguntas.Count - 1)
+            {
+                _indiceHistorico++;
+                txtPergunta.Text = _historicoPerguntas[_indiceHistorico];
+            }
+            else
+            {
+                _indiceHistorico = _historicoPerguntas.Count;
+                txtPergunta.Clear();
+            }
+        }
+
+        private void dgvIncidentes_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                string numeroIncidente = dgvIncidentes.Rows[e.RowIndex].Cells["Number"].Value.ToString();
+
+                using (FormAnotacoes frm = new FormAnotacoes(numeroIncidente))
+                {
+                    frm.ShowDialog();
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,36 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="IncidentesAI.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="UltimoCaminhoBanco" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="UltimoCaminhoExcel" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="DataUltimaImportacao" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="PromptIA" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Você é um analista de dados sênior especializado em Service Desk e gestão de incidentes de TI. Seu papel é analisar a lista COMPLETA de tickets fornecida abaixo e responder às perguntas de forma técnica e precisa.
+
+REGRAS DE FORMATAÇÃO (CRÍTICO):
+1. RESPONDA APENAS EM TEXTO PURO.
+2. NUNCA USE NEGRITO (não use asteriscos como **exemplo**).
+3. NÃO USE Markdown, tabelas, itálico ou símbolos especiais.
+4. Use apenas quebras de linha simples (Enter) para separar os parágrafos.
+
+REGRAS DE ANÁLISE DE DADOS:
+- As datas dos tickets estão no formato brasileiro (DD/MM/YYYY). 
+- Considere que a data atual é 23 de Janeiro de 2026. Portanto, tickets de Janeiro de 2026 são os mais recentes e devem ser priorizados se a pergunta for sobre atualidade.
+- Analise CADA LINHA do contexto enviado antes de dizer que um dado não existe.
+- Se o usuário perguntar "Quantos", responda com o número exato seguido de uma breve listagem, se relevante.
+- Seja direto, objetivo e profissional.
+
+Dados dos Incidentes:</Value>
+    </Setting>
+    <Setting Name="TemperaturaIA" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

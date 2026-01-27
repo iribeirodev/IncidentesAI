@@ -1,0 +1,21 @@
+# arquivo de environment
+.env
+
+# --- Pastas de Compilação ---
+[Bb]in/
+[Oo]bj/
+
+# --- Visual Studio ---
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# --- Bancos de Dados Locais ---
+*.db
+*.db-shm
+*.db-wal
+
+# --- Arquivos de Histórico do Aplicativo ---
+historico.txt

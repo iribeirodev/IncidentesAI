@@ -117,31 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="btnHistoricoDown.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAA
-        cAAAAHABznhikwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAABZSURBVDhP7ZBB
-        CsAgEAPnUvpLH9hCe7H/kxQXxGoV9OjAwmqSPQQWU3HAAWy5kCDtjN4PEi/AA3sudugvNVPtv4iZn2jW
-        ++4NG3ZEQY32v26KKKBSW8UuRgmMZw7U2MiCWQAAAABJRU5ErkJggg==
-</value>
-  </data>
-  <data name="btnHistoricoUp.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAA
-        cAAAAHABznhikwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAABSSURBVDhPY2AY
-        BYSAPRSTBbwYGBh+MDAw/GJgYAhAlyQEYJq7GRgYmkk1BFkzDBBtCDbNMEDQEA6o5jZ0CSQAkgOpAanF
-        ChTRBbAAYtSMAlIAANraEScNZYAvAAAAAElFTkSuQmCC
-</value>
-  </data>
-  <data name="btnPrompt.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAd
-        fQAAHX0B1b/CLQAAABl0RVh0U29mdHdhcmUAUGFpbnQuTkVUIDUuMS4xMYoIFs4AAADTSURBVDhPrdQx
-        SkNBEIDhT0Rsop0QCSRo+nQK6fUCWuUIKXKHQG5hZ2svBKs0egD1IrY2yoNdeEzeQt7j/TDFzDCzOzuz
-        QzeOoqELM8yjsS0XeMEbJtFZorr+cU0f4hl/SV4xrfmLjLDAIOknuME7vnCP0xDTyEMKiKfe4THYipxh
-        m0pYB18sucgYT7W3+MEqJT+IK2zwXUuS5Rc7LHEeAyO9JcqUSsvda0Uvj52p2v+J62Cv5ufg9lc0DeQt
-        PtoOZCzhsusXaaLTpy3RyxrJ7C22f1BdMD4TT//DAAAAAElFTkSuQmCC
-</value>
-  </data>
 </root>

@@ -1,8 +1,8 @@
 using IncidentesAI.Plugins;
-using IncidentesAI.Properties;
 using IncidentesAI.Services;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
+using System.ComponentModel;
 using System.Data;
 using System.Text;
 
@@ -44,6 +44,7 @@ namespace IncidentesAI
             );
 
             builder.Plugins.AddFromObject(new ExcelPlugin(this.dgvIncidentes));
+            builder.Plugins.AddFromObject(this);
             _kernel = builder.Build();
         }
 
@@ -79,8 +80,6 @@ namespace IncidentesAI
                 ConfigurarLayoutGrid();
 
                 PreencherCombosFiltro();
-
-                //RenderizarGraficos();
             }
             catch (Exception ex)
             {
@@ -236,6 +235,56 @@ namespace IncidentesAI
 
         }
 
+        [KernelFunction]
+        [Description("Gera um arquivo Excel com os dados exatamente como estão visíveis na tabela da tela (colunas em português e filtros aplicados).")]
+        public string ExportarTabelaParaExcel()
+        {
+            return (string)this.Invoke(new Func<string>(() =>
+            {
+                StringBuilder sb = new StringBuilder();
+                AnotacaoDataService anotacaoDataService = new AnotacaoDataService(Properties.Settings.Default.UltimoCaminhoBanco);
+
+                var colunasVisiveis = dgvIncidentes.Columns.Cast<DataGridViewColumn>()
+                    .Where(x => x.Visible)
+                    .OrderBy(x => x.DisplayIndex)
+                    .ToList();
+
+                // Cabeçalho: colunas visíveis + colunas da anotação
+                var cabecalho = string.Join(",", colunasVisiveis.Select(x => x.HeaderText))
+                                + ",Status Interno,Observação";
+                sb.AppendLine(cabecalho);
+
+                // varrendo as linhas
+                foreach (DataGridViewRow row in dgvIncidentes.Rows)
+                {
+                    if (row.IsNewRow) continue;
+
+                    string numeroIncidente = row.Cells["Number"].Value?.ToString();
+                    var anotacao = anotacaoDataService.ObterDadosAnotacaoParaExportacao(numeroIncidente);
+
+                    // valores da grid
+                    var valoresGrid = colunasVisiveis.Select(c =>
+                    {
+                        string val = row.Cells[c.Index].Value?.ToString() ?? "";
+                        return val.Replace(",", "").Replace("\"", "").Replace("\r", " ").Replace("\n", " ");
+                    }).ToList();
+
+                    // adicionando dados da anotação
+                    valoresGrid.Add(anotacao?.StatusInterno?.Replace(",", "").Replace("\"", "") ?? "");
+                    valoresGrid.Add(anotacao?.Observacao?.Replace(",", "").Replace("\"", "").Replace("\r", " ").Replace("\n", " ") ?? "");
+
+                    sb.AppendLine(string.Join(",", valoresGrid));
+                }
+
+                string csvFinal = sb.ToString();
+
+                var excelPlugin = new ExcelPlugin(dgvIncidentes);
+                excelPlugin.CriarExcelComDialogo("Exportacao_Incidentes.xlsx", csvFinal);
+
+                return "Excel gerado com sucesso com os dados da tela e anotações.";
+            }));
+        }
+
         private void FormMain_Load(object sender, EventArgs e) => CarregarDados();
 
         private void btnFiltrar_Click(object sender, EventArgs e)
@@ -300,7 +349,7 @@ namespace IncidentesAI
             {
                 string caminhoDb = Properties.Settings.Default.UltimoCaminhoBanco;
                 var dataService = new IncidenteDataService(caminhoDb);
-                string contextoDados = dataService.ObterContextoParaIA(25);
+                string contextoDados = dataService.ObterContextoParaIA(100);
 
                 string systemMessage = Properties.Settings.Default.PromptIA;
 
@@ -395,6 +444,86 @@ namespace IncidentesAI
                     frm.ShowDialog();
                 }
             }
+        }
+
+        [KernelFunction]
+        [Description("Gera um gráfico em uma janela separada. Tipos: 'pie' (pizza), 'bar' (barra). O parâmetro 'titulo' deve ser um resumo do que o gráfico representa.")]
+        public string GerarGraficoJanelaSeparada(string tipo, string labelsCsv, string valoresCsv, string titulo)
+        {
+            return (string)this.Invoke(new Func<string>(() =>
+            {
+                try
+                {
+                    var popup = new FormGrafico();
+                    popup.Size = new Size(800, 500);
+                    popup.StartPosition = FormStartPosition.CenterScreen;
+
+                    var plot = popup.Grafico.Plot;
+                    plot.Clear();
+
+                    // Processa dados recebidos da IA
+                    string[] labels = labelsCsv.Split(',').Select(x => x.Trim().Replace("'", "")).ToArray();
+                    double[] valores = valoresCsv.Split(',').Select(x => double.Parse(x.Trim())).ToArray();
+
+                    // Paleta de cores moderna
+                    var cores = new ScottPlot.Palettes.Category10();
+
+                    // Renderização conforme o tipo
+                    if (tipo.ToLower() == "pie")
+                    {
+                        var fatias = new List<ScottPlot.PieSlice>();
+                        for (int i = 0; i < valores.Length; i++)
+                        {
+                            var fatia = new ScottPlot.PieSlice(valores[i], cores.GetColor(i));
+                            fatia.Label = $"{labels[i]} ({valores[i]})";
+                            fatias.Add(fatia);
+                        }
+
+                        var pie = plot.Add.Pie(fatias);
+                        pie.ExplodeFraction = 0.05; // Pequeno espaço entre fatias
+                        //pie.ShowSliceLabels = true;
+                        pie.SliceLabelDistance = 1.15; // Afasta as legendas para fora da pizza
+
+                        plot.ShowLegend(ScottPlot.Alignment.MiddleRight);
+                    }
+                    else // Tipo: Bar
+                    {
+                        var listaDeBarras = new List<ScottPlot.Bar>();
+                        for (int i = 0; i < valores.Length; i++)
+                        {
+                            listaDeBarras.Add(new ScottPlot.Bar()
+                            {
+                                Value = valores[i],
+                                Position = i,
+                                FillColor = cores.GetColor(i),
+                                Label = labels[i]
+                            });
+                        }
+
+                        var bars = plot.Add.Bars(listaDeBarras);
+
+                        // Configura os nomes no eixo X
+                        var ticks = labels.Select((txt, i) => new ScottPlot.Tick(i, txt)).ToArray();
+                        plot.Axes.Bottom.TickGenerator = new ScottPlot.TickGenerators.NumericManual(ticks);
+
+                        // Melhora o visual do eixo X
+                        plot.Axes.Bottom.Label.Text = "Categorias";
+                        plot.Axes.Left.Label.Text = "Quantidade";
+                    }
+
+                    plot.Title(titulo);
+                    plot.Axes.AutoScale();
+                    popup.Grafico.Refresh();
+
+                    popup.Show();
+
+                    return $"Janela {titulo} aberta com sucesso.";
+                }
+                catch (Exception ex)
+                {
+                    return $"Erro técnico ao gerar gráfico: {ex.Message}";
+                }
+            }));
         }
     }
 }

@@ -101,10 +101,11 @@
             // 
             // lblCntFilter
             // 
-            lblCntFilter.Location = new Point(192, 316);
+            lblCntFilter.Location = new Point(223, 316);
             lblCntFilter.Name = "lblCntFilter";
             lblCntFilter.Size = new Size(305, 23);
             lblCntFilter.TabIndex = 15;
+            lblCntFilter.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // cboCaller
             // 
@@ -152,7 +153,7 @@
             btnLimpar.FlatAppearance.BorderColor = Color.RoyalBlue;
             btnLimpar.FlatStyle = FlatStyle.Flat;
             btnLimpar.ForeColor = Color.RoyalBlue;
-            btnLimpar.Location = new Point(343, 269);
+            btnLimpar.Location = new Point(374, 269);
             btnLimpar.Name = "btnLimpar";
             btnLimpar.Size = new Size(139, 40);
             btnLimpar.TabIndex = 9;
@@ -165,7 +166,7 @@
             btnFiltrar.BackColor = Color.RoyalBlue;
             btnFiltrar.FlatStyle = FlatStyle.Flat;
             btnFiltrar.ForeColor = Color.White;
-            btnFiltrar.Location = new Point(198, 269);
+            btnFiltrar.Location = new Point(229, 269);
             btnFiltrar.Name = "btnFiltrar";
             btnFiltrar.Size = new Size(139, 40);
             btnFiltrar.TabIndex = 8;

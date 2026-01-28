@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using IncidentesAI.DTO;
 using Microsoft.Data.Sqlite;
 
 namespace IncidentesAI.Services;
@@ -65,6 +66,33 @@ public class AnotacaoDataService
         dt.Load(reader);
 
         return dt;
+    }
+
+    public AnotacaoDTO ObterDadosAnotacaoParaExportacao(string numeroIncidente)
+    {
+        using var conn = new SqliteConnection(_connectionString);
+        conn.Open();
+
+        string sql = @"SELECT NumeroIncidente, StatusInterno, Observacao 
+                   FROM StatusInternos 
+                   WHERE NumeroIncidente = @num";
+
+        using var cmd = new SqliteCommand(sql, conn);
+        cmd.Parameters.AddWithValue("@num", numeroIncidente);
+
+        using var reader = cmd.ExecuteReader();
+
+        if (reader.Read())
+        {
+            return new AnotacaoDTO
+            {
+                NumeroIncidente = reader["NumeroIncidente"].ToString(),
+                StatusInterno = reader["StatusInterno"].ToString(),
+                Observacao = reader["Observacao"].ToString()
+            };
+        }
+
+        return null;
     }
 
     public List<string> ObterStatusExistentes()

@@ -52,7 +52,7 @@ git clone https://github.com/iribeirodev/IncidentesAI.git
 
 Um dos grandes diferenciais deste projeto é a camada de **System Prompting**. A IA não apenas conversa, ela segue um protocolo rigoroso de Analista de Dados Sênior para garantir a integridade das informações.
 
-### Instruções do Sistema (System Prompt)
+## Instruções do Sistema (System Prompt)
 O comportamento do agente foi moldado com as seguintes diretrizes:
 
 * **Persona:** Especialista em Service Desk focado em relatórios precisos.
@@ -92,5 +92,15 @@ REGRAS DE NEGÓCIO:
 
 <img width="1145" height="723" alt="image" src="https://github.com/user-attachments/assets/971d82d1-9a9c-4d97-8eb7-a157a58ed937" />
 
+## Facilidade de Migração para Azure OpenAI
 
+A arquitetura baseada no **Microsoft Semantic Kernel** permite que a transição para o ambiente 
+da companhia seja feita de forma quase instantânea:
 
+- Sem Alteração na Lógica: Não é necessário reescrever as funções de análise, filtros ou 
+geração de gráficos. Toda a *inteligência* e os plugins permanecem intactos.
+- Troca via Configuração: A migração resume-se a alterar poucas linhas de codigo na inicialização do 
+sistema e uso da API Key do Azure.
+- Segurança Corporativa: Ao plugar no Azure OpenAI, o projeto passa a herdar automaticamente as camadas
+de governança e privacidade de dados da Microsoft, garantindo que as informações dos incidentes não
+saim do locatário (tenant) da empresa.

@@ -29,40 +29,25 @@
         private void InitializeComponent()
         {
             formsPlot1 = new ScottPlot.WinForms.FormsPlot();
-            lblFechar = new Label();
             SuspendLayout();
             // 
             // formsPlot1
             // 
             formsPlot1.DisplayScale = 1F;
-            formsPlot1.Dock = DockStyle.Bottom;
-            formsPlot1.Location = new Point(0, 27);
+            formsPlot1.Dock = DockStyle.Fill;
+            formsPlot1.Location = new Point(0, 0);
             formsPlot1.Name = "formsPlot1";
-            formsPlot1.Size = new Size(939, 513);
+            formsPlot1.Size = new Size(993, 548);
             formsPlot1.TabIndex = 0;
-            // 
-            // lblFechar
-            // 
-            lblFechar.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            lblFechar.Cursor = Cursors.Hand;
-            lblFechar.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblFechar.ForeColor = Color.Red;
-            lblFechar.Location = new Point(919, 3);
-            lblFechar.Name = "lblFechar";
-            lblFechar.Size = new Size(16, 18);
-            lblFechar.TabIndex = 1;
-            lblFechar.Text = "x";
-            lblFechar.TextAlign = ContentAlignment.MiddleCenter;
-            lblFechar.Click += lblFechar_Click;
             // 
             // FormGrafico
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(939, 540);
-            ControlBox = false;
-            Controls.Add(lblFechar);
+            BackColor = Color.LightSlateGray;
+            ClientSize = new Size(993, 548);
             Controls.Add(formsPlot1);
+            MaximizeBox = false;
             Name = "FormGrafico";
             ResumeLayout(false);
         }
@@ -70,6 +55,5 @@
         #endregion
 
         private ScottPlot.WinForms.FormsPlot formsPlot1;
-        private Label lblFechar;
     }
 }

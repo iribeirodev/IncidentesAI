@@ -59,5 +59,15 @@ namespace IncidentesAI.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] Roboto_Medium {
+            get {
+                object obj = ResourceManager.GetObject("Roboto-Medium", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }

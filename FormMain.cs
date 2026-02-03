@@ -1,10 +1,10 @@
-using IncidentesAI.Plugins;
-using IncidentesAI.Services;
-using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Connectors.OpenAI;
 using System.ComponentModel;
 using System.Data;
 using System.Text;
+using Microsoft.SemanticKernel.Connectors.OpenAI;
+using IncidentesAI.Plugins;
+using IncidentesAI.Services;
+using Microsoft.SemanticKernel;
 
 namespace IncidentesAI
 {
@@ -14,6 +14,7 @@ namespace IncidentesAI
         private List<string> _historicoPerguntas = new List<string>();
         private int _indiceHistorico = -1;
         private readonly string _caminhoArquivoHistorico = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "historico.txt");
+
         public FormMain()
         {
             InitializeComponent();
@@ -27,6 +28,7 @@ namespace IncidentesAI
             SetupKernel();
         }
 
+        #region Métodos principais
         private void SetupKernel()
         {
             // Carrega as variáveis do arquivo .env para o ambiente
@@ -234,63 +236,12 @@ namespace IncidentesAI
             txtHistorico.ScrollToCaret();
 
         }
+        #endregion
 
-        [KernelFunction]
-        [Description("Gera um arquivo Excel com os dados exatamente como estão visíveis na tabela da tela (colunas em português e filtros aplicados).")]
-        public string ExportarTabelaParaExcel()
-        {
-            return (string)this.Invoke(new Func<string>(() =>
-            {
-                StringBuilder sb = new StringBuilder();
-                AnotacaoDataService anotacaoDataService = new AnotacaoDataService(Properties.Settings.Default.UltimoCaminhoBanco);
-
-                var colunasVisiveis = dgvIncidentes.Columns.Cast<DataGridViewColumn>()
-                    .Where(x => x.Visible)
-                    .OrderBy(x => x.DisplayIndex)
-                    .ToList();
-
-                // Cabeçalho: colunas visíveis + colunas da anotação
-                var cabecalho = string.Join(",", colunasVisiveis.Select(x => x.HeaderText))
-                                + ",Status Interno,Observação";
-                sb.AppendLine(cabecalho);
-
-                // varrendo as linhas
-                foreach (DataGridViewRow row in dgvIncidentes.Rows)
-                {
-                    if (row.IsNewRow) continue;
-
-                    string numeroIncidente = row.Cells["Number"].Value?.ToString();
-                    var anotacao = anotacaoDataService.ObterDadosAnotacaoParaExportacao(numeroIncidente);
-
-                    // valores da grid
-                    var valoresGrid = colunasVisiveis.Select(c =>
-                    {
-                        string val = row.Cells[c.Index].Value?.ToString() ?? "";
-                        return val.Replace(",", "").Replace("\"", "").Replace("\r", " ").Replace("\n", " ");
-                    }).ToList();
-
-                    // adicionando dados da anotação
-                    valoresGrid.Add(anotacao?.StatusInterno?.Replace(",", "").Replace("\"", "") ?? "");
-                    valoresGrid.Add(anotacao?.Observacao?.Replace(",", "").Replace("\"", "").Replace("\r", " ").Replace("\n", " ") ?? "");
-
-                    sb.AppendLine(string.Join(",", valoresGrid));
-                }
-
-                string csvFinal = sb.ToString();
-
-                var excelPlugin = new ExcelPlugin(dgvIncidentes);
-                excelPlugin.CriarExcelComDialogo("Exportacao_Incidentes.xlsx", csvFinal);
-
-                return "Excel gerado com sucesso com os dados da tela e anotações.";
-            }));
-        }
-
+        #region Eventos de UI
         private void FormMain_Load(object sender, EventArgs e) => CarregarDados();
 
-        private void btnFiltrar_Click(object sender, EventArgs e)
-        {
-            FiltrarDados();
-        }
+        private void btnFiltrar_Click(object sender, EventArgs e) => FiltrarDados();
 
         private void btnLimpar_Click(object sender, EventArgs e)
         {
@@ -445,6 +396,59 @@ namespace IncidentesAI
                 }
             }
         }
+        #endregion
+
+        #region Kernel Functions para IA
+
+        [KernelFunction]
+        [Description("Gera um arquivo Excel com os dados exatamente como estão visíveis na tabela da tela (colunas em português e filtros aplicados).")]
+        public string ExportarTabelaParaExcel()
+        {
+            return (string)this.Invoke(new Func<string>(() =>
+            {
+                StringBuilder sb = new StringBuilder();
+                AnotacaoDataService anotacaoDataService = new AnotacaoDataService(Properties.Settings.Default.UltimoCaminhoBanco);
+
+                var colunasVisiveis = dgvIncidentes.Columns.Cast<DataGridViewColumn>()
+                    .Where(x => x.Visible)
+                    .OrderBy(x => x.DisplayIndex)
+                    .ToList();
+
+                // Cabeçalho: colunas visíveis + colunas da anotação
+                var cabecalho = string.Join(",", colunasVisiveis.Select(x => x.HeaderText))
+                                + ",Status Interno,Observação";
+                sb.AppendLine(cabecalho);
+
+                // varrendo as linhas
+                foreach (DataGridViewRow row in dgvIncidentes.Rows)
+                {
+                    if (row.IsNewRow) continue;
+
+                    string numeroIncidente = row.Cells["Number"].Value?.ToString();
+                    var anotacao = anotacaoDataService.ObterDadosAnotacaoParaExportacao(numeroIncidente);
+
+                    var valoresGrid = colunasVisiveis.Select(c =>
+                    {
+                        string val = row.Cells[c.Index].Value?.ToString() ?? "";
+                        return val.Replace(",", "").Replace("\"", "").Replace("\r", " ").Replace("\n", " ");
+                    }).ToList();
+
+                    // adicionando dados da anotação
+                    valoresGrid.Add(anotacao?.StatusInterno?.Replace(",", "").Replace("\"", "") ?? "");
+                    valoresGrid.Add(anotacao?.Observacao?.Replace(",", "").Replace("\"", "").Replace("\r", " ").Replace("\n", " ") ?? "");
+
+                    sb.AppendLine(string.Join(",", valoresGrid));
+                }
+
+                string csvFinal = sb.ToString();
+
+                var excelPlugin = new ExcelPlugin(dgvIncidentes);
+                excelPlugin.CriarExcelComDialogo("Exportacao_Incidentes.xlsx", csvFinal);
+
+                return "Excel gerado com sucesso com os dados da tela e anotações.";
+            }));
+        }
+
 
         [KernelFunction]
         [Description("Gera um gráfico em uma janela separada. Tipos: 'pie' (pizza), 'bar' (barra). O parâmetro 'titulo' deve ser um resumo do que o gráfico representa.")]
@@ -480,9 +484,8 @@ namespace IncidentesAI
                         }
 
                         var pie = plot.Add.Pie(fatias);
-                        pie.ExplodeFraction = 0.05; // Pequeno espaço entre fatias
-                        //pie.ShowSliceLabels = true;
-                        pie.SliceLabelDistance = 1.15; // Afasta as legendas para fora da pizza
+                        pie.ExplodeFraction = 0.05;
+                        pie.SliceLabelDistance = 1.15;
 
                         plot.ShowLegend(ScottPlot.Alignment.MiddleRight);
                     }
@@ -506,7 +509,6 @@ namespace IncidentesAI
                         var ticks = labels.Select((txt, i) => new ScottPlot.Tick(i, txt)).ToArray();
                         plot.Axes.Bottom.TickGenerator = new ScottPlot.TickGenerators.NumericManual(ticks);
 
-                        // Melhora o visual do eixo X
                         plot.Axes.Bottom.Label.Text = "Categorias";
                         plot.Axes.Left.Label.Text = "Quantidade";
                     }
@@ -525,5 +527,6 @@ namespace IncidentesAI
                 }
             }));
         }
+        #endregion
     }
 }

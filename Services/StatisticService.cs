@@ -2,12 +2,11 @@
 
 namespace IncidentesAI.Services;
 
-public class StatisticService
+public class StatisticService(string dbPath)
 {
-    private readonly string _connectionString;
-
-    public StatisticService(string dbPath)
-        => _connectionString = dbPath.Contains("Data Source") ? dbPath : $"Data Source={dbPath}";
+    private readonly string _connectionString = dbPath.Contains("Data Source")
+        ? dbPath
+        : $"Data Source={dbPath}";
 
     public async Task<Dictionary<string, int>> ObterDadosGraficoStatusAsync()
     {
@@ -20,9 +19,8 @@ public class StatisticService
         using var cmd = new SqliteCommand(sql, connection);
         using var reader = await cmd.ExecuteReaderAsync();
         while (await reader.ReadAsync())
-        {
             dados.Add(reader.GetString(0), reader.GetInt32(1));
-        }
+
         return dados;
     }
 
@@ -43,9 +41,8 @@ public class StatisticService
 
         using var reader = await cmd.ExecuteReaderAsync();
         while (await reader.ReadAsync())
-        {
             dados.Add(reader.GetString(0), reader.GetInt32(1));
-        }
+
         return dados;
     }
 
@@ -66,9 +63,8 @@ public class StatisticService
 
         using var reader = await cmd.ExecuteReaderAsync();
         while (await reader.ReadAsync())
-        {
             dados.Add(reader.GetString(0), reader.GetInt32(1));
-        }
+
         return dados;
     }
 }

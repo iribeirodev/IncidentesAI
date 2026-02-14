@@ -39,7 +39,7 @@
             // 
             // panel1
             // 
-            panel1.BackColor = Color.GhostWhite;
+            panel1.BackColor = Color.DimGray;
             panel1.Controls.Add(lblValue);
             panel1.Controls.Add(trackBar1);
             panel1.Controls.Add(label1);
@@ -51,23 +51,31 @@
             // 
             // lblValue
             // 
-            lblValue.Location = new Point(411, 266);
+            lblValue.BackColor = Color.DarkOrange;
+            lblValue.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblValue.ForeColor = Color.White;
+            lblValue.Location = new Point(411, 320);
             lblValue.Name = "lblValue";
-            lblValue.Size = new Size(74, 15);
+            lblValue.Size = new Size(39, 15);
             lblValue.TabIndex = 4;
+            lblValue.TextAlign = ContentAlignment.MiddleRight;
             // 
             // trackBar1
             // 
-            trackBar1.Location = new Point(177, 261);
+            trackBar1.BackColor = Color.DimGray;
+            trackBar1.Location = new Point(177, 316);
             trackBar1.Name = "trackBar1";
             trackBar1.Size = new Size(214, 45);
             trackBar1.TabIndex = 3;
+            trackBar1.TabStop = false;
             trackBar1.Scroll += trackBar1_Scroll;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(97, 266);
+            label1.BackColor = Color.Transparent;
+            label1.ForeColor = Color.DarkOrange;
+            label1.Location = new Point(97, 321);
             label1.Name = "label1";
             label1.Size = new Size(74, 15);
             label1.TabIndex = 2;
@@ -75,18 +83,23 @@
             // 
             // txtPrompt
             // 
+            txtPrompt.BackColor = Color.Black;
+            txtPrompt.Cursor = Cursors.Hand;
+            txtPrompt.ForeColor = Color.Sienna;
             txtPrompt.Location = new Point(23, 16);
+            txtPrompt.MaxLength = 5000;
             txtPrompt.Multiline = true;
             txtPrompt.Name = "txtPrompt";
             txtPrompt.ScrollBars = ScrollBars.Both;
-            txtPrompt.Size = new Size(542, 200);
+            txtPrompt.Size = new Size(542, 283);
             txtPrompt.TabIndex = 1;
+            txtPrompt.TabStop = false;
             // 
             // FormPrompt
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.LightSlateGray;
+            BackColor = Color.Gray;
             ClientSize = new Size(605, 388);
             Controls.Add(panel1);
             MaximizeBox = false;

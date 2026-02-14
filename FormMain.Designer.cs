@@ -64,12 +64,15 @@
             // 
             dgvIncidentes.AllowUserToAddRows = false;
             dgvIncidentes.AllowUserToDeleteRows = false;
+            dgvIncidentes.AllowUserToResizeColumns = false;
+            dgvIncidentes.AllowUserToResizeRows = false;
             dgvIncidentes.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            dgvIncidentes.BackgroundColor = Color.WhiteSmoke;
+            dgvIncidentes.BackgroundColor = Color.Black;
             dgvIncidentes.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvIncidentes.Location = new Point(31, 397);
             dgvIncidentes.Name = "dgvIncidentes";
             dgvIncidentes.ReadOnly = true;
+            dgvIncidentes.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             dgvIncidentes.Size = new Size(751, 269);
             dgvIncidentes.TabIndex = 0;
             dgvIncidentes.CellDoubleClick += dgvIncidentes_CellDoubleClick;
@@ -77,7 +80,7 @@
             // panel1
             // 
             panel1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            panel1.BackColor = Color.White;
+            panel1.BackColor = Color.DimGray;
             panel1.Controls.Add(lblCntFilter);
             panel1.Controls.Add(cboCaller);
             panel1.Controls.Add(cboStatus);
@@ -109,7 +112,10 @@
             // 
             // cboCaller
             // 
+            cboCaller.BackColor = Color.Black;
             cboCaller.DropDownStyle = ComboBoxStyle.DropDownList;
+            cboCaller.FlatStyle = FlatStyle.Flat;
+            cboCaller.ForeColor = Color.Orange;
             cboCaller.FormattingEnabled = true;
             cboCaller.Location = new Point(366, 138);
             cboCaller.Name = "cboCaller";
@@ -118,7 +124,10 @@
             // 
             // cboStatus
             // 
+            cboStatus.BackColor = Color.Black;
             cboStatus.DropDownStyle = ComboBoxStyle.DropDownList;
+            cboStatus.FlatStyle = FlatStyle.Flat;
+            cboStatus.ForeColor = Color.Orange;
             cboStatus.FormattingEnabled = true;
             cboStatus.Location = new Point(366, 59);
             cboStatus.Name = "cboStatus";
@@ -127,7 +136,10 @@
             // 
             // cboConfigurationItem
             // 
+            cboConfigurationItem.BackColor = Color.Black;
             cboConfigurationItem.DropDownStyle = ComboBoxStyle.DropDownList;
+            cboConfigurationItem.FlatStyle = FlatStyle.Flat;
+            cboConfigurationItem.ForeColor = Color.Orange;
             cboConfigurationItem.FormattingEnabled = true;
             cboConfigurationItem.Location = new Point(33, 213);
             cboConfigurationItem.Name = "cboConfigurationItem";
@@ -136,23 +148,29 @@
             // 
             // txtShortDescription
             // 
+            txtShortDescription.BackColor = Color.Black;
+            txtShortDescription.ForeColor = Color.Orange;
             txtShortDescription.Location = new Point(32, 138);
+            txtShortDescription.MaxLength = 100;
             txtShortDescription.Name = "txtShortDescription";
             txtShortDescription.Size = new Size(283, 23);
             txtShortDescription.TabIndex = 11;
             // 
             // txtNumber
             // 
+            txtNumber.BackColor = Color.Black;
+            txtNumber.ForeColor = Color.Orange;
             txtNumber.Location = new Point(32, 59);
+            txtNumber.MaxLength = 10;
             txtNumber.Name = "txtNumber";
             txtNumber.Size = new Size(165, 23);
             txtNumber.TabIndex = 10;
             // 
             // btnLimpar
             // 
-            btnLimpar.FlatAppearance.BorderColor = Color.RoyalBlue;
+            btnLimpar.FlatAppearance.BorderColor = Color.Orange;
             btnLimpar.FlatStyle = FlatStyle.Flat;
-            btnLimpar.ForeColor = Color.RoyalBlue;
+            btnLimpar.ForeColor = Color.Orange;
             btnLimpar.Location = new Point(374, 269);
             btnLimpar.Name = "btnLimpar";
             btnLimpar.Size = new Size(139, 40);
@@ -163,9 +181,9 @@
             // 
             // btnFiltrar
             // 
-            btnFiltrar.BackColor = Color.RoyalBlue;
+            btnFiltrar.BackColor = Color.Orange;
             btnFiltrar.FlatStyle = FlatStyle.Flat;
-            btnFiltrar.ForeColor = Color.White;
+            btnFiltrar.ForeColor = Color.Black;
             btnFiltrar.Location = new Point(229, 269);
             btnFiltrar.Name = "btnFiltrar";
             btnFiltrar.Size = new Size(139, 40);
@@ -193,19 +211,22 @@
             // chkFiltrarData
             // 
             chkFiltrarData.AutoSize = true;
-            chkFiltrarData.ForeColor = Color.RoyalBlue;
+            chkFiltrarData.BackColor = Color.Transparent;
+            chkFiltrarData.FlatStyle = FlatStyle.Flat;
+            chkFiltrarData.ForeColor = Color.Orange;
             chkFiltrarData.Location = new Point(364, 185);
             chkFiltrarData.Name = "chkFiltrarData";
-            chkFiltrarData.Size = new Size(178, 19);
+            chkFiltrarData.Size = new Size(175, 19);
             chkFiltrarData.TabIndex = 5;
             chkFiltrarData.Text = "Filtrar por período de criação";
-            chkFiltrarData.UseVisualStyleBackColor = true;
+            chkFiltrarData.UseVisualStyleBackColor = false;
             chkFiltrarData.CheckedChanged += chkFiltrarData_CheckedChanged;
             // 
             // label5
             // 
             label5.AutoSize = true;
-            label5.ForeColor = Color.RoyalBlue;
+            label5.BackColor = Color.Transparent;
+            label5.ForeColor = Color.Orange;
             label5.Location = new Point(364, 111);
             label5.Name = "label5";
             label5.Size = new Size(62, 15);
@@ -215,7 +236,8 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.ForeColor = Color.RoyalBlue;
+            label4.BackColor = Color.Transparent;
+            label4.ForeColor = Color.Orange;
             label4.Location = new Point(364, 29);
             label4.Name = "label4";
             label4.Size = new Size(39, 15);
@@ -225,7 +247,8 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.ForeColor = Color.RoyalBlue;
+            label3.BackColor = Color.Transparent;
+            label3.ForeColor = Color.Orange;
             label3.Location = new Point(28, 186);
             label3.Name = "label3";
             label3.Size = new Size(108, 15);
@@ -235,7 +258,8 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.ForeColor = Color.RoyalBlue;
+            label2.BackColor = Color.Transparent;
+            label2.ForeColor = Color.Orange;
             label2.Location = new Point(28, 111);
             label2.Name = "label2";
             label2.Size = new Size(98, 15);
@@ -245,7 +269,8 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.ForeColor = Color.RoyalBlue;
+            label1.BackColor = Color.Transparent;
+            label1.ForeColor = Color.Orange;
             label1.Location = new Point(28, 29);
             label1.Name = "label1";
             label1.Size = new Size(51, 15);
@@ -255,7 +280,7 @@
             // panel2
             // 
             panel2.Anchor = AnchorStyles.Right;
-            panel2.BackColor = Color.White;
+            panel2.BackColor = Color.DimGray;
             panel2.Controls.Add(btnHistoricoDown);
             panel2.Controls.Add(btnHistoricoUp);
             panel2.Controls.Add(btnPrompt);
@@ -274,6 +299,7 @@
             btnHistoricoDown.Cursor = Cursors.Hand;
             btnHistoricoDown.FlatAppearance.BorderColor = Color.Gainsboro;
             btnHistoricoDown.FlatStyle = FlatStyle.Flat;
+            btnHistoricoDown.ForeColor = Color.Orange;
             btnHistoricoDown.Image = (Image)resources.GetObject("btnHistoricoDown.Image");
             btnHistoricoDown.Location = new Point(293, 37);
             btnHistoricoDown.Name = "btnHistoricoDown";
@@ -288,6 +314,7 @@
             btnHistoricoUp.Cursor = Cursors.Hand;
             btnHistoricoUp.FlatAppearance.BorderColor = Color.Gainsboro;
             btnHistoricoUp.FlatStyle = FlatStyle.Flat;
+            btnHistoricoUp.ForeColor = Color.Orange;
             btnHistoricoUp.Image = (Image)resources.GetObject("btnHistoricoUp.Image");
             btnHistoricoUp.Location = new Point(293, 12);
             btnHistoricoUp.Name = "btnHistoricoUp";
@@ -320,10 +347,10 @@
             // 
             // btnProcessar
             // 
-            btnProcessar.BackColor = Color.SeaGreen;
+            btnProcessar.BackColor = Color.Orange;
             btnProcessar.FlatAppearance.BorderColor = Color.RoyalBlue;
             btnProcessar.FlatStyle = FlatStyle.Flat;
-            btnProcessar.ForeColor = Color.White;
+            btnProcessar.ForeColor = Color.Black;
             btnProcessar.Location = new Point(95, 69);
             btnProcessar.Name = "btnProcessar";
             btnProcessar.Size = new Size(139, 26);
@@ -334,6 +361,8 @@
             // 
             // txtPergunta
             // 
+            txtPergunta.BackColor = Color.Black;
+            txtPergunta.ForeColor = Color.Orange;
             txtPergunta.Location = new Point(14, 12);
             txtPergunta.Multiline = true;
             txtPergunta.Name = "txtPergunta";
@@ -342,9 +371,11 @@
             // 
             // txtHistorico
             // 
-            txtHistorico.Location = new Point(14, 111);
+            txtHistorico.BackColor = Color.Black;
+            txtHistorico.ForeColor = Color.Orange;
+            txtHistorico.Location = new Point(14, 114);
             txtHistorico.Name = "txtHistorico";
-            txtHistorico.Size = new Size(303, 490);
+            txtHistorico.Size = new Size(303, 492);
             txtHistorico.TabIndex = 4;
             txtHistorico.Text = "";
             // 
@@ -352,7 +383,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.LightSlateGray;
+            BackColor = Color.Gray;
             ClientSize = new Size(1144, 694);
             Controls.Add(panel2);
             Controls.Add(panel1);

@@ -203,12 +203,12 @@ namespace IncidentesAI
                 if (totalFiltrado == 0)
                 {
                     lblCntFilter.Text = "Nenhum registro encontrado.";
-                    lblCntFilter.ForeColor = Color.Red;
+                    lblCntFilter.ForeColor = Color.White;
                 }
                 else
                 {
                     lblCntFilter.Text = $"Encontrado: {totalFiltrado} de {totalGeral}";
-                    lblCntFilter.ForeColor = Color.Green;
+                    lblCntFilter.ForeColor = Color.DarkOrange;
                 }
             }
         }
@@ -391,9 +391,8 @@ namespace IncidentesAI
                 string numeroIncidente = dgvIncidentes.Rows[e.RowIndex].Cells["Number"].Value.ToString();
 
                 using (FormAnotacoes frm = new FormAnotacoes(numeroIncidente))
-                {
-                    frm.ShowDialog();
-                }
+                frm.ShowDialog();
+
             }
         }
         #endregion

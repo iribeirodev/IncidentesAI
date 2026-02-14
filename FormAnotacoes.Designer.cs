@@ -28,7 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            panel1 = new Panel();
+            panelControles = new Panel();
+            label4 = new Label();
             lblDataAtualizacao = new Label();
             txtObservacao = new TextBox();
             cboStatus = new ComboBox();
@@ -38,39 +39,55 @@
             txtNumero = new TextBox();
             btnAplicar = new Button();
             label1 = new Label();
-            panel1.SuspendLayout();
+            panelControles.SuspendLayout();
             SuspendLayout();
             // 
-            // panel1
+            // panelControles
             // 
-            panel1.BackColor = Color.GhostWhite;
-            panel1.Controls.Add(lblDataAtualizacao);
-            panel1.Controls.Add(txtObservacao);
-            panel1.Controls.Add(cboStatus);
-            panel1.Controls.Add(label3);
-            panel1.Controls.Add(label2);
-            panel1.Controls.Add(btnRemover);
-            panel1.Controls.Add(txtNumero);
-            panel1.Controls.Add(btnAplicar);
-            panel1.Controls.Add(label1);
-            panel1.Location = new Point(10, 9);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(652, 344);
-            panel1.TabIndex = 1;
+            panelControles.BackColor = Color.DimGray;
+            panelControles.Controls.Add(label4);
+            panelControles.Controls.Add(lblDataAtualizacao);
+            panelControles.Controls.Add(txtObservacao);
+            panelControles.Controls.Add(cboStatus);
+            panelControles.Controls.Add(label3);
+            panelControles.Controls.Add(label2);
+            panelControles.Controls.Add(btnRemover);
+            panelControles.Controls.Add(txtNumero);
+            panelControles.Controls.Add(btnAplicar);
+            panelControles.Controls.Add(label1);
+            panelControles.Location = new Point(10, 9);
+            panelControles.Name = "panelControles";
+            panelControles.Size = new Size(652, 344);
+            panelControles.TabIndex = 1;
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.BackColor = Color.Transparent;
+            label4.ForeColor = Color.Orange;
+            label4.Location = new Point(78, 248);
+            label4.Name = "label4";
+            label4.Size = new Size(106, 15);
+            label4.TabIndex = 9;
+            label4.Text = "Última Atualização";
             // 
             // lblDataAtualizacao
             // 
-            lblDataAtualizacao.ForeColor = Color.RoyalBlue;
-            lblDataAtualizacao.Location = new Point(43, 244);
+            lblDataAtualizacao.BackColor = Color.Black;
+            lblDataAtualizacao.BorderStyle = BorderStyle.Fixed3D;
+            lblDataAtualizacao.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            lblDataAtualizacao.ForeColor = Color.Sienna;
+            lblDataAtualizacao.Location = new Point(205, 244);
             lblDataAtualizacao.Name = "lblDataAtualizacao";
-            lblDataAtualizacao.Size = new Size(273, 23);
+            lblDataAtualizacao.Size = new Size(369, 23);
             lblDataAtualizacao.TabIndex = 8;
+            lblDataAtualizacao.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // txtObservacao
             // 
-            txtObservacao.BackColor = Color.White;
-            txtObservacao.ForeColor = Color.Black;
-            txtObservacao.Location = new Point(165, 150);
+            txtObservacao.BackColor = Color.Black;
+            txtObservacao.ForeColor = Color.Sienna;
+            txtObservacao.Location = new Point(205, 150);
             txtObservacao.MaxLength = 250;
             txtObservacao.Multiline = true;
             txtObservacao.Name = "txtObservacao";
@@ -80,10 +97,10 @@
             // 
             // cboStatus
             // 
-            cboStatus.BackColor = Color.White;
-            cboStatus.ForeColor = Color.Black;
+            cboStatus.BackColor = Color.Black;
+            cboStatus.ForeColor = Color.Sienna;
             cboStatus.FormattingEnabled = true;
-            cboStatus.Location = new Point(165, 94);
+            cboStatus.Location = new Point(205, 94);
             cboStatus.Name = "cboStatus";
             cboStatus.Size = new Size(369, 23);
             cboStatus.TabIndex = 6;
@@ -92,8 +109,9 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.ForeColor = Color.RoyalBlue;
-            label3.Location = new Point(38, 153);
+            label3.BackColor = Color.Transparent;
+            label3.ForeColor = Color.Orange;
+            label3.Location = new Point(78, 153);
             label3.Name = "label3";
             label3.Size = new Size(69, 15);
             label3.TabIndex = 5;
@@ -102,8 +120,9 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.ForeColor = Color.RoyalBlue;
-            label2.Location = new Point(38, 97);
+            label2.BackColor = Color.Transparent;
+            label2.ForeColor = Color.Orange;
+            label2.Location = new Point(78, 97);
             label2.Name = "label2";
             label2.Size = new Size(80, 15);
             label2.TabIndex = 4;
@@ -115,19 +134,20 @@
             btnRemover.Cursor = Cursors.Hand;
             btnRemover.FlatStyle = FlatStyle.Flat;
             btnRemover.ForeColor = Color.White;
-            btnRemover.Location = new Point(180, 282);
+            btnRemover.Location = new Point(329, 295);
             btnRemover.Name = "btnRemover";
             btnRemover.Size = new Size(136, 34);
             btnRemover.TabIndex = 3;
+            btnRemover.TabStop = false;
             btnRemover.Text = "Remover";
             btnRemover.UseVisualStyleBackColor = false;
             btnRemover.Click += btnRemover_Click;
             // 
             // txtNumero
             // 
-            txtNumero.BackColor = Color.White;
-            txtNumero.ForeColor = Color.Black;
-            txtNumero.Location = new Point(165, 41);
+            txtNumero.BackColor = Color.Black;
+            txtNumero.ForeColor = Color.Sienna;
+            txtNumero.Location = new Point(205, 41);
             txtNumero.MaxLength = 15;
             txtNumero.Name = "txtNumero";
             txtNumero.Size = new Size(151, 23);
@@ -140,10 +160,11 @@
             btnAplicar.Cursor = Cursors.Hand;
             btnAplicar.FlatStyle = FlatStyle.Flat;
             btnAplicar.ForeColor = Color.White;
-            btnAplicar.Location = new Point(38, 282);
+            btnAplicar.Location = new Point(187, 295);
             btnAplicar.Name = "btnAplicar";
             btnAplicar.Size = new Size(136, 34);
             btnAplicar.TabIndex = 1;
+            btnAplicar.TabStop = false;
             btnAplicar.Text = "Aplicar";
             btnAplicar.UseVisualStyleBackColor = false;
             btnAplicar.Click += btnAplicar_Click;
@@ -151,8 +172,9 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.ForeColor = Color.RoyalBlue;
-            label1.Location = new Point(38, 41);
+            label1.BackColor = Color.Transparent;
+            label1.ForeColor = Color.Orange;
+            label1.Location = new Point(78, 41);
             label1.Name = "label1";
             label1.Size = new Size(51, 15);
             label1.TabIndex = 0;
@@ -162,9 +184,9 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.LightSlateGray;
+            BackColor = Color.Gray;
             ClientSize = new Size(672, 363);
-            Controls.Add(panel1);
+            Controls.Add(panelControles);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
             MinimizeBox = false;
@@ -172,14 +194,14 @@
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Anotações";
             Load += FormAnotacoes_Load;
-            panel1.ResumeLayout(false);
-            panel1.PerformLayout();
+            panelControles.ResumeLayout(false);
+            panelControles.PerformLayout();
             ResumeLayout(false);
         }
 
         #endregion
 
-        private Panel panel1;
+        private Panel panelControles;
         private Button btnRemover;
         private TextBox txtNumero;
         private Button btnAplicar;
@@ -189,5 +211,6 @@
         private Label label3;
         private Label label2;
         private Label lblDataAtualizacao;
+        private Label label4;
     }
 }

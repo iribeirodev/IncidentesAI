@@ -28,86 +28,167 @@
         /// </summary>
         private void InitializeComponent()
         {
-            pnlMenu = new Panel();
-            btnConfiguracoes = new FontAwesome.Sharp.IconButton();
-            btnIncidentes = new FontAwesome.Sharp.IconButton();
-            pnlMenu.SuspendLayout();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMenu));
+            tableLayoutPanel1 = new TableLayoutPanel();
+            flowLayoutPanel1 = new FlowLayoutPanel();
+            ListaIncidentes = new PictureBox();
+            Prompt = new PictureBox();
+            Configuracoes = new PictureBox();
+            Sair = new PictureBox();
+            lblTitulo = new Label();
+            tableLayoutPanel1.SuspendLayout();
+            flowLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)ListaIncidentes).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)Prompt).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)Configuracoes).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)Sair).BeginInit();
             SuspendLayout();
             // 
-            // pnlMenu
+            // tableLayoutPanel1
             // 
-            pnlMenu.BackColor = Color.FloralWhite;
-            pnlMenu.Controls.Add(btnConfiguracoes);
-            pnlMenu.Controls.Add(btnIncidentes);
-            pnlMenu.Dock = DockStyle.Left;
-            pnlMenu.Location = new Point(0, 0);
-            pnlMenu.Name = "pnlMenu";
-            pnlMenu.Size = new Size(200, 450);
-            pnlMenu.TabIndex = 0;
+            tableLayoutPanel1.BackColor = Color.DimGray;
+            tableLayoutPanel1.ColumnCount = 3;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 80F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10F));
+            tableLayoutPanel1.Controls.Add(flowLayoutPanel1, 1, 1);
+            tableLayoutPanel1.Controls.Add(lblTitulo, 0, 0);
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.Location = new Point(0, 0);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 3;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 13.043479F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 43.47826F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 43.47826F));
+            tableLayoutPanel1.Size = new Size(1107, 620);
+            tableLayoutPanel1.TabIndex = 2;
             // 
-            // btnConfiguracoes
+            // flowLayoutPanel1
             // 
-            btnConfiguracoes.BackColor = Color.LightSlateGray;
-            btnConfiguracoes.Cursor = Cursors.Hand;
-            btnConfiguracoes.Font = new Font("Segoe UI Variable Display", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            btnConfiguracoes.ForeColor = Color.White;
-            btnConfiguracoes.IconChar = FontAwesome.Sharp.IconChar.Cog;
-            btnConfiguracoes.IconColor = Color.White;
-            btnConfiguracoes.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            btnConfiguracoes.IconSize = 22;
-            btnConfiguracoes.ImageAlign = ContentAlignment.MiddleLeft;
-            btnConfiguracoes.Location = new Point(3, 67);
-            btnConfiguracoes.Name = "btnConfiguracoes";
-            btnConfiguracoes.Padding = new Padding(10, 0, 0, 0);
-            btnConfiguracoes.Size = new Size(194, 61);
-            btnConfiguracoes.TabIndex = 3;
-            btnConfiguracoes.Text = "Configurações";
-            btnConfiguracoes.TextImageRelation = TextImageRelation.ImageBeforeText;
-            btnConfiguracoes.UseVisualStyleBackColor = false;
-            btnConfiguracoes.Click += btnConfiguracoes_Click;
-            btnConfiguracoes.MouseEnter += btnConfiguracoes_MouseEnter;
+            flowLayoutPanel1.Anchor = AnchorStyles.None;
+            flowLayoutPanel1.BorderStyle = BorderStyle.FixedSingle;
+            flowLayoutPanel1.Controls.Add(ListaIncidentes);
+            flowLayoutPanel1.Controls.Add(Prompt);
+            flowLayoutPanel1.Controls.Add(Configuracoes);
+            flowLayoutPanel1.Controls.Add(Sair);
+            flowLayoutPanel1.FlowDirection = FlowDirection.TopDown;
+            flowLayoutPanel1.Location = new Point(188, 132);
+            flowLayoutPanel1.Name = "flowLayoutPanel1";
+            flowLayoutPanel1.Size = new Size(728, 165);
+            flowLayoutPanel1.TabIndex = 2;
+            flowLayoutPanel1.Paint += EstilizarBordaFlowLayout;
             // 
-            // btnIncidentes
+            // ListaIncidentes
             // 
-            btnIncidentes.BackColor = Color.LightSlateGray;
-            btnIncidentes.Cursor = Cursors.Hand;
-            btnIncidentes.Font = new Font("Tahoma", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            btnIncidentes.ForeColor = Color.White;
-            btnIncidentes.IconChar = FontAwesome.Sharp.IconChar.List12;
-            btnIncidentes.IconColor = Color.White;
-            btnIncidentes.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            btnIncidentes.IconSize = 22;
-            btnIncidentes.ImageAlign = ContentAlignment.MiddleLeft;
-            btnIncidentes.Location = new Point(3, 4);
-            btnIncidentes.Name = "btnIncidentes";
-            btnIncidentes.Padding = new Padding(10, 0, 0, 0);
-            btnIncidentes.Size = new Size(194, 61);
-            btnIncidentes.TabIndex = 2;
-            btnIncidentes.Text = "Lista de Incidentes";
-            btnIncidentes.TextImageRelation = TextImageRelation.ImageBeforeText;
-            btnIncidentes.UseVisualStyleBackColor = false;
-            btnIncidentes.Click += btnIncidentes_Click;
+            ListaIncidentes.BackColor = Color.DimGray;
+            ListaIncidentes.Cursor = Cursors.Hand;
+            ListaIncidentes.Image = (Image)resources.GetObject("ListaIncidentes.Image");
+            ListaIncidentes.Location = new Point(5, 5);
+            ListaIncidentes.Margin = new Padding(5);
+            ListaIncidentes.Name = "ListaIncidentes";
+            ListaIncidentes.Size = new Size(172, 148);
+            ListaIncidentes.SizeMode = PictureBoxSizeMode.CenterImage;
+            ListaIncidentes.TabIndex = 4;
+            ListaIncidentes.TabStop = false;
+            ListaIncidentes.Tag = "Exibe a lista de incidentes principal";
+            ListaIncidentes.Click += ExibirFormulario;
+            ListaIncidentes.MouseLeave += EsmaecerMenuItem;
+            ListaIncidentes.MouseHover += DestacarMenuItem;
+            // 
+            // Prompt
+            // 
+            Prompt.BackColor = Color.DimGray;
+            Prompt.Cursor = Cursors.Hand;
+            Prompt.Image = (Image)resources.GetObject("Prompt.Image");
+            Prompt.Location = new Point(187, 5);
+            Prompt.Margin = new Padding(5);
+            Prompt.Name = "Prompt";
+            Prompt.Size = new Size(172, 148);
+            Prompt.SizeMode = PictureBoxSizeMode.CenterImage;
+            Prompt.TabIndex = 1;
+            Prompt.TabStop = false;
+            Prompt.Tag = "Configuração do Prompt (Persona)";
+            Prompt.Click += ExibirFormulario;
+            Prompt.MouseLeave += EsmaecerMenuItem;
+            Prompt.MouseHover += DestacarMenuItem;
+            // 
+            // Configuracoes
+            // 
+            Configuracoes.BackColor = Color.DimGray;
+            Configuracoes.Cursor = Cursors.Hand;
+            Configuracoes.Image = (Image)resources.GetObject("Configuracoes.Image");
+            Configuracoes.Location = new Point(369, 5);
+            Configuracoes.Margin = new Padding(5);
+            Configuracoes.Name = "Configuracoes";
+            Configuracoes.Size = new Size(172, 148);
+            Configuracoes.SizeMode = PictureBoxSizeMode.CenterImage;
+            Configuracoes.TabIndex = 2;
+            Configuracoes.TabStop = false;
+            Configuracoes.Tag = "Configurações Gerais";
+            Configuracoes.Click += ExibirFormulario;
+            Configuracoes.MouseLeave += EsmaecerMenuItem;
+            Configuracoes.MouseHover += DestacarMenuItem;
+            // 
+            // Sair
+            // 
+            Sair.BackColor = Color.DimGray;
+            Sair.Cursor = Cursors.Hand;
+            Sair.Image = (Image)resources.GetObject("Sair.Image");
+            Sair.Location = new Point(551, 5);
+            Sair.Margin = new Padding(5);
+            Sair.Name = "Sair";
+            Sair.Size = new Size(172, 148);
+            Sair.SizeMode = PictureBoxSizeMode.CenterImage;
+            Sair.TabIndex = 5;
+            Sair.TabStop = false;
+            Sair.Tag = "Encerrar a aplicação";
+            Sair.Click += Sair_Click;
+            Sair.MouseLeave += EsmaecerMenuItem;
+            Sair.MouseHover += DestacarMenuItem;
+            // 
+            // lblTitulo
+            // 
+            lblTitulo.AutoSize = true;
+            lblTitulo.BackColor = Color.DimGray;
+            tableLayoutPanel1.SetColumnSpan(lblTitulo, 3);
+            lblTitulo.Dock = DockStyle.Fill;
+            lblTitulo.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblTitulo.ForeColor = Color.Orange;
+            lblTitulo.Location = new Point(3, 0);
+            lblTitulo.Name = "lblTitulo";
+            lblTitulo.Size = new Size(1101, 80);
+            lblTitulo.TabIndex = 3;
+            lblTitulo.Text = "\r\n";
+            lblTitulo.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // FormMenu
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.White;
-            ClientSize = new Size(800, 450);
-            Controls.Add(pnlMenu);
+            ClientSize = new Size(1107, 620);
+            ControlBox = false;
+            Controls.Add(tableLayoutPanel1);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "FormMenu";
-            Text = "ServiceNow AI Insights and Analytics (Incidentes AI)";
             WindowState = FormWindowState.Maximized;
-            Paint += FormMenu_Paint;
-            pnlMenu.ResumeLayout(false);
+            tableLayoutPanel1.ResumeLayout(false);
+            tableLayoutPanel1.PerformLayout();
+            flowLayoutPanel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)ListaIncidentes).EndInit();
+            ((System.ComponentModel.ISupportInitialize)Prompt).EndInit();
+            ((System.ComponentModel.ISupportInitialize)Configuracoes).EndInit();
+            ((System.ComponentModel.ISupportInitialize)Sair).EndInit();
             ResumeLayout(false);
         }
 
         #endregion
 
-        private Panel pnlMenu;
-        private FontAwesome.Sharp.IconButton btnIncidentes;
-        private FontAwesome.Sharp.IconButton btnConfiguracoes;
+        private TableLayoutPanel tableLayoutPanel1;
+        private FlowLayoutPanel flowLayoutPanel1;
+        private PictureBox Prompt;
+        private PictureBox Configuracoes;
+        private PictureBox ListaIncidentes;
+        private Label lblTitulo;
+        private PictureBox Sair;
     }
 }

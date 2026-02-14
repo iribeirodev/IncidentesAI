@@ -1,13 +1,5 @@
-﻿using IncidentesAI.Services;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Data;
+using IncidentesAI.Services;
 
 namespace IncidentesAI
 {
@@ -38,7 +30,7 @@ namespace IncidentesAI
                 DataRow row = dt.Rows[0];
                 cboStatus.Text = row["StatusInterno"].ToString();
                 txtObservacao.Text = row["Observacao"].ToString();
-                lblDataAtualizacao.Text = "Última alteração: " + row["DataAtualizacao"].ToString();
+                lblDataAtualizacao.Text = row["DataAtualizacao"].ToString();
 
                 btnRemover.Enabled = true;
             }

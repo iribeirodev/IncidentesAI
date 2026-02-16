@@ -1,10 +1,14 @@
-using System.ComponentModel;
-using System.Data;
-using System.Text;
-using Microsoft.SemanticKernel.Connectors.OpenAI;
+using IncidentesAI.Helpers;
 using IncidentesAI.Plugins;
 using IncidentesAI.Services;
 using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Connectors.OpenAI;
+using OpenTK.Platform.Windows;
+using System.ComponentModel;
+using System.Data;
+using System.Globalization;
+using System.Text;
+
 
 namespace IncidentesAI
 {
@@ -12,6 +16,7 @@ namespace IncidentesAI
     {
         private Kernel _kernel;
         private List<string> _historicoPerguntas = new List<string>();
+        private FormCalendar _formCalendar;
         private int _indiceHistorico = -1;
         private readonly string _caminhoArquivoHistorico = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "historico.txt");
 
@@ -20,8 +25,8 @@ namespace IncidentesAI
             InitializeComponent();
 
             chkFiltrarData.Checked = false;
-            dtpInicio.Enabled = false;
-            dtpFim.Enabled = false;
+
+            HabilitarCalendario(false);
 
             CarregarHistoricoDoArquivo();
 
@@ -180,13 +185,13 @@ namespace IncidentesAI
             if (cboCaller.SelectedIndex > 0)
                 condicoes.Add(string.Format("Caller = '{0}'", cboCaller.Text.Replace("'", "''")));
 
-            if (chkFiltrarData.Checked)
-            {
-                string dataInicio = dtpInicio.Value.ToString("MM/dd/yyyy");
-                string dataFim = dtpFim.Value.ToString("MM/dd/yyyy");
+            //if (chkFiltrarData.Checked)
+            //{
+            //    string dataInicio = dtpInicio.Value.ToString("MM/dd/yyyy");
+            //    string dataFim = dtpFim.Value.ToString("MM/dd/yyyy");
 
-                condicoes.Add(string.Format("Created >= #{0} 00:00:00# AND Created <= #{1} 23:59:59#", dataInicio, dataFim));
-            }
+            //    condicoes.Add(string.Format("Created >= #{0} 00:00:00# AND Created <= #{1} 23:59:59#", dataInicio, dataFim));
+            //}
 
             dt.DefaultView.RowFilter = condicoes.Count > 0 ? string.Join(" AND ", condicoes) : "";
 
@@ -236,6 +241,14 @@ namespace IncidentesAI
             txtHistorico.ScrollToCaret();
 
         }
+
+        private void HabilitarCalendario(bool habilitado)
+        {
+            txtDtInicio.Enabled = habilitado;
+            txtDtFim.Enabled = habilitado;
+            btnShowCalendarInicio.Enabled = habilitado;
+            btnShowCalendarFim.Enabled = habilitado;
+        }
         #endregion
 
         #region Eventos de UI
@@ -253,8 +266,8 @@ namespace IncidentesAI
             cboCaller.SelectedIndex = 0;
 
             chkFiltrarData.Checked = false;
-            dtpInicio.Value = DateTime.Now.AddDays(-30);
-            dtpFim.Value = DateTime.Now;
+            //dtpInicio.Value = DateTime.Now.AddDays(-30);
+            //dtpFim.Value = DateTime.Now;
 
             FiltrarDados();
         }
@@ -262,21 +275,28 @@ namespace IncidentesAI
         private void chkFiltrarData_CheckedChanged(object sender, EventArgs e)
         {
             // Habilita/Desabilita os calendários
-            dtpInicio.Enabled = chkFiltrarData.Checked;
-            dtpFim.Enabled = chkFiltrarData.Checked;
+            //dtpInicio.Enabled = chkFiltrarData.Checked;
+            //dtpFim.Enabled = chkFiltrarData.Checked;
 
             if (chkFiltrarData.Checked)
             {
-                chkFiltrarData.ForeColor = Color.Blue;
+                chkFiltrarData.ForeColor = Color.Orange;
                 chkFiltrarData.Text = "Filtrando por período:";
+
+                HabilitarCalendario(true);
             }
             else
             {
-                chkFiltrarData.ForeColor = Color.Black;
+                chkFiltrarData.ForeColor = Color.Gray;
                 chkFiltrarData.Text = "Filtrar por período de criação";
+
+                HabilitarCalendario(false);
+
+                txtDtInicio.Clear();
+                txtDtFim.Clear();
             }
 
-            FiltrarDados();
+            //FiltrarDados();
         }
 
         private async void btnProcessar_Click(object sender, EventArgs e)
@@ -291,7 +311,7 @@ namespace IncidentesAI
 
             SalvarPerguntaNoHistorico(userPrompt);
 
-            AdicionarTextoFormatado("Usuário", userPrompt, Color.Black);
+            AdicionarTextoFormatado("Usuário", userPrompt, Color.Orange);
             btnProcessar.Enabled = false;
             lblStatus.Text = "Consultando Mistral AI...";
             Cursor = Cursors.WaitCursor;
@@ -333,7 +353,7 @@ namespace IncidentesAI
                     var resposta = await _kernel.InvokePromptAsync(fullPrompt.ToString(), arguments);
 
                     lblStatus.Text = "Pronto!";
-                    AdicionarTextoFormatado("IA", resposta.ToString(), Color.DarkMagenta);
+                    AdicionarTextoFormatado("IA", resposta.ToString(), Color.White);
                     txtPergunta.Clear();
                 }
                 catch (HttpOperationException httpEx)
@@ -391,10 +411,52 @@ namespace IncidentesAI
                 string numeroIncidente = dgvIncidentes.Rows[e.RowIndex].Cells["Number"].Value.ToString();
 
                 using (FormAnotacoes frm = new FormAnotacoes(numeroIncidente))
-                frm.ShowDialog();
+                    frm.ShowDialog();
 
             }
         }
+
+        private void AbrirCalendario(object sender, EventArgs e)
+        {
+            Button btnClicado = sender as Button;
+            if (btnClicado == null || btnClicado.Tag == null) return;
+
+            string whichButton = btnClicado.Tag.ToString();
+            TextBox txtAlvo = (whichButton == "DataInicio") ? txtDtInicio : txtDtFim;
+
+            using (FormCalendar _formCalendar = new FormCalendar())
+            {
+                _formCalendar.StartPosition = FormStartPosition.Manual;
+
+                if (!string.IsNullOrWhiteSpace(txtAlvo.Text))
+                    _formCalendar.SetDataInicial(txtAlvo.Text);
+
+                Point localizacaoNaTela = btnClicado.PointToScreen(Point.Empty);
+                _formCalendar.Left = localizacaoNaTela.X;
+                _formCalendar.Top = localizacaoNaTela.Y + btnClicado.Height;
+
+                if (_formCalendar.ShowDialog() == DialogResult.OK)
+                {
+                    txtAlvo.Text = _formCalendar.DataSelecionada;
+
+                    string formato = "dd/MM/yyyy";
+                    CultureInfo culturaBR = new CultureInfo("pt-BR");
+
+                    bool inicioValido = DateTime.TryParseExact(txtDtInicio.Text, formato, culturaBR, DateTimeStyles.None, out DateTime dataInicio);
+                    bool fimValido = DateTime.TryParseExact(txtDtFim.Text, formato, culturaBR, DateTimeStyles.None, out DateTime dataFim);
+
+                    if (inicioValido && fimValido)
+                    {
+                        if (dataInicio > dataFim)
+                        {
+                            UIHelper.MostrarAviso("A data de início não pode ser maior que a data de fim.");
+                            txtAlvo.Clear();
+                        }
+                    }
+                }
+            }
+        }
+
         #endregion
 
         #region Kernel Functions para IA
@@ -527,5 +589,8 @@ namespace IncidentesAI
             }));
         }
         #endregion
+
+
+
     }
 }

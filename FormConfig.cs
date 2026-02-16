@@ -1,21 +1,12 @@
-﻿using IncidentesAI.Services;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using IncidentesAI.Helpers;
+using IncidentesAI.Services;
 
 namespace IncidentesAI;
 
 public partial class FormConfig : Form
 {
-    private IncidenteConfigService _service = new IncidenteConfigService("Data Source=incidentes.db");
-    private string _caminhoDbFinal;
-    private string _caminhoExcelSelecionado;
+    // Configurações
+    private static Properties.Settings Settings => Properties.Settings.Default;
 
     public FormConfig()
     {
@@ -25,124 +16,98 @@ public partial class FormConfig : Form
 
     private void CarregarConfiguracoes()
     {
-        // Ao abrir, preenche os campos com o que foi salvo na última execução
-        txtCaminhoBanco.Text = Properties.Settings.Default.UltimoCaminhoBanco;
-        txtCaminhoPlanilha.Text = Properties.Settings.Default.UltimoCaminhoExcel;
+        txtCaminhoBanco.Text = Settings.UltimoCaminhoBanco;
+        txtCaminhoPlanilha.Text = Settings.UltimoCaminhoExcel;
+        AtualizarStatus(Settings.DataUltimaImportacao);
+    }
 
-        string ultimaData = Properties.Settings.Default.DataUltimaImportacao;
+    private bool CamposValidos()
+    {
+        if (!string.IsNullOrWhiteSpace(txtCaminhoPlanilha.Text) && !string.IsNullOrWhiteSpace(txtCaminhoBanco.Text))
+            return false;
 
-        if (string.IsNullOrEmpty(ultimaData))
-        {
-            lblStatusImportacao.Text = "Status: Nenhuma importação realizada.";
-            lblStatusImportacao.ForeColor = Color.Red;
-        }
-        else
-        {
-            lblStatusImportacao.Text = $"Última atualização: {ultimaData}";
-            lblStatusImportacao.ForeColor = Color.Green;
-        }
+        UIHelper.MostrarAviso("Selecione os caminhos antes de importar.");
+        return true;
+    }
+
+    private void AtualizarCaminhoBanco(string path)
+    {
+        txtCaminhoBanco.Text = path;
+        Settings.UltimoCaminhoBanco = path;
+        Settings.Save();
+    }
+
+    private void AtualizarCaminhoExcel(string path)
+    {
+        txtCaminhoPlanilha.Text = path;
+        Settings.UltimoCaminhoExcel = path;
+        Settings.Save();
+    }
+
+    private void SalvarLogImportacao()
+    {
+        string data = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
+        Settings.DataUltimaImportacao = data;
+        Settings.Save();
+        AtualizarStatus(data);
+    }
+
+    private void AtualizarStatus(string data)
+    {
+        bool temData = !string.IsNullOrEmpty(data);
+        lblStatusImportacao.Text = temData ? $"Última atualização: {data}" : "Status: Nenhuma importação.";
+        lblStatusImportacao.ForeColor = temData ? Color.Orange : Color.Sienna;
     }
 
     private void btnCriarDatabase_Click(object sender, EventArgs e)
     {
-        if (string.IsNullOrEmpty(_caminhoDbFinal))
+        if (string.IsNullOrWhiteSpace(txtCaminhoPlanilha.Text))
         {
-            MessageBox.Show("Por favor, selecione primeiro onde deseja salvar o banco.");
+            UIHelper.MostrarAviso("Por favor, selecione primeiro onde deseja salvar o banco.");
             return;
         }
 
-        try
+        UIHelper.Executar(() =>
         {
-            // Atualizamos o service com o novo caminho (string de conexão)
-            string connectionString = $"Data Source={_caminhoDbFinal};";
-            var service = new IncidenteConfigService(connectionString);
-            service.CriarBancoDeDados();
-
-            MessageBox.Show("Arquivo de banco de dados criado com sucesso!");
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show("Erro: " + ex.Message);
-        }
+            new IncidenteConfigService(txtCaminhoBanco.Text).CriarBancoDeDados();
+            UIHelper.MostrarSucesso("Arquivo de banco de dados criado com sucesso!");
+        });
     }
 
     private void btnImportar_Click(object sender, EventArgs e)
     {
-        string caminhoExcel = txtCaminhoPlanilha.Text;
-        string caminhoDb = txtCaminhoBanco.Text;
-
-        if (string.IsNullOrWhiteSpace(caminhoExcel) || string.IsNullOrWhiteSpace(caminhoDb))
-        {
-            MessageBox.Show("Selecione os caminhos antes de importar.");
-            return;
-        }
+        if (CamposValidos()) return;
 
         btnImportar.Enabled = false;
-        progressBar1.Value = 0;
 
-        try
+        UIHelper.Executar(() =>
         {
-            string connString = $"Data Source={caminhoDb};";
-            var service = new IncidenteConfigService(connString);
+            new IncidenteConfigService(txtCaminhoBanco.Text)
+                .ImportarPlanilha(txtCaminhoPlanilha.Text, (atual, total) =>
+                {
+                    progressBar1.Maximum = total;
+                    progressBar1.Value = atual;
+                    Application.DoEvents();
+                }, limparDados: true);
+        });
 
-            service.ImportarPlanilha(caminhoExcel, (atual, total) =>
-            {
-                progressBar1.Maximum = total;
-                progressBar1.Value = atual;
-                Application.DoEvents();
-            }, limparDados: true);
+        SalvarLogImportacao();
+        UIHelper.MostrarSucesso("Dados atualizados com sucesso!");
 
-            DateTime agora = DateTime.Now;
-            string dataFormatada = agora.ToString("dd/MM/yyyy HH:mm:ss");
-            // Salva na configuração do sistema
-            Properties.Settings.Default.DataUltimaImportacao = dataFormatada;
-            Properties.Settings.Default.Save();
-
-            // Atualiza um Label na tela para o usuário ver
-            lblStatusImportacao.Text = "Última importação: " + dataFormatada;
-
-            MessageBox.Show("Dados atualizados com sucesso!");
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show("Erro na Importação: " + ex.Message);
-        }
-        finally
-        {
-            btnImportar.Enabled = true;
-        }
+        btnImportar.Enabled = true;
     }
 
     private void btnEscolherCaminho_Click(object sender, EventArgs e)
     {
-        using (var folderDialog = new FolderBrowserDialog())
-        {
-            if (folderDialog.ShowDialog() == DialogResult.OK)
-            {
-                _caminhoDbFinal = Path.Combine(folderDialog.SelectedPath, "incidentes.db");
-                txtCaminhoBanco.Text = _caminhoDbFinal;
-
-                // Salva permanentemente
-                Properties.Settings.Default.UltimoCaminhoBanco = _caminhoDbFinal;
-                Properties.Settings.Default.Save();
-            }
-        }
+        using var dialog = new FolderBrowserDialog();
+        if (dialog.ShowDialog() == DialogResult.OK)
+            AtualizarCaminhoBanco(Path.Combine(dialog.SelectedPath, "incidentes.db"));
     }
 
     private void btnEscolherCaminhoPlanilha_Click(object sender, EventArgs e)
     {
-        using (var openDialog = new OpenFileDialog())
-        {
-            openDialog.Filter = "Arquivos Excel|*.xlsx;*.xls;*.csv";
-            if (openDialog.ShowDialog() == DialogResult.OK)
-            {
-                _caminhoExcelSelecionado = openDialog.FileName;
-                txtCaminhoPlanilha.Text = _caminhoExcelSelecionado;
-
-                // Salva permanentemente
-                Properties.Settings.Default.UltimoCaminhoExcel = _caminhoExcelSelecionado;
-                Properties.Settings.Default.Save();
-            }
-        }
+        using var dialog = new OpenFileDialog { Filter = "Arquivos Excel|*.xlsx;*.xls;*.csv" };
+        if (dialog.ShowDialog() == DialogResult.OK)
+            AtualizarCaminhoExcel(dialog.FileName);
     }
 }

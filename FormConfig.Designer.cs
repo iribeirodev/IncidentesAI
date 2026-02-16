@@ -28,16 +28,17 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormConfig));
             panel1 = new Panel();
             btnEscolherCaminho = new Button();
             txtCaminhoBanco = new TextBox();
             btnCriarDatabase = new Button();
             label1 = new Label();
             panel2 = new Panel();
+            btnEscolherCaminhoPlanilha = new Button();
             lblStatusImportacao = new Label();
             btnImportar = new Button();
             progressBar1 = new ProgressBar();
-            btnEscolherCaminhoPlanilha = new Button();
             txtCaminhoPlanilha = new TextBox();
             label2 = new Label();
             panel1.SuspendLayout();
@@ -46,7 +47,7 @@
             // 
             // panel1
             // 
-            panel1.BackColor = Color.GhostWhite;
+            panel1.BackColor = Color.DimGray;
             panel1.Controls.Add(btnEscolherCaminho);
             panel1.Controls.Add(txtCaminhoBanco);
             panel1.Controls.Add(btnCriarDatabase);
@@ -58,32 +59,42 @@
             // 
             // btnEscolherCaminho
             // 
-            btnEscolherCaminho.Location = new Point(540, 41);
+            btnEscolherCaminho.BackgroundImageLayout = ImageLayout.Stretch;
+            btnEscolherCaminho.Cursor = Cursors.Hand;
+            btnEscolherCaminho.FlatAppearance.BorderColor = Color.White;
+            btnEscolherCaminho.FlatAppearance.BorderSize = 0;
+            btnEscolherCaminho.FlatStyle = FlatStyle.Flat;
+            btnEscolherCaminho.Image = (Image)resources.GetObject("btnEscolherCaminho.Image");
+            btnEscolherCaminho.Location = new Point(540, 36);
             btnEscolherCaminho.Name = "btnEscolherCaminho";
-            btnEscolherCaminho.Size = new Size(75, 23);
+            btnEscolherCaminho.Size = new Size(35, 31);
             btnEscolherCaminho.TabIndex = 3;
-            btnEscolherCaminho.Text = "...";
+            btnEscolherCaminho.TabStop = false;
             btnEscolherCaminho.UseVisualStyleBackColor = true;
             btnEscolherCaminho.Click += btnEscolherCaminho_Click;
             // 
             // txtCaminhoBanco
             // 
+            txtCaminhoBanco.BackColor = Color.Black;
+            txtCaminhoBanco.ForeColor = Color.Orange;
             txtCaminhoBanco.Location = new Point(165, 41);
             txtCaminhoBanco.Name = "txtCaminhoBanco";
             txtCaminhoBanco.ReadOnly = true;
             txtCaminhoBanco.Size = new Size(369, 23);
             txtCaminhoBanco.TabIndex = 2;
+            txtCaminhoBanco.TabStop = false;
             // 
             // btnCriarDatabase
             // 
-            btnCriarDatabase.BackColor = Color.RoyalBlue;
+            btnCriarDatabase.BackColor = Color.Orange;
             btnCriarDatabase.Cursor = Cursors.Hand;
             btnCriarDatabase.FlatStyle = FlatStyle.Flat;
-            btnCriarDatabase.ForeColor = Color.White;
+            btnCriarDatabase.ForeColor = Color.Black;
             btnCriarDatabase.Location = new Point(39, 91);
             btnCriarDatabase.Name = "btnCriarDatabase";
             btnCriarDatabase.Size = new Size(136, 34);
             btnCriarDatabase.TabIndex = 1;
+            btnCriarDatabase.TabStop = false;
             btnCriarDatabase.Text = "Criar Database";
             btnCriarDatabase.UseVisualStyleBackColor = false;
             btnCriarDatabase.Click += btnCriarDatabase_Click;
@@ -91,7 +102,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.ForeColor = Color.RoyalBlue;
+            label1.ForeColor = Color.Orange;
             label1.Location = new Point(38, 41);
             label1.Name = "label1";
             label1.Size = new Size(102, 15);
@@ -100,11 +111,11 @@
             // 
             // panel2
             // 
-            panel2.BackColor = Color.GhostWhite;
+            panel2.BackColor = Color.DimGray;
+            panel2.Controls.Add(btnEscolherCaminhoPlanilha);
             panel2.Controls.Add(lblStatusImportacao);
             panel2.Controls.Add(btnImportar);
             panel2.Controls.Add(progressBar1);
-            panel2.Controls.Add(btnEscolherCaminhoPlanilha);
             panel2.Controls.Add(txtCaminhoPlanilha);
             panel2.Controls.Add(label2);
             panel2.Location = new Point(31, 192);
@@ -112,23 +123,42 @@
             panel2.Size = new Size(652, 186);
             panel2.TabIndex = 1;
             // 
+            // btnEscolherCaminhoPlanilha
+            // 
+            btnEscolherCaminhoPlanilha.BackgroundImageLayout = ImageLayout.Stretch;
+            btnEscolherCaminhoPlanilha.Cursor = Cursors.Hand;
+            btnEscolherCaminhoPlanilha.FlatAppearance.BorderColor = Color.White;
+            btnEscolherCaminhoPlanilha.FlatAppearance.BorderSize = 0;
+            btnEscolherCaminhoPlanilha.FlatStyle = FlatStyle.Flat;
+            btnEscolherCaminhoPlanilha.Image = (Image)resources.GetObject("btnEscolherCaminhoPlanilha.Image");
+            btnEscolherCaminhoPlanilha.Location = new Point(542, 37);
+            btnEscolherCaminhoPlanilha.Name = "btnEscolherCaminhoPlanilha";
+            btnEscolherCaminhoPlanilha.Size = new Size(35, 31);
+            btnEscolherCaminhoPlanilha.TabIndex = 11;
+            btnEscolherCaminhoPlanilha.TabStop = false;
+            btnEscolherCaminhoPlanilha.UseVisualStyleBackColor = true;
+            btnEscolherCaminhoPlanilha.Click += btnEscolherCaminhoPlanilha_Click;
+            // 
             // lblStatusImportacao
             // 
-            lblStatusImportacao.Location = new Point(133, 155);
+            lblStatusImportacao.ForeColor = Color.Orange;
+            lblStatusImportacao.Location = new Point(36, 155);
             lblStatusImportacao.Name = "lblStatusImportacao";
-            lblStatusImportacao.Size = new Size(387, 23);
+            lblStatusImportacao.Size = new Size(582, 23);
             lblStatusImportacao.TabIndex = 10;
+            lblStatusImportacao.TextAlign = ContentAlignment.TopCenter;
             // 
             // btnImportar
             // 
-            btnImportar.BackColor = Color.RoyalBlue;
+            btnImportar.BackColor = Color.Orange;
             btnImportar.Cursor = Cursors.Hand;
             btnImportar.FlatStyle = FlatStyle.Flat;
-            btnImportar.ForeColor = Color.White;
+            btnImportar.ForeColor = Color.Black;
             btnImportar.Location = new Point(36, 86);
             btnImportar.Name = "btnImportar";
             btnImportar.Size = new Size(136, 34);
             btnImportar.TabIndex = 9;
+            btnImportar.TabStop = false;
             btnImportar.Text = "Importar";
             btnImportar.UseVisualStyleBackColor = false;
             btnImportar.Click += btnImportar_Click;
@@ -143,29 +173,22 @@
             progressBar1.Style = ProgressBarStyle.Continuous;
             progressBar1.TabIndex = 8;
             // 
-            // btnEscolherCaminhoPlanilha
-            // 
-            btnEscolherCaminhoPlanilha.Location = new Point(542, 42);
-            btnEscolherCaminhoPlanilha.Name = "btnEscolherCaminhoPlanilha";
-            btnEscolherCaminhoPlanilha.Size = new Size(75, 23);
-            btnEscolherCaminhoPlanilha.TabIndex = 7;
-            btnEscolherCaminhoPlanilha.Text = "...";
-            btnEscolherCaminhoPlanilha.UseVisualStyleBackColor = true;
-            btnEscolherCaminhoPlanilha.Click += btnEscolherCaminhoPlanilha_Click;
-            // 
             // txtCaminhoPlanilha
             // 
+            txtCaminhoPlanilha.BackColor = Color.Black;
+            txtCaminhoPlanilha.ForeColor = Color.Orange;
             txtCaminhoPlanilha.Location = new Point(167, 42);
             txtCaminhoPlanilha.Name = "txtCaminhoPlanilha";
             txtCaminhoPlanilha.ReadOnly = true;
             txtCaminhoPlanilha.Size = new Size(369, 23);
             txtCaminhoPlanilha.TabIndex = 6;
+            txtCaminhoPlanilha.TabStop = false;
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.ForeColor = Color.RoyalBlue;
-            label2.Location = new Point(40, 42);
+            label2.ForeColor = Color.Orange;
+            label2.Location = new Point(36, 42);
             label2.Name = "label2";
             label2.Size = new Size(102, 15);
             label2.TabIndex = 4;
@@ -175,7 +198,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.LightSlateGray;
+            BackColor = Color.Gray;
             ClientSize = new Size(695, 390);
             Controls.Add(panel2);
             Controls.Add(panel1);
@@ -199,11 +222,11 @@
         private Panel panel2;
         private Button btnEscolherCaminho;
         private TextBox txtCaminhoBanco;
-        private Button btnEscolherCaminhoPlanilha;
         private TextBox txtCaminhoPlanilha;
         private Label label2;
         private Button btnImportar;
         private ProgressBar progressBar1;
         private Label lblStatusImportacao;
+        private Button btnEscolherCaminhoPlanilha;
     }
 }

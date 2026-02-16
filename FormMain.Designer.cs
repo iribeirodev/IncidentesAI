@@ -28,9 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             dgvIncidentes = new DataGridView();
             panel1 = new Panel();
+            btnShowCalendarFim = new Button();
+            txtDtFim = new TextBox();
+            btnShowCalendarInicio = new Button();
+            txtDtInicio = new TextBox();
             lblCntFilter = new Label();
             cboCaller = new ComboBox();
             cboStatus = new ComboBox();
@@ -39,8 +44,6 @@
             txtNumber = new TextBox();
             btnLimpar = new Button();
             btnFiltrar = new Button();
-            dtpFim = new DateTimePicker();
-            dtpInicio = new DateTimePicker();
             chkFiltrarData = new CheckBox();
             label5 = new Label();
             label4 = new Label();
@@ -67,8 +70,17 @@
             dgvIncidentes.AllowUserToResizeColumns = false;
             dgvIncidentes.AllowUserToResizeRows = false;
             dgvIncidentes.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            dgvIncidentes.BackgroundColor = Color.Black;
+            dgvIncidentes.BackgroundColor = Color.Linen;
             dgvIncidentes.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = Color.Linen;
+            dataGridViewCellStyle1.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle1.ForeColor = Color.Black;
+            dataGridViewCellStyle1.SelectionBackColor = Color.Goldenrod;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.False;
+            dgvIncidentes.DefaultCellStyle = dataGridViewCellStyle1;
+            dgvIncidentes.GridColor = Color.Bisque;
             dgvIncidentes.Location = new Point(31, 397);
             dgvIncidentes.Name = "dgvIncidentes";
             dgvIncidentes.ReadOnly = true;
@@ -81,6 +93,10 @@
             // 
             panel1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             panel1.BackColor = Color.DimGray;
+            panel1.Controls.Add(btnShowCalendarFim);
+            panel1.Controls.Add(txtDtFim);
+            panel1.Controls.Add(btnShowCalendarInicio);
+            panel1.Controls.Add(txtDtInicio);
             panel1.Controls.Add(lblCntFilter);
             panel1.Controls.Add(cboCaller);
             panel1.Controls.Add(cboStatus);
@@ -89,8 +105,6 @@
             panel1.Controls.Add(txtNumber);
             panel1.Controls.Add(btnLimpar);
             panel1.Controls.Add(btnFiltrar);
-            panel1.Controls.Add(dtpFim);
-            panel1.Controls.Add(dtpInicio);
             panel1.Controls.Add(chkFiltrarData);
             panel1.Controls.Add(label5);
             panel1.Controls.Add(label4);
@@ -101,6 +115,56 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(751, 348);
             panel1.TabIndex = 1;
+            // 
+            // btnShowCalendarFim
+            // 
+            btnShowCalendarFim.Cursor = Cursors.Hand;
+            btnShowCalendarFim.FlatAppearance.BorderSize = 0;
+            btnShowCalendarFim.FlatStyle = FlatStyle.Flat;
+            btnShowCalendarFim.Image = (Image)resources.GetObject("btnShowCalendarFim.Image");
+            btnShowCalendarFim.Location = new Point(665, 208);
+            btnShowCalendarFim.Name = "btnShowCalendarFim";
+            btnShowCalendarFim.Size = new Size(33, 23);
+            btnShowCalendarFim.TabIndex = 21;
+            btnShowCalendarFim.Tag = "DataFim";
+            btnShowCalendarFim.UseVisualStyleBackColor = true;
+            btnShowCalendarFim.Click += AbrirCalendario;
+            // 
+            // txtDtFim
+            // 
+            txtDtFim.BackColor = Color.Black;
+            txtDtFim.ForeColor = Color.Orange;
+            txtDtFim.Location = new Point(537, 210);
+            txtDtFim.MaxLength = 10;
+            txtDtFim.Name = "txtDtFim";
+            txtDtFim.ReadOnly = true;
+            txtDtFim.Size = new Size(127, 23);
+            txtDtFim.TabIndex = 20;
+            // 
+            // btnShowCalendarInicio
+            // 
+            btnShowCalendarInicio.Cursor = Cursors.Hand;
+            btnShowCalendarInicio.FlatAppearance.BorderSize = 0;
+            btnShowCalendarInicio.FlatStyle = FlatStyle.Flat;
+            btnShowCalendarInicio.Image = (Image)resources.GetObject("btnShowCalendarInicio.Image");
+            btnShowCalendarInicio.Location = new Point(489, 208);
+            btnShowCalendarInicio.Name = "btnShowCalendarInicio";
+            btnShowCalendarInicio.Size = new Size(33, 23);
+            btnShowCalendarInicio.TabIndex = 19;
+            btnShowCalendarInicio.Tag = "DataInicio";
+            btnShowCalendarInicio.UseVisualStyleBackColor = true;
+            btnShowCalendarInicio.Click += AbrirCalendario;
+            // 
+            // txtDtInicio
+            // 
+            txtDtInicio.BackColor = Color.Black;
+            txtDtInicio.ForeColor = Color.Orange;
+            txtDtInicio.Location = new Point(363, 210);
+            txtDtInicio.MaxLength = 10;
+            txtDtInicio.Name = "txtDtInicio";
+            txtDtInicio.ReadOnly = true;
+            txtDtInicio.Size = new Size(127, 23);
+            txtDtInicio.TabIndex = 18;
             // 
             // lblCntFilter
             // 
@@ -192,28 +256,12 @@
             btnFiltrar.UseVisualStyleBackColor = false;
             btnFiltrar.Click += btnFiltrar_Click;
             // 
-            // dtpFim
-            // 
-            dtpFim.Format = DateTimePickerFormat.Short;
-            dtpFim.Location = new Point(515, 212);
-            dtpFim.Name = "dtpFim";
-            dtpFim.Size = new Size(131, 23);
-            dtpFim.TabIndex = 7;
-            // 
-            // dtpInicio
-            // 
-            dtpInicio.Format = DateTimePickerFormat.Short;
-            dtpInicio.Location = new Point(366, 212);
-            dtpInicio.Name = "dtpInicio";
-            dtpInicio.Size = new Size(131, 23);
-            dtpInicio.TabIndex = 6;
-            // 
             // chkFiltrarData
             // 
             chkFiltrarData.AutoSize = true;
             chkFiltrarData.BackColor = Color.Transparent;
             chkFiltrarData.FlatStyle = FlatStyle.Flat;
-            chkFiltrarData.ForeColor = Color.Orange;
+            chkFiltrarData.ForeColor = Color.Gray;
             chkFiltrarData.Location = new Point(364, 185);
             chkFiltrarData.Name = "chkFiltrarData";
             chkFiltrarData.Size = new Size(175, 19);
@@ -339,6 +387,7 @@
             // 
             // lblStatus
             // 
+            lblStatus.ForeColor = Color.Orange;
             lblStatus.Location = new Point(16, 604);
             lblStatus.Name = "lblStatus";
             lblStatus.Size = new Size(298, 23);
@@ -414,8 +463,6 @@
         private TextBox txtNumber;
         private Button btnLimpar;
         private Button btnFiltrar;
-        private DateTimePicker dtpFim;
-        private DateTimePicker dtpInicio;
         private CheckBox chkFiltrarData;
         private Label label5;
         private Label label4;
@@ -431,5 +478,9 @@
         private Button btnPrompt;
         private Button btnHistoricoDown;
         private Button btnHistoricoUp;
+        private TextBox txtDtInicio;
+        private Button btnShowCalendarInicio;
+        private Button btnShowCalendarFim;
+        private TextBox txtDtFim;
     }
 }

@@ -44,11 +44,13 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.LightSlateGray;
+            BackColor = Color.DimGray;
             ClientSize = new Size(993, 548);
             Controls.Add(formsPlot1);
             MaximizeBox = false;
+            MinimizeBox = false;
             Name = "FormGrafico";
+            StartPosition = FormStartPosition.CenterParent;
             ResumeLayout(false);
         }
 

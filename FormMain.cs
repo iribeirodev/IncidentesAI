@@ -1,4 +1,4 @@
-using IncidentesAI.Helpers;
+Ôªøusing IncidentesAI.Helpers;
 using IncidentesAI.Plugins;
 using IncidentesAI.Services;
 using Microsoft.SemanticKernel;
@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Globalization;
 using System.Reflection;
+using System.Speech.Recognition;
 using System.Text;
 
 
@@ -20,6 +21,7 @@ namespace IncidentesAI
         private FormCalendar _formCalendar;
         private int _indiceHistorico = -1;
         private readonly string _caminhoArquivoHistorico = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "historico.txt");
+        private SpeechRecognitionEngine _recognizer;
 
         public FormMain()
         {
@@ -37,10 +39,10 @@ namespace IncidentesAI
                 BindingFlags.Instance | BindingFlags.SetProperty, null, dgvIncidentes, new object[] { true });
         }
 
-        #region MÈtodos principais
+        #region M√©todos principais
         private void SetupKernel()
         {
-            // Carrega as vari·veis do arquivo .env para o ambiente
+            // Carrega as vari√°veis do arquivo .env para o ambiente
             DotNetEnv.Env.Load();
 
             string apiKey = Environment.GetEnvironmentVariable("MISTRAL_API_KEY");
@@ -72,7 +74,7 @@ namespace IncidentesAI
         {
             if (string.IsNullOrWhiteSpace(pergunta)) return;
 
-            // Adiciona na lista e reseta o Ìndice para o final
+            // Adiciona na lista e reseta o √≠ndice para o final
             _historicoPerguntas.Add(pergunta);
             _indiceHistorico = _historicoPerguntas.Count;
 
@@ -112,14 +114,14 @@ namespace IncidentesAI
                     dgvIncidentes.Columns["Id"].Visible = false;
 
                 dgvIncidentes.Columns["Number"].HeaderText = "Chamado";
-                dgvIncidentes.Columns["AssignmentGroup"].HeaderText = "Grupo de AtribuiÁ„o";
+                dgvIncidentes.Columns["AssignmentGroup"].HeaderText = "Grupo de Atribui√ß√£o";
                 dgvIncidentes.Columns["State"].HeaderText = "Status";
                 dgvIncidentes.Columns["Caller"].HeaderText = "Solicitante";
-                dgvIncidentes.Columns["AssignedTo"].HeaderText = "AtribuÌdo a";
+                dgvIncidentes.Columns["AssignedTo"].HeaderText = "Atribu√≠do a";
                 dgvIncidentes.Columns["Priority"].HeaderText = "Prioridade";
-                dgvIncidentes.Columns["Created"].HeaderText = "Data de CriaÁ„o";
-                dgvIncidentes.Columns["ShortDescription"].HeaderText = "DescriÁ„o";
-                dgvIncidentes.Columns["ConfigurationItem"].HeaderText = "Item de ConfiguraÁ„o";
+                dgvIncidentes.Columns["Created"].HeaderText = "Data de Cria√ß√£o";
+                dgvIncidentes.Columns["ShortDescription"].HeaderText = "Descri√ß√£o";
+                dgvIncidentes.Columns["ConfigurationItem"].HeaderText = "Item de Configura√ß√£o";
                 dgvIncidentes.Columns["Email"].HeaderText = "E-mail";
 
                 dgvIncidentes.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
@@ -191,7 +193,7 @@ namespace IncidentesAI
 
             dt.DefaultView.RowFilter = condicoes.Count > 0 ? string.Join(" AND ", condicoes) : "";
 
-            // AtualizaÁ„o da Label de Contagem
+            // Atualiza√ß√£o da Label de Contagem
             if (condicoes.Count == 0)
             {
                 lblCntFilter.Text = "";
@@ -248,7 +250,11 @@ namespace IncidentesAI
         #endregion
 
         #region Eventos de UI
-        private void FormMain_Load(object sender, EventArgs e) => CarregarDados();
+        private void FormMain_Load(object sender, EventArgs e)
+        {
+            timerFade.Start();
+            CarregarDados();
+        }
 
         private void btnFiltrar_Click(object sender, EventArgs e) => FiltrarDados();
 
@@ -268,18 +274,18 @@ namespace IncidentesAI
 
         private void chkFiltrarData_CheckedChanged(object sender, EventArgs e)
         {
-            // Habilita/Desabilita os calend·rios
+            // Habilita/Desabilita os calend√°rios
             if (chkFiltrarData.Checked)
             {
                 chkFiltrarData.ForeColor = Color.SteelBlue;
-                chkFiltrarData.Text = "Filtrando por perÌodo:";
+                chkFiltrarData.Text = "Filtrando por per√≠odo:";
 
                 HabilitarCalendario(true);
             }
             else
             {
                 chkFiltrarData.ForeColor = Color.Silver;
-                chkFiltrarData.Text = "Filtrar por perÌodo de criaÁ„o";
+                chkFiltrarData.Text = "Filtrar por per√≠odo de cria√ß√£o";
 
                 HabilitarCalendario(false);
 
@@ -300,7 +306,7 @@ namespace IncidentesAI
 
             SalvarPerguntaNoHistorico(userPrompt);
 
-            AdicionarTextoFormatado("Usu·rio", userPrompt, Color.Orange);
+            AdicionarTextoFormatado("Usu√°rio", userPrompt, Color.Orange);
             btnProcessar.Enabled = false;
             lblStatus.Text = "Consultando Mistral AI...";
             Cursor = Cursors.WaitCursor;
@@ -314,11 +320,11 @@ namespace IncidentesAI
                 string systemMessage = Properties.Settings.Default.PromptIA;
 
                 StringBuilder fullPrompt = new StringBuilder();
-                fullPrompt.AppendLine("### INSTRU«’ES DE SISTEMA ###");
+                fullPrompt.AppendLine("### INSTRU√á√ïES DE SISTEMA ###");
                 fullPrompt.AppendLine(systemMessage);
                 fullPrompt.AppendLine("\n### DADOS DOS TICKETS (CONTEXTO) ###");
                 fullPrompt.AppendLine(contextoDados);
-                fullPrompt.AppendLine("\n### PERGUNTA DO USU¡RIO ###");
+                fullPrompt.AppendLine("\n### PERGUNTA DO USU√ÅRIO ###");
                 fullPrompt.AppendLine(userPrompt);
 
                 double tempValue = 0.1;
@@ -339,11 +345,13 @@ namespace IncidentesAI
 
                 try
                 {
-                    var resposta = await _kernel.InvokePromptAsync(fullPrompt.ToString(), arguments);
+                    var resultado = await _kernel.InvokePromptAsync(fullPrompt.ToString(), arguments);
+                    string respostaIA = resultado.ToString().Trim();
 
                     lblStatus.Text = "Pronto!";
-                    AdicionarTextoFormatado("IA", resposta.ToString(), Color.White);
+                    AdicionarTextoFormatado("IA", resultado.ToString(), Color.White);
                     txtPergunta.Clear();
+
                 }
                 catch (HttpOperationException httpEx)
                 {
@@ -355,7 +363,7 @@ namespace IncidentesAI
             {
                 string erroMensagem = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
                 MessageBox.Show($"Erro: {erroMensagem}");
-                lblStatus.Text = "Erro na operaÁ„o.";
+                lblStatus.Text = "Erro na opera√ß√£o.";
             }
             finally
             {
@@ -438,7 +446,7 @@ namespace IncidentesAI
                     {
                         if (dataInicio > dataFim)
                         {
-                            UIHelper.MostrarAviso("A data de inÌcio n„o pode ser maior que a data de fim.");
+                            UIHelper.MostrarAviso("A data de in√≠cio n√£o pode ser maior que a data de fim.");
                             txtAlvo.Clear();
                         }
                     }
@@ -451,7 +459,7 @@ namespace IncidentesAI
         #region Kernel Functions para IA
 
         [KernelFunction]
-        [Description("Gera um arquivo Excel com os dados exatamente como est„o visÌveis na tabela da tela (colunas em portuguÍs e filtros aplicados).")]
+        [Description("Gera um arquivo Excel com os dados exatamente como est√£o vis√≠veis na tabela da tela (colunas em portugu√™s e filtros aplicados).")]
         public string ExportarTabelaParaExcel()
         {
             return (string)this.Invoke(new Func<string>(() =>
@@ -464,9 +472,9 @@ namespace IncidentesAI
                     .OrderBy(x => x.DisplayIndex)
                     .ToList();
 
-                // CabeÁalho: colunas visÌveis + colunas da anotaÁ„o
+                // Cabe√ßalho: colunas vis√≠veis + colunas da anota√ß√£o
                 var cabecalho = string.Join(",", colunasVisiveis.Select(x => x.HeaderText))
-                                + ",Status Interno,ObservaÁ„o";
+                                + ",Status Interno,Observa√ß√£o";
                 sb.AppendLine(cabecalho);
 
                 // varrendo as linhas
@@ -483,7 +491,7 @@ namespace IncidentesAI
                         return val.Replace(",", "").Replace("\"", "").Replace("\r", " ").Replace("\n", " ");
                     }).ToList();
 
-                    // adicionando dados da anotaÁ„o
+                    // adicionando dados da anota√ß√£o
                     valoresGrid.Add(anotacao?.StatusInterno?.Replace(",", "").Replace("\"", "") ?? "");
                     valoresGrid.Add(anotacao?.Observacao?.Replace(",", "").Replace("\"", "").Replace("\r", " ").Replace("\n", " ") ?? "");
 
@@ -495,13 +503,13 @@ namespace IncidentesAI
                 var excelPlugin = new ExcelPlugin(dgvIncidentes);
                 excelPlugin.CriarExcelComDialogo("Exportacao_Incidentes.xlsx", csvFinal);
 
-                return "Excel gerado com sucesso com os dados da tela e anotaÁıes.";
+                return "Excel gerado com sucesso com os dados da tela e anota√ß√µes.";
             }));
         }
 
 
         [KernelFunction]
-        [Description("Gera um gr·fico em uma janela separada. Tipos: 'pie' (pizza), 'bar' (barra). O par‚metro 'titulo' deve ser um resumo do que o gr·fico representa.")]
+        [Description("Gera um gr√°fico em uma janela separada. Tipos: 'pie' (pizza), 'bar' (barra). O par√¢metro 'titulo' deve ser um resumo do que o gr√°fico representa.")]
         public string GerarGraficoJanelaSeparada(string tipo, string labelsCsv, string valoresCsv, string titulo)
         {
             return (string)this.Invoke(new Func<string>(() =>
@@ -522,7 +530,7 @@ namespace IncidentesAI
                     // Paleta de cores moderna
                     var cores = new ScottPlot.Palettes.Category10();
 
-                    // RenderizaÁ„o conforme o tipo
+                    // Renderiza√ß√£o conforme o tipo
                     if (tipo.ToLower() == "pie")
                     {
                         var fatias = new List<ScottPlot.PieSlice>();
@@ -573,13 +581,18 @@ namespace IncidentesAI
                 }
                 catch (Exception ex)
                 {
-                    return $"Erro tÈcnico ao gerar gr·fico: {ex.Message}";
+                    return $"Erro t√©cnico ao gerar gr√°fico: {ex.Message}";
                 }
             }));
         }
         #endregion
 
-
-
+        private void timerFade_Tick(object sender, EventArgs e)
+        {
+            if (this.Opacity < 1)
+                this.Opacity += 0.05;
+            else 
+                timerFade.Stop();
+        }
     }
 }

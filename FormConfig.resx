@@ -121,7 +121,7 @@
   <data name="btnEscolherCaminho.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAA
-        5wAAAOcB8BtYtQAAABl0RVh0U29mdHdhcmUAUGFpbnQuTkVUIDUuMS4xMYoIFs4AAAP6SURBVEhLrZXp
+        5QAAAOUBj+WbPAAAABl0RVh0U29mdHdhcmUAUGFpbnQuTkVUIDUuMS4xMYoIFs4AAAP6SURBVEhLrZXp
         T1xVGIfHxPhJE/UP8E9pool+MK0Bt260YrUt1oKGLU0p1CUmatKOYPFDpUpNC0qbFFQgLA2EHWbYZoCB
         wjCdgTJ0hpm5s91z7myPuTOkla2LeJLny31vfs95z7nnXIPBYDBoEe0VoYouoQo0qaFpT0Y0EkXxKwT8
         gZ+BZ/SsbYdUZY4UMh4OhXEuOlmcd+B4BHr9rt2JGlUJKSH8a74QLD+7OffBEKrIlUIm9JdnLDYmzBYm
@@ -145,7 +145,7 @@
   <data name="btnEscolherCaminhoPlanilha.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAA
-        5gAAAOYBIly6UQAAABl0RVh0U29mdHdhcmUAUGFpbnQuTkVUIDUuMS4xMYoIFs4AAAP6SURBVEhLrZXp
+        5AAAAOQBXaJ52AAAABl0RVh0U29mdHdhcmUAUGFpbnQuTkVUIDUuMS4xMYoIFs4AAAP6SURBVEhLrZXp
         T1xVGIfHxPhJE/UP8E9pool+MK0Bt260YrUt1oKGLU0p1CUmatKOYPFDpUpNC0qbFFQgLA2EHWbYZoCB
         wjCdgTJ0hpm5s91z7myPuTOkla2LeJLny31vfs95z7nnXIPBYDBoEe0VoYouoQo0qaFpT0Y0EkXxKwT8
         gZ+BZ/SsbYdUZY4UMh4OhXEuOlmcd+B4BHr9rt2JGlUJKSH8a74QLD+7OffBEKrIlUIm9JdnLDYmzBYm
@@ -166,4 +166,7 @@
         AElFTkSuQmCC
 </value>
   </data>
+  <metadata name="timerFade.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
 </root>

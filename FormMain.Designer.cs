@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             dgvIncidentes = new DataGridView();
@@ -58,6 +59,7 @@
             btnProcessar = new Button();
             txtPergunta = new TextBox();
             txtHistorico = new RichTextBox();
+            timerFade = new System.Windows.Forms.Timer(components);
             ((System.ComponentModel.ISupportInitialize)dgvIncidentes).BeginInit();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
@@ -439,6 +441,11 @@
             txtHistorico.TabIndex = 4;
             txtHistorico.Text = "";
             // 
+            // timerFade
+            // 
+            timerFade.Interval = 10;
+            timerFade.Tick += timerFade_Tick;
+            // 
             // FormMain
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -453,6 +460,7 @@
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "FormMain";
+            Opacity = 0D;
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Lista de Incidentes";
             Load += FormMain_Load;
@@ -494,5 +502,6 @@
         private Button btnShowCalendarInicio;
         private Button btnShowCalendarFim;
         private TextBox txtDtFim;
+        private System.Windows.Forms.Timer timerFade;
     }
 }

@@ -30,6 +30,8 @@ namespace IncidentesAI
 
         private void FormPrompt_Load(object sender, EventArgs e)
         {
+            timerFade.Start();
+
             trackBar1.Minimum = 1;
             trackBar1.Maximum = 9;
 
@@ -55,6 +57,14 @@ namespace IncidentesAI
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
             SetTemperature();
+        }
+
+        private void timerFade_Tick(object sender, EventArgs e)
+        {
+            if (this.Opacity < 1)
+                this.Opacity += 0.05;
+            else
+                timerFade.Stop();
         }
     }
 }

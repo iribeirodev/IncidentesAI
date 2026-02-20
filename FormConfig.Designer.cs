@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormConfig));
             panel1 = new Panel();
             btnEscolherCaminho = new Button();
@@ -41,13 +42,14 @@
             progressBar1 = new ProgressBar();
             txtCaminhoPlanilha = new TextBox();
             label2 = new Label();
+            timerFade = new System.Windows.Forms.Timer(components);
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             SuspendLayout();
             // 
             // panel1
             // 
-            panel1.BackColor = Color.FromArgb(30, 30, 30); // Cinza grafite profundo
+            panel1.BackColor = Color.FromArgb(30, 30, 30);
             panel1.Controls.Add(btnEscolherCaminho);
             panel1.Controls.Add(txtCaminhoBanco);
             panel1.Controls.Add(btnCriarDatabase);
@@ -75,9 +77,9 @@
             // 
             // txtCaminhoBanco
             // 
-            txtCaminhoBanco.BackColor = Color.FromArgb(45, 45, 48); // Fundo do TextBox escuro
+            txtCaminhoBanco.BackColor = Color.FromArgb(45, 45, 48);
             txtCaminhoBanco.BorderStyle = BorderStyle.FixedSingle;
-            txtCaminhoBanco.ForeColor = Color.Silver; // Texto claro, mas não ofuscante
+            txtCaminhoBanco.ForeColor = Color.Silver;
             txtCaminhoBanco.Location = new Point(165, 41);
             txtCaminhoBanco.Name = "txtCaminhoBanco";
             txtCaminhoBanco.ReadOnly = true;
@@ -87,7 +89,7 @@
             // 
             // btnCriarDatabase
             // 
-            btnCriarDatabase.BackColor = Color.SteelBlue; // Cor de destaque do novo tema
+            btnCriarDatabase.BackColor = Color.SteelBlue;
             btnCriarDatabase.Cursor = Cursors.Hand;
             btnCriarDatabase.FlatAppearance.BorderSize = 0;
             btnCriarDatabase.FlatStyle = FlatStyle.Flat;
@@ -144,7 +146,7 @@
             // 
             // lblStatusImportacao
             // 
-            lblStatusImportacao.ForeColor = Color.SteelBlue; // Texto de status em azul moderno
+            lblStatusImportacao.ForeColor = Color.SteelBlue;
             lblStatusImportacao.Location = new Point(36, 155);
             lblStatusImportacao.Name = "lblStatusImportacao";
             lblStatusImportacao.Size = new Size(582, 23);
@@ -171,7 +173,7 @@
             // progressBar1
             // 
             progressBar1.BackColor = Color.FromArgb(45, 45, 48);
-            progressBar1.ForeColor = Color.SteelBlue; // Barra de progresso azul
+            progressBar1.ForeColor = Color.SteelBlue;
             progressBar1.Location = new Point(40, 126);
             progressBar1.Name = "progressBar1";
             progressBar1.Size = new Size(578, 20);
@@ -200,11 +202,16 @@
             label2.TabIndex = 4;
             label2.Text = "Local Selecionado";
             // 
+            // timerFade
+            // 
+            timerFade.Interval = 10;
+            timerFade.Tick += timerFade_Tick;
+            // 
             // FormConfig
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.FromArgb(18, 18, 18); // Fundo quase preto (Dark Mode)
+            BackColor = Color.FromArgb(18, 18, 18);
             ClientSize = new Size(695, 395);
             Controls.Add(panel2);
             Controls.Add(panel1);
@@ -213,8 +220,10 @@
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "FormConfig";
+            Opacity = 0D;
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Configurações do Sistema";
+            Load += FormConfig_Load;
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             panel2.ResumeLayout(false);
@@ -236,5 +245,6 @@
         private ProgressBar progressBar1;
         private Label lblStatusImportacao;
         private Button btnEscolherCaminhoPlanilha;
+        private System.Windows.Forms.Timer timerFade;
     }
 }

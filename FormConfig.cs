@@ -110,4 +110,17 @@ public partial class FormConfig : Form
         if (dialog.ShowDialog() == DialogResult.OK)
             AtualizarCaminhoExcel(dialog.FileName);
     }
+
+    private void FormConfig_Load(object sender, EventArgs e)
+    {
+        timerFade.Start();
+    }
+
+    private void timerFade_Tick(object sender, EventArgs e)
+    {
+        if (this.Opacity < 1)
+            this.Opacity += 0.05;
+        else
+            timerFade.Stop();
+    }
 }

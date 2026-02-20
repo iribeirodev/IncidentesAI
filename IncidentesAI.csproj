@@ -21,6 +21,7 @@
     <PackageReference Include="Microsoft.SemanticKernel.Connectors.OpenAI" Version="1.70.0" />
     <PackageReference Include="ScottPlot.WinForms" Version="5.1.57" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="10.0.2" />
+    <PackageReference Include="System.Speech" Version="10.0.3" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="10.0.2" />
   </ItemGroup>
 

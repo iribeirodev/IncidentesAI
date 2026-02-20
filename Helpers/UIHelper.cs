@@ -1,7 +1,12 @@
-﻿namespace IncidentesAI.Helpers;
+﻿using System.Reflection;
+
+namespace IncidentesAI.Helpers;
 
 public class UIHelper
 {
+    public static string ObterTituloApp()
+        => Strings.TituloApp ?? "Incidentes AI";
+
     public static void MostrarAviso(string mensagem)
         => MessageBox.Show(mensagem, 
                                 "Atenção", 

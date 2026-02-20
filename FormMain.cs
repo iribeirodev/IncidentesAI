@@ -7,6 +7,7 @@ using OpenTK.Platform.Windows;
 using System.ComponentModel;
 using System.Data;
 using System.Globalization;
+using System.Reflection;
 using System.Text;
 
 
@@ -31,6 +32,9 @@ namespace IncidentesAI
             CarregarHistoricoDoArquivo();
 
             SetupKernel();
+
+            typeof(DataGridView).InvokeMember("DoubleBuffered", BindingFlags.NonPublic |
+                BindingFlags.Instance | BindingFlags.SetProperty, null, dgvIncidentes, new object[] { true });
         }
 
         #region Métodos principais
@@ -185,14 +189,6 @@ namespace IncidentesAI
             if (cboCaller.SelectedIndex > 0)
                 condicoes.Add(string.Format("Caller = '{0}'", cboCaller.Text.Replace("'", "''")));
 
-            //if (chkFiltrarData.Checked)
-            //{
-            //    string dataInicio = dtpInicio.Value.ToString("MM/dd/yyyy");
-            //    string dataFim = dtpFim.Value.ToString("MM/dd/yyyy");
-
-            //    condicoes.Add(string.Format("Created >= #{0} 00:00:00# AND Created <= #{1} 23:59:59#", dataInicio, dataFim));
-            //}
-
             dt.DefaultView.RowFilter = condicoes.Count > 0 ? string.Join(" AND ", condicoes) : "";
 
             // Atualização da Label de Contagem
@@ -208,12 +204,12 @@ namespace IncidentesAI
                 if (totalFiltrado == 0)
                 {
                     lblCntFilter.Text = "Nenhum registro encontrado.";
-                    lblCntFilter.ForeColor = Color.White;
+                    lblCntFilter.ForeColor = Color.LightCoral;
                 }
                 else
                 {
                     lblCntFilter.Text = $"Encontrado: {totalFiltrado} de {totalGeral}";
-                    lblCntFilter.ForeColor = Color.DarkOrange;
+                    lblCntFilter.ForeColor = Color.SteelBlue;
                 }
             }
         }
@@ -266,8 +262,6 @@ namespace IncidentesAI
             cboCaller.SelectedIndex = 0;
 
             chkFiltrarData.Checked = false;
-            //dtpInicio.Value = DateTime.Now.AddDays(-30);
-            //dtpFim.Value = DateTime.Now;
 
             FiltrarDados();
         }
@@ -275,19 +269,16 @@ namespace IncidentesAI
         private void chkFiltrarData_CheckedChanged(object sender, EventArgs e)
         {
             // Habilita/Desabilita os calendários
-            //dtpInicio.Enabled = chkFiltrarData.Checked;
-            //dtpFim.Enabled = chkFiltrarData.Checked;
-
             if (chkFiltrarData.Checked)
             {
-                chkFiltrarData.ForeColor = Color.Orange;
+                chkFiltrarData.ForeColor = Color.SteelBlue;
                 chkFiltrarData.Text = "Filtrando por período:";
 
                 HabilitarCalendario(true);
             }
             else
             {
-                chkFiltrarData.ForeColor = Color.Gray;
+                chkFiltrarData.ForeColor = Color.Silver;
                 chkFiltrarData.Text = "Filtrar por período de criação";
 
                 HabilitarCalendario(false);
@@ -295,8 +286,6 @@ namespace IncidentesAI
                 txtDtInicio.Clear();
                 txtDtFim.Clear();
             }
-
-            //FiltrarDados();
         }
 
         private async void btnProcessar_Click(object sender, EventArgs e)

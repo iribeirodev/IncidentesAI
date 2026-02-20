@@ -39,7 +39,7 @@
             // 
             // panel1
             // 
-            panel1.BackColor = Color.DimGray;
+            panel1.BackColor = Color.FromArgb(30, 30, 30); // Cinza grafite profundo
             panel1.Controls.Add(lblValue);
             panel1.Controls.Add(trackBar1);
             panel1.Controls.Add(label1);
@@ -51,18 +51,18 @@
             // 
             // lblValue
             // 
-            lblValue.BackColor = Color.DarkOrange;
+            lblValue.BackColor = Color.SteelBlue; // Mudado de Orange para SteelBlue
             lblValue.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lblValue.ForeColor = Color.White;
             lblValue.Location = new Point(411, 320);
             lblValue.Name = "lblValue";
-            lblValue.Size = new Size(39, 15);
+            lblValue.Size = new Size(39, 18);
             lblValue.TabIndex = 4;
-            lblValue.TextAlign = ContentAlignment.MiddleRight;
+            lblValue.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // trackBar1
             // 
-            trackBar1.BackColor = Color.DimGray;
+            trackBar1.BackColor = Color.FromArgb(30, 30, 30); // Fundo igual ao painel
             trackBar1.Location = new Point(177, 316);
             trackBar1.Name = "trackBar1";
             trackBar1.Size = new Size(214, 45);
@@ -74,7 +74,7 @@
             // 
             label1.AutoSize = true;
             label1.BackColor = Color.Transparent;
-            label1.ForeColor = Color.DarkOrange;
+            label1.ForeColor = Color.Silver; // Prata para melhor leitura no escuro
             label1.Location = new Point(97, 321);
             label1.Name = "label1";
             label1.Size = new Size(74, 15);
@@ -83,9 +83,10 @@
             // 
             // txtPrompt
             // 
-            txtPrompt.BackColor = Color.Black;
-            txtPrompt.Cursor = Cursors.Hand;
-            txtPrompt.ForeColor = Color.Sienna;
+            txtPrompt.BackColor = Color.FromArgb(15, 15, 15); // Quase preto para a área de edição
+            txtPrompt.BorderStyle = BorderStyle.FixedSingle; // Borda sutil
+            txtPrompt.Font = new Font("Consolas", 10F); // Fonte monoespaçada é melhor para prompts
+            txtPrompt.ForeColor = Color.Silver; // Texto prata suave
             txtPrompt.Location = new Point(23, 16);
             txtPrompt.MaxLength = 5000;
             txtPrompt.Multiline = true;
@@ -99,14 +100,15 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.Gray;
+            BackColor = Color.FromArgb(18, 18, 18); // Fundo externo principal
             ClientSize = new Size(605, 388);
             Controls.Add(panel1);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "FormPrompt";
             StartPosition = FormStartPosition.CenterParent;
-            Text = "Prompt";
+            Text = "Configuração de Diretrizes da IA";
             FormClosing += FormPrompt_FormClosing;
             Load += FormPrompt_Load;
             panel1.ResumeLayout(false);

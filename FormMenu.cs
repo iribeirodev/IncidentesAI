@@ -1,156 +1,62 @@
-﻿using ScottPlot.Palettes;
-using System.Drawing.Text;
-using System.Runtime.InteropServices;
+﻿using IncidentesAI.Helpers;
 
 namespace IncidentesAI;
 
 public partial class FormMenu : Form
 {
-    private readonly Color DefaultMenuItemColor;
-    private readonly string SelectedMenuItemColor;
-    private readonly string CorBordaSuperior;
-    private readonly string CorBordaInferior;
-    private Label lblHint;
+    private Color CorDefaultPanel;
+
+    private Dictionary<string, Func<Form>> Routes = new Dictionary<string, Func<Form>> {
+    { "Panel01", () => new FormMain() },
+    { "Panel02", () => new FormPrompt() },
+    { "Panel03", () => new FormConfig() }};
 
     public FormMenu()
     {
         InitializeComponent();
 
-        DefaultMenuItemColor = Color.DimGray;
-        SelectedMenuItemColor = "#BFBFB4";
-        CorBordaSuperior = "#47442A";
-        CorBordaInferior = "#7A7A5C";
+        CorDefaultPanel = Panel01.BackColor;
+        lblTitulo.Text = UIHelper.ObterTituloApp();
 
-
-        lblTitulo.Text = "ServiceNow AI Insights and Analytics (Incidentes AI)";
-        CriarHint();
+        // Efeitos de panel
+        PanelEffects.AplicarHoverGradiente(Panel01, lblDescricao, Panel01.Tag.ToString(), Titulo01);
+        PanelEffects.AplicarHoverGradiente(Panel02, lblDescricao, Panel02.Tag.ToString(), Titulo02);
+        PanelEffects.AplicarHoverGradiente(Panel03, lblDescricao, Panel03.Tag.ToString(), Titulo03);
     }
 
     private void ExibirFormulario(object sender, EventArgs e)
     {
-        PictureBox pic = sender as PictureBox;
-        if (pic != null)
+        var controle = sender as Control;
+        string nome = (controle is Panel p ? p.Name : controle.Parent?.Name);
+
+        if (nome != null && Routes.TryGetValue(nome, out var exibirForm))
         {
-            switch (pic.Name)
+            // Forçar o Invalidate para "apagar" o brilho antes de abrir o modal
+            if (controle is Panel pnl) pnl.Invalidate();
+            else controle.Parent?.Invalidate();
+
+            using (var frm = exibirForm())
             {
-                case "ListaIncidentes":
-                    FormMain formMain = new FormMain();
-                    formMain.ShowDialog();
-                    break;
-                case "Prompt":
-                    FormPrompt formPrompt = new FormPrompt();
-                    formPrompt.ShowDialog();
-                    break;
-                case "Configuracoes":
-                    FormConfig formConfig = new FormConfig();
-                    formConfig.ShowDialog();
-                    break;
+                frm.ShowDialog();
             }
+
+            // Ao voltar, garante que a descrição limpe
+            lblDescricao.Text = "";
         }
-    }
-
-    private void EstilizarBordaFlowLayout(object sender, PaintEventArgs e)
-    {
-        Color corBorda = ColorTranslator.FromHtml(CorBordaSuperior); 
-        Color corBordaInferior = ColorTranslator.FromHtml(CorBordaInferior);
-        int espessura = 1;
-
-        ControlPaint.DrawBorder(e.Graphics, flowLayoutPanel1.ClientRectangle,
-            corBorda, espessura, ButtonBorderStyle.Solid, // Esquerda
-            corBorda, espessura, ButtonBorderStyle.Solid, // Cima
-            corBordaInferior, espessura, ButtonBorderStyle.Solid, // Direita
-            corBordaInferior, espessura, ButtonBorderStyle.Solid); // Baixo
-    }
-
-    private async void DestacarMenuItem(object sender, EventArgs e)
-    {
-        if (sender is PictureBox pic)
-        {
-            LimparTodosDestaques();
-
-            Color baseColor = ColorTranslator.FromHtml(SelectedMenuItemColor);
-
-            // Loop de animação
-            for (int alpha = 0; alpha <= 40; alpha += 4)
-            {
-                // Verificação de segurança: se o mouse já saiu durante o delay, interrompe
-                try
-                {
-                    if (!pic.ClientRectangle.Contains(pic.PointToClient(Control.MousePosition)))
-                        break;
-                }
-                catch{}
-
-                pic.BackColor = Color.FromArgb(alpha, baseColor);
-
-                if (lblHint != null)
-                {
-                    lblHint.ForeColor = Color.FromArgb(alpha, baseColor);
-                    lblHint.Text = pic.Tag.ToString();
-                }
-
-                await Task.Delay(5);
-            }
-        }
-    }
-
-    private void EsmaecerMenuItem(object sender, EventArgs e)
-    {
-        PictureBox pic = sender as PictureBox;
-        if (pic != null)
-        {
-            pic.BackColor = DefaultMenuItemColor;
-            lblHint.ForeColor = DefaultMenuItemColor;
-            lblHint.Text = string.Empty;
-        }
-            
-    }
-
-    // Método auxiliar para garantir que apenas um fique ativo
-    private void LimparTodosDestaques()
-    {
-        var menus = new[] { ListaIncidentes, Prompt, Configuracoes, Sair };
-        foreach (var item in menus)
-            item.BackColor = DefaultMenuItemColor;
-    }
-
-    private void CriarHint()
-    {
-        lblHint = new Label();
-        lblHint.Text = "";
-
-        lblHint.TextAlign = ContentAlignment.TopCenter;
-        lblHint.Dock = DockStyle.Fill;
-
-        lblHint.Font = new Font("Segoe UI", 12, FontStyle.Bold);
-        lblHint.ForeColor = Color.Orange;
-
-        tableLayoutPanel1.Controls.Add(lblHint, 1, 2); // 3a. linha, 2a. coluna
     }
 
     private void lblIncidentes_Click(object sender, EventArgs e)
-    {
-        FormMain formMain = new FormMain();
-        formMain.ShowDialog();
-    }
+        => new FormMain().ShowDialog();
 
     private void lblConfiguracoes_Click(object sender, EventArgs e)
-    {
-        FormConfig formConfig = new FormConfig();
-        formConfig.ShowDialog();
-    }
+        => new FormConfig().ShowDialog();
+
+    private void Sair_Click(object sender, EventArgs e)
+        => Application.Exit();
 
     private void FormMenu_Paint(object sender, PaintEventArgs e)
     {
-        using (System.Drawing.Drawing2D.LinearGradientBrush brush = new System.Drawing.Drawing2D.LinearGradientBrush(
-            this.ClientRectangle,
-            Color.White,
-            Color.FromArgb(30, 255, 215, 0),
-            90F))
-        {
-            e.Graphics.FillRectangle(brush, this.ClientRectangle);
-        }
+        // Habilitar anti-aliasing para suavizar as bordas do texto
+        e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
     }
-
-    private void Sair_Click(object sender, EventArgs e) => Application.Exit();
 }

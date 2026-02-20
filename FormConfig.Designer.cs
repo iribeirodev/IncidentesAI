@@ -3,14 +3,14 @@
     partial class FormConfig
     {
         /// <summary>
-        /// Required designer variable.
+        /// Variável de designer necessária.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
         /// <summary>
-        /// Clean up any resources being used.
+        /// Limpar os recursos que estão sendo usados.
         /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        /// <param name="disposing">true se os recursos gerenciados devem ser descartados; caso contrário, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -23,8 +23,8 @@
         #region Windows Form Designer generated code
 
         /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
+        /// Método necessário para suporte ao Designer - não modifique 
+        /// o conteúdo deste método com o editor de código.
         /// </summary>
         private void InitializeComponent()
         {
@@ -47,12 +47,12 @@
             // 
             // panel1
             // 
-            panel1.BackColor = Color.DimGray;
+            panel1.BackColor = Color.FromArgb(30, 30, 30); // Cinza grafite profundo
             panel1.Controls.Add(btnEscolherCaminho);
             panel1.Controls.Add(txtCaminhoBanco);
             panel1.Controls.Add(btnCriarDatabase);
             panel1.Controls.Add(label1);
-            panel1.Location = new Point(31, 15);
+            panel1.Location = new Point(22, 15);
             panel1.Name = "panel1";
             panel1.Size = new Size(652, 161);
             panel1.TabIndex = 0;
@@ -61,8 +61,8 @@
             // 
             btnEscolherCaminho.BackgroundImageLayout = ImageLayout.Stretch;
             btnEscolherCaminho.Cursor = Cursors.Hand;
-            btnEscolherCaminho.FlatAppearance.BorderColor = Color.White;
             btnEscolherCaminho.FlatAppearance.BorderSize = 0;
+            btnEscolherCaminho.FlatAppearance.MouseOverBackColor = Color.FromArgb(50, 50, 50);
             btnEscolherCaminho.FlatStyle = FlatStyle.Flat;
             btnEscolherCaminho.Image = (Image)resources.GetObject("btnEscolherCaminho.Image");
             btnEscolherCaminho.Location = new Point(540, 36);
@@ -75,8 +75,9 @@
             // 
             // txtCaminhoBanco
             // 
-            txtCaminhoBanco.BackColor = Color.Black;
-            txtCaminhoBanco.ForeColor = Color.Orange;
+            txtCaminhoBanco.BackColor = Color.FromArgb(45, 45, 48); // Fundo do TextBox escuro
+            txtCaminhoBanco.BorderStyle = BorderStyle.FixedSingle;
+            txtCaminhoBanco.ForeColor = Color.Silver; // Texto claro, mas não ofuscante
             txtCaminhoBanco.Location = new Point(165, 41);
             txtCaminhoBanco.Name = "txtCaminhoBanco";
             txtCaminhoBanco.ReadOnly = true;
@@ -86,10 +87,12 @@
             // 
             // btnCriarDatabase
             // 
-            btnCriarDatabase.BackColor = Color.Orange;
+            btnCriarDatabase.BackColor = Color.SteelBlue; // Cor de destaque do novo tema
             btnCriarDatabase.Cursor = Cursors.Hand;
+            btnCriarDatabase.FlatAppearance.BorderSize = 0;
             btnCriarDatabase.FlatStyle = FlatStyle.Flat;
-            btnCriarDatabase.ForeColor = Color.Black;
+            btnCriarDatabase.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            btnCriarDatabase.ForeColor = Color.White;
             btnCriarDatabase.Location = new Point(39, 91);
             btnCriarDatabase.Name = "btnCriarDatabase";
             btnCriarDatabase.Size = new Size(136, 34);
@@ -102,7 +105,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.ForeColor = Color.Orange;
+            label1.ForeColor = Color.Silver;
             label1.Location = new Point(38, 41);
             label1.Name = "label1";
             label1.Size = new Size(102, 15);
@@ -111,14 +114,14 @@
             // 
             // panel2
             // 
-            panel2.BackColor = Color.DimGray;
+            panel2.BackColor = Color.FromArgb(30, 30, 30);
             panel2.Controls.Add(btnEscolherCaminhoPlanilha);
             panel2.Controls.Add(lblStatusImportacao);
             panel2.Controls.Add(btnImportar);
             panel2.Controls.Add(progressBar1);
             panel2.Controls.Add(txtCaminhoPlanilha);
             panel2.Controls.Add(label2);
-            panel2.Location = new Point(31, 192);
+            panel2.Location = new Point(22, 192);
             panel2.Name = "panel2";
             panel2.Size = new Size(652, 186);
             panel2.TabIndex = 1;
@@ -127,8 +130,8 @@
             // 
             btnEscolherCaminhoPlanilha.BackgroundImageLayout = ImageLayout.Stretch;
             btnEscolherCaminhoPlanilha.Cursor = Cursors.Hand;
-            btnEscolherCaminhoPlanilha.FlatAppearance.BorderColor = Color.White;
             btnEscolherCaminhoPlanilha.FlatAppearance.BorderSize = 0;
+            btnEscolherCaminhoPlanilha.FlatAppearance.MouseOverBackColor = Color.FromArgb(50, 50, 50);
             btnEscolherCaminhoPlanilha.FlatStyle = FlatStyle.Flat;
             btnEscolherCaminhoPlanilha.Image = (Image)resources.GetObject("btnEscolherCaminhoPlanilha.Image");
             btnEscolherCaminhoPlanilha.Location = new Point(542, 37);
@@ -141,7 +144,7 @@
             // 
             // lblStatusImportacao
             // 
-            lblStatusImportacao.ForeColor = Color.Orange;
+            lblStatusImportacao.ForeColor = Color.SteelBlue; // Texto de status em azul moderno
             lblStatusImportacao.Location = new Point(36, 155);
             lblStatusImportacao.Name = "lblStatusImportacao";
             lblStatusImportacao.Size = new Size(582, 23);
@@ -150,10 +153,12 @@
             // 
             // btnImportar
             // 
-            btnImportar.BackColor = Color.Orange;
+            btnImportar.BackColor = Color.SteelBlue;
             btnImportar.Cursor = Cursors.Hand;
+            btnImportar.FlatAppearance.BorderSize = 0;
             btnImportar.FlatStyle = FlatStyle.Flat;
-            btnImportar.ForeColor = Color.Black;
+            btnImportar.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            btnImportar.ForeColor = Color.White;
             btnImportar.Location = new Point(36, 86);
             btnImportar.Name = "btnImportar";
             btnImportar.Size = new Size(136, 34);
@@ -165,18 +170,19 @@
             // 
             // progressBar1
             // 
-            progressBar1.BackColor = Color.FromArgb(50, 50, 50);
-            progressBar1.ForeColor = Color.Red;
+            progressBar1.BackColor = Color.FromArgb(45, 45, 48);
+            progressBar1.ForeColor = Color.SteelBlue; // Barra de progresso azul
             progressBar1.Location = new Point(40, 126);
             progressBar1.Name = "progressBar1";
-            progressBar1.Size = new Size(578, 23);
+            progressBar1.Size = new Size(578, 20);
             progressBar1.Style = ProgressBarStyle.Continuous;
             progressBar1.TabIndex = 8;
             // 
             // txtCaminhoPlanilha
             // 
-            txtCaminhoPlanilha.BackColor = Color.Black;
-            txtCaminhoPlanilha.ForeColor = Color.Orange;
+            txtCaminhoPlanilha.BackColor = Color.FromArgb(45, 45, 48);
+            txtCaminhoPlanilha.BorderStyle = BorderStyle.FixedSingle;
+            txtCaminhoPlanilha.ForeColor = Color.Silver;
             txtCaminhoPlanilha.Location = new Point(167, 42);
             txtCaminhoPlanilha.Name = "txtCaminhoPlanilha";
             txtCaminhoPlanilha.ReadOnly = true;
@@ -187,7 +193,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.ForeColor = Color.Orange;
+            label2.ForeColor = Color.Silver;
             label2.Location = new Point(36, 42);
             label2.Name = "label2";
             label2.Size = new Size(102, 15);
@@ -198,15 +204,17 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.Gray;
-            ClientSize = new Size(695, 390);
+            BackColor = Color.FromArgb(18, 18, 18); // Fundo quase preto (Dark Mode)
+            ClientSize = new Size(695, 395);
             Controls.Add(panel2);
             Controls.Add(panel1);
+            ForeColor = Color.White;
+            FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "FormConfig";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Configurações";
+            Text = "Configurações do Sistema";
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             panel2.ResumeLayout(false);

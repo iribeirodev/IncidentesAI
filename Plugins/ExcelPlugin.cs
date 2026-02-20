@@ -1,19 +1,14 @@
-﻿using ClosedXML.Excel;
-using Microsoft.SemanticKernel;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Data;
 using System.Text;
+using Microsoft.SemanticKernel;
+using ClosedXML.Excel;
 
 namespace IncidentesAI.Plugins;
 
-public class ExcelPlugin
+public class ExcelPlugin(DataGridView grid)
 {
-    private readonly DataGridView _grid;
-
-    public ExcelPlugin(DataGridView grid)
-    {
-        _grid = grid;
-    }
+    private readonly DataGridView _grid = grid;
 
     [KernelFunction]
     [Description("Lê os dados visíveis na tabela. Use APENAS se os dados fornecidos no prompt inicial forem insuficientes.")]

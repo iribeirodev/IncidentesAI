@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!--
-    Microsoft ResX Schema
-
+  <!-- 
+    Microsoft ResX Schema 
+    
     Version 2.0
-
-    The primary goals of this format is to allow a simple XML format
-    that is mostly human readable. The generation and parsing of the
-    various data types are done through the TypeConverter classes
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
     associated with the data types.
-
+    
     Example:
-
+    
     ... ado.net/XML headers & schema ...
     <resheader name="resmimetype">text/microsoft-resx</resheader>
     <resheader name="version">2.0</resheader>
@@ -26,36 +26,36 @@
         <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
         <comment>This is a comment</comment>
     </data>
-
-    There are any number of "resheader" rows that contain simple
+                
+    There are any number of "resheader" rows that contain simple 
     name/value pairs.
-
-    Each data row contains a name, and value. The row also contains a
-    type or mimetype. Type corresponds to a .NET class that support
-    text/value conversion through the TypeConverter architecture.
-    Classes that don't support this are serialized and stored with the
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
     mimetype set.
-
-    The mimetype is used for serialized objects, and tells the
-    ResXResourceReader how to depersist the object. This is currently not
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
     extensible. For a given mimetype the value must be set accordingly:
-
-    Note - application/x-microsoft.net.object.binary.base64 is the format
-    that the ResXResourceWriter will generate, however the reader can
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
     read any of the formats listed below.
-
+    
     mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with
+    value   : The object must be serialized with 
             : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
             : and then encoded with base64 encoding.
-
+    
     mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with
+    value   : The object must be serialized with 
             : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
             : and then encoded with base64 encoding.
 
     mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array
+    value   : The object must be serialized into a byte array 
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
@@ -117,45 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="btnShowCalendarFim.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAA
-        qAAAAKgBefSzxgAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAMcSURBVEhLrZRJ
-        T1phGIW76E/oX3CnLto0aWKaNmkc0sSFVNO4oI3FUIc6XLEOIKgBjIgiDlhNtdaZNjE2AU0d6oARB7Be
-        KMrkhKYVTTqkaRddneb7DAiImihfchbn8L7nuZd74dq1MKelpf+xUtldOjMzcz0wV6m6c5qaerMCMzKj
-        VL4pJzuB+ZmnqWkgiscT/2UYxV59XafUl6vVvWnZ2dLvRI2NPam+XKnolJFZHk/yh+z6iwLPllQa5WKY
-        YXdBwdjiy/JZYaH81zhTtjXJlDlJRqQvl5rqSmoPRhjRN2NR6Wdf3lNeY+8QKjaHGNEPtrDIQDLSRTr9
-        AHt6utcaGwsi44MEVPFFWIuJod6nsTQumvklYENybcYL9DzNhSUkJ51+wHpi4j/fB+zNW6jKKMbw/fig
-        BVPcXQi5DEbj7gXlhoSHEKbnYfL2naCcdIYFEJGrCb0DCo+JARuS0Tw6+lR+LiASCgK4jMafTqMRkRTp
-        9AOODg8dR14vIqrDQ0dYQL2yCwJBHRhGRr1eN009ny+GeYWF27mJ4mIlGEYBVUPnSeH+PnY0mosBPJ4Y
-        SUlZ4HByqe9o11IfH/8M4x9nwa7ZqCfKz6umM26BAC4+Hx6t9mJAm2YQEnEzRMJ66ifG56kvyJfDytqw
-        vbmNSkkrxBVqtLX105kDmw2egYGT8vMAEdNZgPZXWnrFFaIG6qcmju+AKZTDalnH9tYOqqs0qBCp8bpj
-        kM6QrzFw51zAZZ5BZqaE+pSUnIsBclk7srOqkZtTSf2HkUnqn3BLYDat0bcoN0eK5/xKKGrb6UyNPHjn
-        XEDEdBbgnXYULc19UKm6qF9cMFMvk2rgdLiwt+tBm2YA6sa3eK/VnS6+CHCZZ+DT1709uO32Yzkc+2EB
-        5Ff6iFMILreY+qFBHfXJyVkwLphg33AhNbUInJQCiCsC3hqvFyvz85jS6fBJr4fVbP4dFnAVLc3NYVqv
-        B7u0BNvq6sm/6f7urid0+DJaNhhouWV5ORhgt1o9dpaF3WK5kr6YTLScyGGxePwAp9N5Y2tjo9W9vt4X
-        IbWQTtL9H47r8eo8hVhJAAAAAElFTkSuQmCC
-</value>
+  <data name="CorPainelDestaque" xml:space="preserve">
+    <value>#FFFFFF</value>
   </data>
-  <data name="btnShowCalendarInicio.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAA
-        qAAAAKgBefSzxgAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAMcSURBVEhLrZRJ
-        T1phGIW76E/oX3CnLto0aWKaNmkc0sSFVNO4oI3FUIc6XLEOIKgBjIgiDlhNtdaZNjE2AU0d6oARB7Be
-        KMrkhKYVTTqkaRddneb7DAiImihfchbn8L7nuZd74dq1MKelpf+xUtldOjMzcz0wV6m6c5qaerMCMzKj
-        VL4pJzuB+ZmnqWkgiscT/2UYxV59XafUl6vVvWnZ2dLvRI2NPam+XKnolJFZHk/yh+z6iwLPllQa5WKY
-        YXdBwdjiy/JZYaH81zhTtjXJlDlJRqQvl5rqSmoPRhjRN2NR6Wdf3lNeY+8QKjaHGNEPtrDIQDLSRTr9
-        AHt6utcaGwsi44MEVPFFWIuJod6nsTQumvklYENybcYL9DzNhSUkJ51+wHpi4j/fB+zNW6jKKMbw/fig
-        BVPcXQi5DEbj7gXlhoSHEKbnYfL2naCcdIYFEJGrCb0DCo+JARuS0Tw6+lR+LiASCgK4jMafTqMRkRTp
-        9AOODg8dR14vIqrDQ0dYQL2yCwJBHRhGRr1eN009ny+GeYWF27mJ4mIlGEYBVUPnSeH+PnY0mosBPJ4Y
-        SUlZ4HByqe9o11IfH/8M4x9nwa7ZqCfKz6umM26BAC4+Hx6t9mJAm2YQEnEzRMJ66ifG56kvyJfDytqw
-        vbmNSkkrxBVqtLX105kDmw2egYGT8vMAEdNZgPZXWnrFFaIG6qcmju+AKZTDalnH9tYOqqs0qBCp8bpj
-        kM6QrzFw51zAZZ5BZqaE+pSUnIsBclk7srOqkZtTSf2HkUnqn3BLYDat0bcoN0eK5/xKKGrb6UyNPHjn
-        XEDEdBbgnXYULc19UKm6qF9cMFMvk2rgdLiwt+tBm2YA6sa3eK/VnS6+CHCZZ+DT1709uO32Yzkc+2EB
-        5Ff6iFMILreY+qFBHfXJyVkwLphg33AhNbUInJQCiCsC3hqvFyvz85jS6fBJr4fVbP4dFnAVLc3NYVqv
-        B7u0BNvq6sm/6f7urid0+DJaNhhouWV5ORhgt1o9dpaF3WK5kr6YTLScyGGxePwAp9N5Y2tjo9W9vt4X
-        IbWQTtL9H47r8eo8hVhJAAAAAElFTkSuQmCC
-</value>
+  <data name="TituloApp" xml:space="preserve">
+    <value>Incidentes AI (AI Insights and Analytics for Service Now)</value>
   </data>
 </root>

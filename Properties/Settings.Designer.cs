@@ -97,5 +97,17 @@ Dados dos Incidentes:")]
                 this["TemperaturaIA"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public int NumeroIncidentes {
+            get {
+                return ((int)(this["NumeroIncidentes"]));
+            }
+            set {
+                this["NumeroIncidentes"] = value;
+            }
+        }
     }
 }

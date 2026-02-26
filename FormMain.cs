@@ -1,5 +1,6 @@
 ﻿using IncidentesAI.Helpers;
 using IncidentesAI.Plugins;
+using IncidentesAI.Properties;
 using IncidentesAI.Services;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
@@ -21,6 +22,8 @@ namespace IncidentesAI
         private FormCalendar _formCalendar;
         private int _indiceHistorico = -1;
         private readonly string _caminhoArquivoHistorico = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "historico.txt");
+        private int _numeroIncidentesConsiderar;
+
         private SpeechRecognitionEngine _recognizer;
 
         public FormMain()
@@ -28,6 +31,7 @@ namespace IncidentesAI
             InitializeComponent();
 
             chkFiltrarData.Checked = false;
+            _numeroIncidentesConsiderar = Properties.Settings.Default.NumeroIncidentes;
 
             HabilitarCalendario(false);
 
@@ -88,7 +92,7 @@ namespace IncidentesAI
             {
                 string caminhoDb = Properties.Settings.Default.UltimoCaminhoBanco;
                 var dataService = new IncidenteDataService(caminhoDb);
-                DataTable dt = dataService.ObterTodosIncidentes();
+                DataTable dt = dataService.ObterTodosIncidentes(_numeroIncidentesConsiderar);
                 dgvIncidentes.DataSource = dt;
                 ConfigurarLayoutGrid();
 
@@ -297,7 +301,6 @@ namespace IncidentesAI
         private async void btnProcessar_Click(object sender, EventArgs e)
         {
             string userPrompt = txtPergunta.Text;
-
             if (string.IsNullOrWhiteSpace(userPrompt))
             {
                 MessageBox.Show("Por favor, digite uma pergunta ou comando.");
@@ -305,7 +308,6 @@ namespace IncidentesAI
             }
 
             SalvarPerguntaNoHistorico(userPrompt);
-
             AdicionarTextoFormatado("Usuário", userPrompt, Color.Orange);
             btnProcessar.Enabled = false;
             lblStatus.Text = "Consultando Mistral AI...";
@@ -315,7 +317,9 @@ namespace IncidentesAI
             {
                 string caminhoDb = Properties.Settings.Default.UltimoCaminhoBanco;
                 var dataService = new IncidenteDataService(caminhoDb);
-                string contextoDados = dataService.ObterContextoParaIA(100);
+
+                // Usa a função com corte automático
+                string contextoDados = dataService.ObterContextoParaIA(_numeroIncidentesConsiderar, 800);
 
                 string systemMessage = Properties.Settings.Default.PromptIA;
 
@@ -327,36 +331,54 @@ namespace IncidentesAI
                 fullPrompt.AppendLine("\n### PERGUNTA DO USUÁRIO ###");
                 fullPrompt.AppendLine(userPrompt);
 
-                double tempValue = 0.1;
-                try
-                {
-                    string tempConfig = Properties.Settings.Default.TemperaturaIA.ToString().Replace(",", ".");
-                    tempValue = double.Parse(tempConfig, System.Globalization.CultureInfo.InvariantCulture);
-                }
-                catch { tempValue = 0.1; }
-
                 var settings = new OpenAIPromptExecutionSettings
                 {
                     ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions,
-                    Temperature = tempValue
+                    Temperature = 0.1
                 };
 
                 var arguments = new KernelArguments(settings);
 
-                try
+                // Tentamos chamar a IA algumas vezes caso o limite de requisições seja atingido. 
+                // Se der erro de "rate limit exceeded", esperamos alguns segundos e tentamos de novo. 
+                // A cada tentativa o tempo de espera aumenta (2s → 4s → 8s), até no máximo 3 tentativas.
+                int maxTentativas = 3;
+                int delayMs = 2000;
+                for (int tentativa = 1; tentativa <= maxTentativas; tentativa++)
                 {
-                    var resultado = await _kernel.InvokePromptAsync(fullPrompt.ToString(), arguments);
-                    string respostaIA = resultado.ToString().Trim();
+                    try
+                    {
+                        var resultado = await _kernel.InvokePromptAsync(fullPrompt.ToString(), arguments);
+                        string respostaIA = resultado.ToString().Trim();
 
-                    lblStatus.Text = "Pronto!";
-                    AdicionarTextoFormatado("IA", resultado.ToString(), Color.White);
-                    txtPergunta.Clear();
-
-                }
-                catch (HttpOperationException httpEx)
-                {
-                    MessageBox.Show($"Erro na API Mistral:\n{httpEx.ResponseContent}");
-                    lblStatus.Text = "Erro na API.";
+                        lblStatus.Text = "Pronto!";
+                        AdicionarTextoFormatado("IA", respostaIA, Color.White);
+                        txtPergunta.Clear();
+                        break;
+                    }
+                    catch (HttpOperationException httpEx)
+                    {
+                        if (httpEx.ResponseContent.Contains("rate limit exceeded"))
+                        {
+                            if (tentativa == maxTentativas)
+                            {
+                                MessageBox.Show("Limite de requisições atingido. Tente novamente mais tarde.");
+                                lblStatus.Text = "Rate limit excedido.";
+                            }
+                            else
+                            {
+                                lblStatus.Text = $"Rate limit excedido, aguardando {delayMs / 1000}s antes da nova tentativa...";
+                                await Task.Delay(delayMs);
+                                delayMs *= 2; // espera exponencial
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show($"Erro na API Mistral:\n{httpEx.ResponseContent}");
+                            lblStatus.Text = "Erro na API.";
+                            break;
+                        }
+                    }
                 }
             }
             catch (Exception ex)
@@ -375,6 +397,7 @@ namespace IncidentesAI
         private void btnPrompt_Click(object sender, EventArgs e)
         {
             FormPrompt formPrompt = new FormPrompt();
+            formPrompt.IsReadOnly = true;
             formPrompt.ShowDialog();
         }
 
@@ -583,6 +606,24 @@ namespace IncidentesAI
                 {
                     return $"Erro técnico ao gerar gráfico: {ex.Message}";
                 }
+            }));
+        }
+
+        [KernelFunction]
+        [Description("Retorna o número exato de incidentes visíveis na tabela da tela.")]
+        public string ObterTotalIncidentes()
+        {
+            return (string)this.Invoke(new Func<string>(() =>
+            {
+                // Conta diretamente as linhas do DataGridView
+                int total = dgvIncidentes.Rows
+                    .Cast<DataGridViewRow>()
+                    .Count(r => !r.IsNewRow);
+
+                if (total == 0) return "Não há nenhum incidente no contexto";
+
+                return total > 1 ? $"Existem {total} incidentes no contexto fornecido."
+                            : $"Existe 1 incidente no contexto fornecido.";
             }));
         }
         #endregion

@@ -43,8 +43,15 @@
             txtCaminhoPlanilha = new TextBox();
             label2 = new Label();
             timerFade = new System.Windows.Forms.Timer(components);
+            panel3 = new Panel();
+            lblNumeroIncidentes = new Label();
+            trackBarNumeroIncidentes = new TrackBar();
+            label3 = new Label();
+            btnResumoImportacao = new Button();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
+            panel3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)trackBarNumeroIncidentes).BeginInit();
             SuspendLayout();
             // 
             // panel1
@@ -67,7 +74,7 @@
             btnEscolherCaminho.FlatAppearance.MouseOverBackColor = Color.FromArgb(50, 50, 50);
             btnEscolherCaminho.FlatStyle = FlatStyle.Flat;
             btnEscolherCaminho.Image = (Image)resources.GetObject("btnEscolherCaminho.Image");
-            btnEscolherCaminho.Location = new Point(540, 36);
+            btnEscolherCaminho.Location = new Point(540, 30);
             btnEscolherCaminho.Name = "btnEscolherCaminho";
             btnEscolherCaminho.Size = new Size(35, 31);
             btnEscolherCaminho.TabIndex = 3;
@@ -80,7 +87,7 @@
             txtCaminhoBanco.BackColor = Color.FromArgb(45, 45, 48);
             txtCaminhoBanco.BorderStyle = BorderStyle.FixedSingle;
             txtCaminhoBanco.ForeColor = Color.Silver;
-            txtCaminhoBanco.Location = new Point(165, 41);
+            txtCaminhoBanco.Location = new Point(165, 36);
             txtCaminhoBanco.Name = "txtCaminhoBanco";
             txtCaminhoBanco.ReadOnly = true;
             txtCaminhoBanco.Size = new Size(369, 23);
@@ -117,6 +124,7 @@
             // panel2
             // 
             panel2.BackColor = Color.FromArgb(30, 30, 30);
+            panel2.Controls.Add(btnResumoImportacao);
             panel2.Controls.Add(btnEscolherCaminhoPlanilha);
             panel2.Controls.Add(lblStatusImportacao);
             panel2.Controls.Add(btnImportar);
@@ -136,7 +144,7 @@
             btnEscolherCaminhoPlanilha.FlatAppearance.MouseOverBackColor = Color.FromArgb(50, 50, 50);
             btnEscolherCaminhoPlanilha.FlatStyle = FlatStyle.Flat;
             btnEscolherCaminhoPlanilha.Image = (Image)resources.GetObject("btnEscolherCaminhoPlanilha.Image");
-            btnEscolherCaminhoPlanilha.Location = new Point(542, 37);
+            btnEscolherCaminhoPlanilha.Location = new Point(540, 31);
             btnEscolherCaminhoPlanilha.Name = "btnEscolherCaminhoPlanilha";
             btnEscolherCaminhoPlanilha.Size = new Size(35, 31);
             btnEscolherCaminhoPlanilha.TabIndex = 11;
@@ -185,7 +193,7 @@
             txtCaminhoPlanilha.BackColor = Color.FromArgb(45, 45, 48);
             txtCaminhoPlanilha.BorderStyle = BorderStyle.FixedSingle;
             txtCaminhoPlanilha.ForeColor = Color.Silver;
-            txtCaminhoPlanilha.Location = new Point(167, 42);
+            txtCaminhoPlanilha.Location = new Point(165, 37);
             txtCaminhoPlanilha.Name = "txtCaminhoPlanilha";
             txtCaminhoPlanilha.ReadOnly = true;
             txtCaminhoPlanilha.Size = new Size(369, 23);
@@ -207,16 +215,81 @@
             timerFade.Interval = 10;
             timerFade.Tick += timerFade_Tick;
             // 
+            // panel3
+            // 
+            panel3.BackColor = Color.FromArgb(30, 30, 30);
+            panel3.Controls.Add(lblNumeroIncidentes);
+            panel3.Controls.Add(trackBarNumeroIncidentes);
+            panel3.Controls.Add(label3);
+            panel3.Location = new Point(22, 398);
+            panel3.Name = "panel3";
+            panel3.Size = new Size(652, 103);
+            panel3.TabIndex = 2;
+            // 
+            // lblNumeroIncidentes
+            // 
+            lblNumeroIncidentes.BackColor = Color.SteelBlue;
+            lblNumeroIncidentes.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblNumeroIncidentes.ForeColor = Color.White;
+            lblNumeroIncidentes.Location = new Point(417, 51);
+            lblNumeroIncidentes.Name = "lblNumeroIncidentes";
+            lblNumeroIncidentes.Size = new Size(39, 18);
+            lblNumeroIncidentes.TabIndex = 7;
+            lblNumeroIncidentes.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // trackBarNumeroIncidentes
+            // 
+            trackBarNumeroIncidentes.BackColor = Color.FromArgb(30, 30, 30);
+            trackBarNumeroIncidentes.LargeChange = 10;
+            trackBarNumeroIncidentes.Location = new Point(197, 51);
+            trackBarNumeroIncidentes.Maximum = 200;
+            trackBarNumeroIncidentes.Name = "trackBarNumeroIncidentes";
+            trackBarNumeroIncidentes.Size = new Size(214, 45);
+            trackBarNumeroIncidentes.SmallChange = 10;
+            trackBarNumeroIncidentes.TabIndex = 6;
+            trackBarNumeroIncidentes.TabStop = false;
+            trackBarNumeroIncidentes.TickFrequency = 20;
+            trackBarNumeroIncidentes.Scroll += trackBarNumeroIncidentes_Scroll;
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.BackColor = Color.Transparent;
+            label3.ForeColor = Color.Silver;
+            label3.Location = new Point(231, 17);
+            label3.Name = "label3";
+            label3.Size = new Size(191, 15);
+            label3.TabIndex = 5;
+            label3.Text = "Número de Incidentes a considerar";
+            // 
+            // btnResumoImportacao
+            // 
+            btnResumoImportacao.BackgroundImage = (Image)resources.GetObject("btnResumoImportacao.BackgroundImage");
+            btnResumoImportacao.BackgroundImageLayout = ImageLayout.Stretch;
+            btnResumoImportacao.Cursor = Cursors.Hand;
+            btnResumoImportacao.FlatAppearance.BorderSize = 0;
+            btnResumoImportacao.FlatAppearance.MouseOverBackColor = Color.FromArgb(50, 50, 50);
+            btnResumoImportacao.FlatStyle = FlatStyle.Flat;
+            btnResumoImportacao.Location = new Point(574, 32);
+            btnResumoImportacao.Name = "btnResumoImportacao";
+            btnResumoImportacao.Size = new Size(35, 31);
+            btnResumoImportacao.TabIndex = 12;
+            btnResumoImportacao.TabStop = false;
+            btnResumoImportacao.UseVisualStyleBackColor = true;
+            btnResumoImportacao.Click += btnResumoImportacao_Click;
+            // 
             // FormConfig
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(18, 18, 18);
-            ClientSize = new Size(695, 395);
+            ClientSize = new Size(695, 528);
+            Controls.Add(panel3);
             Controls.Add(panel2);
             Controls.Add(panel1);
             ForeColor = Color.White;
             FormBorderStyle = FormBorderStyle.FixedSingle;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "FormConfig";
@@ -228,6 +301,9 @@
             panel1.PerformLayout();
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
+            panel3.ResumeLayout(false);
+            panel3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)trackBarNumeroIncidentes).EndInit();
             ResumeLayout(false);
         }
 
@@ -246,5 +322,10 @@
         private Label lblStatusImportacao;
         private Button btnEscolherCaminhoPlanilha;
         private System.Windows.Forms.Timer timerFade;
+        private Panel panel3;
+        private Label lblNumeroIncidentes;
+        private TrackBar trackBarNumeroIncidentes;
+        private Label label3;
+        private Button btnResumoImportacao;
     }
 }

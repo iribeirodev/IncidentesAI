@@ -29,8 +29,6 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMenu));
-            Sair = new PictureBox();
-            lblTitulo = new Label();
             pnlPrincipal = new Panel();
             panel4 = new Panel();
             lblDescricao = new Label();
@@ -43,7 +41,9 @@
             Panel01 = new Panel();
             ListaIncidentes = new PictureBox();
             Titulo01 = new Label();
-            ((System.ComponentModel.ISupportInitialize)Sair).BeginInit();
+            pnlTitulo = new Panel();
+            Sair = new PictureBox();
+            lblTitulo = new Label();
             pnlPrincipal.SuspendLayout();
             panel4.SuspendLayout();
             Panel02.SuspendLayout();
@@ -52,34 +52,9 @@
             ((System.ComponentModel.ISupportInitialize)Configuracoes).BeginInit();
             Panel01.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)ListaIncidentes).BeginInit();
+            pnlTitulo.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)Sair).BeginInit();
             SuspendLayout();
-            // 
-            // Sair
-            // 
-            Sair.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            Sair.BackColor = Color.Transparent;
-            Sair.Cursor = Cursors.Hand;
-            Sair.Image = (Image)resources.GetObject("Sair.Image");
-            Sair.Location = new Point(1110, 5);
-            Sair.Margin = new Padding(5);
-            Sair.Name = "Sair";
-            Sair.Size = new Size(32, 32);
-            Sair.SizeMode = PictureBoxSizeMode.StretchImage;
-            Sair.TabIndex = 12;
-            Sair.TabStop = false;
-            Sair.Tag = "Encerrar a aplicação";
-            Sair.Click += Sair_Click;
-            // 
-            // lblTitulo
-            // 
-            lblTitulo.AutoSize = true;
-            lblTitulo.Font = new Font("Segoe UI Variable Text", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblTitulo.ForeColor = SystemColors.Highlight;
-            lblTitulo.Location = new Point(81, 5);
-            lblTitulo.Name = "lblTitulo";
-            lblTitulo.Size = new Size(64, 32);
-            lblTitulo.TabIndex = 18;
-            lblTitulo.Text = "Title";
             // 
             // pnlPrincipal
             // 
@@ -88,9 +63,9 @@
             pnlPrincipal.Controls.Add(Panel02);
             pnlPrincipal.Controls.Add(Panel03);
             pnlPrincipal.Controls.Add(Panel01);
-            pnlPrincipal.Location = new Point(81, 102);
+            pnlPrincipal.Location = new Point(81, 79);
             pnlPrincipal.Name = "pnlPrincipal";
-            pnlPrincipal.Size = new Size(1001, 624);
+            pnlPrincipal.Size = new Size(1001, 610);
             pnlPrincipal.TabIndex = 19;
             // 
             // panel4
@@ -231,22 +206,57 @@
             Titulo01.Text = "Lista de Incidentes";
             Titulo01.Click += ExibirFormulario;
             // 
+            // pnlTitulo
+            // 
+            pnlTitulo.Controls.Add(Sair);
+            pnlTitulo.Controls.Add(lblTitulo);
+            pnlTitulo.Dock = DockStyle.Top;
+            pnlTitulo.Location = new Point(0, 0);
+            pnlTitulo.Name = "pnlTitulo";
+            pnlTitulo.Size = new Size(1148, 46);
+            pnlTitulo.TabIndex = 20;
+            // 
+            // Sair
+            // 
+            Sair.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            Sair.BackColor = Color.Transparent;
+            Sair.Cursor = Cursors.Hand;
+            Sair.Image = (Image)resources.GetObject("Sair.Image");
+            Sair.Location = new Point(1114, 8);
+            Sair.Margin = new Padding(5);
+            Sair.Name = "Sair";
+            Sair.Size = new Size(29, 27);
+            Sair.SizeMode = PictureBoxSizeMode.StretchImage;
+            Sair.TabIndex = 21;
+            Sair.TabStop = false;
+            Sair.Tag = "Encerrar a aplicação";
+            Sair.Click += Sair_Click;
+            // 
+            // lblTitulo
+            // 
+            lblTitulo.AutoSize = true;
+            lblTitulo.Font = new Font("Segoe UI Variable Text", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblTitulo.ForeColor = SystemColors.Highlight;
+            lblTitulo.Location = new Point(3, 4);
+            lblTitulo.Name = "lblTitulo";
+            lblTitulo.Size = new Size(64, 32);
+            lblTitulo.TabIndex = 20;
+            lblTitulo.Text = "Title";
+            // 
             // FormMenu
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(18, 18, 18);
-            ClientSize = new Size(1148, 813);
+            ClientSize = new Size(1148, 738);
             ControlBox = false;
+            Controls.Add(pnlTitulo);
             Controls.Add(pnlPrincipal);
-            Controls.Add(lblTitulo);
-            Controls.Add(Sair);
             ForeColor = Color.Black;
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "FormMenu";
             WindowState = FormWindowState.Maximized;
             Paint += FormMenu_Paint;
-            ((System.ComponentModel.ISupportInitialize)Sair).EndInit();
             pnlPrincipal.ResumeLayout(false);
             panel4.ResumeLayout(false);
             Panel02.ResumeLayout(false);
@@ -258,14 +268,13 @@
             Panel01.ResumeLayout(false);
             Panel01.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)ListaIncidentes).EndInit();
+            pnlTitulo.ResumeLayout(false);
+            pnlTitulo.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)Sair).EndInit();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
-
-        private PictureBox Sair;
-        private Label lblTitulo;
         private Panel pnlPrincipal;
         private Panel panel4;
         private Label lblDescricao;
@@ -278,5 +287,8 @@
         private Panel Panel01;
         private Label Titulo01;
         private PictureBox ListaIncidentes;
+        private Panel pnlTitulo;
+        private PictureBox Sair;
+        private Label lblTitulo;
     }
 }

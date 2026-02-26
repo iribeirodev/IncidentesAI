@@ -18,6 +18,8 @@ public partial class FormConfig : Form
     {
         txtCaminhoBanco.Text = Settings.UltimoCaminhoBanco;
         txtCaminhoPlanilha.Text = Settings.UltimoCaminhoExcel;
+        trackBarNumeroIncidentes.Value = Settings.NumeroIncidentes;
+        lblNumeroIncidentes.Text = trackBarNumeroIncidentes.Value.ToString();
         AtualizarStatus(Settings.DataUltimaImportacao);
     }
 
@@ -122,5 +124,19 @@ public partial class FormConfig : Form
             this.Opacity += 0.05;
         else
             timerFade.Stop();
+    }
+
+    private void trackBarNumeroIncidentes_Scroll(object sender, EventArgs e)
+    {
+        lblNumeroIncidentes.Text = trackBarNumeroIncidentes.Value.ToString();
+        Settings.NumeroIncidentes = int.Parse(lblNumeroIncidentes.Text);
+        Settings.Save();
+    }
+
+    private void btnResumoImportacao_Click(object sender, EventArgs e)
+    {
+        FormResumoImport formResumoImport = new FormResumoImport();
+        formResumoImport.Text = "Resumo da Importação em " + Settings.DataUltimaImportacao.ToString();
+        formResumoImport.ShowDialog();
     }
 }

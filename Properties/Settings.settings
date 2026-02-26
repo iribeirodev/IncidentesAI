@@ -32,5 +32,8 @@ Dados dos Incidentes:</Value>
     <Setting Name="TemperaturaIA" Type="System.Double" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
+    <Setting Name="NumeroIncidentes" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">100</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

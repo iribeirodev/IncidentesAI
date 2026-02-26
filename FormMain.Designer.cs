@@ -85,11 +85,11 @@
             dgvIncidentes.DefaultCellStyle = dataGridViewCellStyle1;
             dgvIncidentes.EnableHeadersVisualStyles = false;
             dgvIncidentes.GridColor = Color.FromArgb(50, 50, 50);
-            dgvIncidentes.Location = new Point(31, 397);
+            dgvIncidentes.Location = new Point(31, 391);
             dgvIncidentes.Name = "dgvIncidentes";
             dgvIncidentes.ReadOnly = true;
             dgvIncidentes.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            dgvIncidentes.Size = new Size(751, 269);
+            dgvIncidentes.Size = new Size(751, 197);
             dgvIncidentes.TabIndex = 0;
             dgvIncidentes.CellDoubleClick += dgvIncidentes_CellDoubleClick;
             // 
@@ -342,7 +342,7 @@
             panel2.Controls.Add(txtHistorico);
             panel2.Location = new Point(803, 29);
             panel2.Name = "panel2";
-            panel2.Size = new Size(329, 637);
+            panel2.Size = new Size(329, 566);
             panel2.TabIndex = 4;
             // 
             // btnHistoricoDown
@@ -353,7 +353,7 @@
             btnHistoricoDown.FlatAppearance.MouseOverBackColor = Color.SteelBlue;
             btnHistoricoDown.FlatStyle = FlatStyle.Flat;
             btnHistoricoDown.Font = new Font("Arial", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            btnHistoricoDown.Location = new Point(293, 37);
+            btnHistoricoDown.Location = new Point(293, 51);
             btnHistoricoDown.Name = "btnHistoricoDown";
             btnHistoricoDown.Size = new Size(21, 19);
             btnHistoricoDown.TabIndex = 14;
@@ -370,7 +370,7 @@
             btnHistoricoUp.FlatAppearance.MouseOverBackColor = Color.SteelBlue;
             btnHistoricoUp.FlatStyle = FlatStyle.Flat;
             btnHistoricoUp.Font = new Font("Arial", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            btnHistoricoUp.Location = new Point(293, 12);
+            btnHistoricoUp.Location = new Point(293, 26);
             btnHistoricoUp.Name = "btnHistoricoUp";
             btnHistoricoUp.Size = new Size(21, 19);
             btnHistoricoUp.TabIndex = 13;
@@ -388,7 +388,7 @@
             btnPrompt.FlatStyle = FlatStyle.Flat;
             btnPrompt.Font = new Font("Segoe UI Emoji", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             btnPrompt.ForeColor = Color.SteelBlue;
-            btnPrompt.Location = new Point(290, 70);
+            btnPrompt.Location = new Point(290, 82);
             btnPrompt.Name = "btnPrompt";
             btnPrompt.Size = new Size(24, 24);
             btnPrompt.TabIndex = 12;
@@ -398,10 +398,11 @@
             // 
             // lblStatus
             // 
+            lblStatus.Font = new Font("Segoe UI", 8F, FontStyle.Regular, GraphicsUnit.Point, 0);
             lblStatus.ForeColor = Color.SteelBlue;
-            lblStatus.Location = new Point(16, 604);
+            lblStatus.Location = new Point(14, 543);
             lblStatus.Name = "lblStatus";
-            lblStatus.Size = new Size(298, 23);
+            lblStatus.Size = new Size(298, 16);
             lblStatus.TabIndex = 11;
             lblStatus.TextAlign = ContentAlignment.MiddleCenter;
             // 
@@ -411,7 +412,7 @@
             btnProcessar.FlatAppearance.BorderSize = 0;
             btnProcessar.FlatStyle = FlatStyle.Flat;
             btnProcessar.ForeColor = Color.White;
-            btnProcessar.Location = new Point(95, 69);
+            btnProcessar.Location = new Point(90, 82);
             btnProcessar.Name = "btnProcessar";
             btnProcessar.Size = new Size(139, 26);
             btnProcessar.TabIndex = 10;
@@ -424,7 +425,7 @@
             txtPergunta.BackColor = Color.FromArgb(45, 45, 48);
             txtPergunta.BorderStyle = BorderStyle.FixedSingle;
             txtPergunta.ForeColor = Color.FromArgb(241, 241, 241);
-            txtPergunta.Location = new Point(14, 12);
+            txtPergunta.Location = new Point(13, 24);
             txtPergunta.Multiline = true;
             txtPergunta.Name = "txtPergunta";
             txtPergunta.Size = new Size(274, 52);
@@ -437,7 +438,7 @@
             txtHistorico.ForeColor = Color.White;
             txtHistorico.Location = new Point(14, 114);
             txtHistorico.Name = "txtHistorico";
-            txtHistorico.Size = new Size(303, 474);
+            txtHistorico.Size = new Size(303, 420);
             txtHistorico.TabIndex = 4;
             txtHistorico.Text = "";
             // 
@@ -451,12 +452,13 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(18, 18, 18);
-            ClientSize = new Size(1144, 694);
+            ClientSize = new Size(1144, 600);
             Controls.Add(panel2);
             Controls.Add(panel1);
             Controls.Add(dgvIncidentes);
             ForeColor = Color.White;
             FormBorderStyle = FormBorderStyle.FixedSingle;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "FormMain";

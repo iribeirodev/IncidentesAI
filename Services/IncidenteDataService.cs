@@ -1,5 +1,8 @@
 ﻿using System.Data;
 using System.Text;
+using System.Text.Encodings.Web;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.Data.Sqlite;
 
 namespace IncidentesAI.Services;
@@ -11,15 +14,18 @@ public class IncidenteDataService
     public IncidenteDataService(string dbPath)
         => _connectionString = dbPath.Contains("Data Source") ? dbPath : $"Data Source={dbPath}";
 
-    public DataTable ObterTodosIncidentes()
+    public DataTable ObterTodosIncidentes(int numeroIncidentesConsiderar)
     {
         DataTable dt = new DataTable();
         using var connection = new SqliteConnection(_connectionString);
         connection.Open();
 
-        string sql = "SELECT * FROM Incidentes ORDER BY Created DESC";
+        string commandText = "";
+        commandText = "SELECT * FROM Incidentes ORDER BY Created DESC";
+        if (numeroIncidentesConsiderar > 0)
+            commandText += $" LIMIT {numeroIncidentesConsiderar}";
 
-        using var cmd = new SqliteCommand(sql, connection);
+        using var cmd = new SqliteCommand(commandText, connection);
         using var reader = cmd.ExecuteReader();
         dt.Load(reader);
 
@@ -71,38 +77,94 @@ public class IncidenteDataService
         return lista;
     }
 
-    public string ObterContextoParaIA(int top = 30)
+    public string ObterContextoParaIA(int top = 30, int limiteTokens = 800)
     {
-        StringBuilder sb = new StringBuilder();
         using var connection = new SqliteConnection(_connectionString);
         connection.Open();
 
-        string sql = $@"SELECT Number, State, Created, ShortDescription 
-                       FROM Incidentes 
-                       ORDER BY Created DESC LIMIT {top}";
+        string sql = $@"SELECT Number, State, Created, ShortDescription, AssignedTo, Caller
+                   FROM Incidentes 
+                   ORDER BY Created DESC LIMIT {top}";
 
         using var cmd = new SqliteCommand(sql, connection);
         using var reader = cmd.ExecuteReader();
 
+        var linhas = new List<string>();
+
         while (reader.Read())
         {
-            string number = reader["Number"]?.ToString() ?? "N/A";
-            string created = reader["Created"]?.ToString() ?? "N/A";
-            string state = reader["State"]?.ToString() ?? "N/A";
-
-            string rawDesc = reader["ShortDescription"]?.ToString() ?? "";
-            string cleanDesc = rawDesc
-                .Replace("\"", "'")
-                .Replace("{", "[")
-                .Replace("}", "]")
+            var number = reader["Number"]?.ToString();
+            var state = reader["State"]?.ToString();
+            var created = reader["Created"]?.ToString();
+            var assigned = reader["AssignedTo"]?.ToString();
+            var caller = reader["Caller"]?.ToString();
+            var desc = (reader["ShortDescription"]?.ToString() ?? "")
+                .Replace("|", " ")
                 .Replace("\n", " ")
                 .Replace("\r", " ")
                 .Replace("\t", " ")
                 .Trim();
 
-            sb.AppendLine($"- Ticket: {number} | Criado: {created} | Status: {state} | Desc: {cleanDesc}");
+            linhas.Add($"{number} | {state} | {created} | {assigned} | {caller} | {desc}");
         }
 
-        return sb.ToString();
+        // Junta tudo em texto delimitado
+        string contexto = string.Join("\n", linhas);
+
+        // Estima tokens
+        int tokensEstimados = EstimarTokens(contexto);
+
+        // Se exceder limite, corta a lista até caber
+        while (tokensEstimados > limiteTokens && linhas.Count > 0)
+        {
+            linhas.RemoveAt(linhas.Count - 1); // remove último incidente
+            contexto = string.Join("\n", linhas);
+            tokensEstimados = EstimarTokens(contexto);
+        }
+
+        return contexto;
     }
+
+    public int EstimarTokens(string texto)
+    {
+        if (string.IsNullOrEmpty(texto)) return 0;
+        int caracteres = texto.Length;
+        return caracteres / 4; // aproximação: 1 token ≈ 4 caracteres
+    }
+
+
+    //public string ObterContextoParaIA(int top = 30)
+    //{
+    //    using var connection = new SqliteConnection(_connectionString);
+    //    connection.Open();
+
+    //    string sql = $@"SELECT Number, State, Created, ShortDescription, AssignedTo, Caller
+    //               FROM Incidentes 
+    //               ORDER BY Created DESC LIMIT {top}";
+
+    //    using var cmd = new SqliteCommand(sql, connection);
+    //    using var reader = cmd.ExecuteReader();
+
+    //    var linhas = new List<string>();
+
+    //    while (reader.Read())
+    //    {
+    //        var number = reader["Number"]?.ToString();
+    //        var state = reader["State"]?.ToString();
+    //        var created = reader["Created"]?.ToString();
+    //        var assigned = reader["AssignedTo"]?.ToString();
+    //        var caller = reader["Caller"]?.ToString();
+    //        var desc = (reader["ShortDescription"]?.ToString() ?? "")
+    //            .Replace("|", " ") // evita conflito com delimitador
+    //            .Replace("\n", " ")
+    //            .Replace("\r", " ")
+    //            .Replace("\t", " ")
+    //            .Trim();
+
+    //        linhas.Add($"{number} | {state} | {created} | {assigned} | {caller} | {desc}");
+    //    }
+
+    //    return string.Join("\n", linhas);
+    //}
+
 }

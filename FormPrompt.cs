@@ -12,6 +12,8 @@ namespace IncidentesAI
 {
     public partial class FormPrompt : Form
     {
+        public bool IsReadOnly { get; set; } = false;
+
         public FormPrompt()
         {
             InitializeComponent();
@@ -45,6 +47,14 @@ namespace IncidentesAI
 
             trackBar1.Value = (int)(tempSalva * 10);
             lblValue.Text = tempSalva.ToString("N1");
+
+            if (IsReadOnly)
+            {
+                txtPrompt.ReadOnly = true;
+                trackBar1.Enabled = false;
+
+                lblValue.BackColor = Color.DimGray;
+            }
         }
 
         private void FormPrompt_FormClosing(object sender, FormClosingEventArgs e)

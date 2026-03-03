@@ -24,7 +24,13 @@ public partial class FormConfig : Form
             "o que pode afetar o limite de uso da API."
         );
 
-        CarregarIncidentesImportados();
+        try
+        {
+            CarregarIncidentesImportados();
+        }
+        catch
+        {
+        }
 
         dgvImported.DefaultCellStyle.ForeColor = Color.Black;
 
@@ -83,7 +89,7 @@ public partial class FormConfig : Form
 
     private void btnCriarDatabase_Click(object sender, EventArgs e)
     {
-        if (string.IsNullOrWhiteSpace(txtCaminhoPlanilha.Text))
+        if (string.IsNullOrWhiteSpace(txtCaminhoBanco.Text))
         {
             UIHelper.MostrarAviso("Por favor, selecione primeiro onde deseja salvar o banco.");
             return;

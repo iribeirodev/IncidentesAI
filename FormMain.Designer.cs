@@ -30,6 +30,8 @@
         {
             components = new System.ComponentModel.Container();
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             dgvIncidentes = new DataGridView();
             panel1 = new Panel();
@@ -60,6 +62,17 @@
             txtPergunta = new TextBox();
             txtHistorico = new RichTextBox();
             timerFade = new System.Windows.Forms.Timer(components);
+            Id = new DataGridViewTextBoxColumn();
+            Number = new DataGridViewTextBoxColumn();
+            AssignmentGroup = new DataGridViewTextBoxColumn();
+            State = new DataGridViewTextBoxColumn();
+            Caller = new DataGridViewTextBoxColumn();
+            AssignedTo = new DataGridViewTextBoxColumn();
+            Priority = new DataGridViewTextBoxColumn();
+            CreatedFormatado = new DataGridViewTextBoxColumn();
+            ShortDescription = new DataGridViewTextBoxColumn();
+            ConfigurationItem = new DataGridViewTextBoxColumn();
+            Email = new DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)dgvIncidentes).BeginInit();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
@@ -71,18 +84,29 @@
             dgvIncidentes.AllowUserToDeleteRows = false;
             dgvIncidentes.AllowUserToResizeColumns = false;
             dgvIncidentes.AllowUserToResizeRows = false;
+            dataGridViewCellStyle1.BackColor = Color.Transparent;
+            dgvIncidentes.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             dgvIncidentes.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             dgvIncidentes.BackgroundColor = Color.FromArgb(30, 30, 30);
             dgvIncidentes.BorderStyle = BorderStyle.None;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = Color.WhiteSmoke;
+            dataGridViewCellStyle2.Font = new Font("Segoe UI", 8.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle2.ForeColor = Color.Black;
+            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
+            dgvIncidentes.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             dgvIncidentes.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = Color.FromArgb(37, 37, 38);
-            dataGridViewCellStyle1.Font = new Font("Segoe UI", 9F);
-            dataGridViewCellStyle1.ForeColor = Color.White;
-            dataGridViewCellStyle1.SelectionBackColor = Color.FromArgb(9, 71, 113);
-            dataGridViewCellStyle1.SelectionForeColor = Color.White;
-            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.False;
-            dgvIncidentes.DefaultCellStyle = dataGridViewCellStyle1;
+            dgvIncidentes.Columns.AddRange(new DataGridViewColumn[] { Id, Number, AssignmentGroup, State, Caller, AssignedTo, Priority, CreatedFormatado, ShortDescription, ConfigurationItem, Email });
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = Color.FromArgb(37, 37, 38);
+            dataGridViewCellStyle3.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle3.ForeColor = Color.White;
+            dataGridViewCellStyle3.SelectionBackColor = Color.FromArgb(9, 71, 113);
+            dataGridViewCellStyle3.SelectionForeColor = Color.White;
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.False;
+            dgvIncidentes.DefaultCellStyle = dataGridViewCellStyle3;
             dgvIncidentes.EnableHeadersVisualStyles = false;
             dgvIncidentes.GridColor = Color.FromArgb(50, 50, 50);
             dgvIncidentes.Location = new Point(31, 391);
@@ -92,6 +116,8 @@
             dgvIncidentes.Size = new Size(751, 197);
             dgvIncidentes.TabIndex = 0;
             dgvIncidentes.CellDoubleClick += dgvIncidentes_CellDoubleClick;
+            dgvIncidentes.ColumnHeaderMouseClick += dgvIncidentes_ColumnHeaderMouseClick;
+            dgvIncidentes.RowPostPaint += dgvIncidentes_RowPostPaint;
             // 
             // panel1
             // 
@@ -175,7 +201,7 @@
             // lblCntFilter
             // 
             lblCntFilter.ForeColor = Color.DarkGray;
-            lblCntFilter.Location = new Point(223, 316);
+            lblCntFilter.Location = new Point(223, 319);
             lblCntFilter.Name = "lblCntFilter";
             lblCntFilter.Size = new Size(305, 23);
             lblCntFilter.TabIndex = 15;
@@ -244,7 +270,7 @@
             btnLimpar.FlatAppearance.BorderColor = Color.FromArgb(100, 100, 100);
             btnLimpar.FlatStyle = FlatStyle.Flat;
             btnLimpar.ForeColor = Color.FromArgb(200, 200, 200);
-            btnLimpar.Location = new Point(374, 269);
+            btnLimpar.Location = new Point(374, 273);
             btnLimpar.Name = "btnLimpar";
             btnLimpar.Size = new Size(139, 40);
             btnLimpar.TabIndex = 9;
@@ -258,7 +284,7 @@
             btnFiltrar.FlatAppearance.BorderSize = 0;
             btnFiltrar.FlatStyle = FlatStyle.Flat;
             btnFiltrar.ForeColor = Color.White;
-            btnFiltrar.Location = new Point(229, 269);
+            btnFiltrar.Location = new Point(229, 273);
             btnFiltrar.Name = "btnFiltrar";
             btnFiltrar.Size = new Size(139, 40);
             btnFiltrar.TabIndex = 8;
@@ -447,6 +473,93 @@
             timerFade.Interval = 10;
             timerFade.Tick += timerFade_Tick;
             // 
+            // Id
+            // 
+            Id.DataPropertyName = "Id";
+            Id.Frozen = true;
+            Id.HeaderText = "Id";
+            Id.Name = "Id";
+            Id.ReadOnly = true;
+            Id.Width = 60;
+            // 
+            // Number
+            // 
+            Number.DataPropertyName = "Number";
+            Number.Frozen = true;
+            Number.HeaderText = "Número";
+            Number.Name = "Number";
+            Number.ReadOnly = true;
+            Number.Width = 90;
+            // 
+            // AssignmentGroup
+            // 
+            AssignmentGroup.DataPropertyName = "AssignmentGroup";
+            AssignmentGroup.HeaderText = "Grupo de Atribuição";
+            AssignmentGroup.Name = "AssignmentGroup";
+            AssignmentGroup.ReadOnly = true;
+            AssignmentGroup.Width = 150;
+            // 
+            // State
+            // 
+            State.DataPropertyName = "State";
+            State.HeaderText = "Status";
+            State.Name = "State";
+            State.ReadOnly = true;
+            State.Width = 80;
+            // 
+            // Caller
+            // 
+            Caller.DataPropertyName = "Caller";
+            Caller.HeaderText = "Solicitante";
+            Caller.Name = "Caller";
+            Caller.ReadOnly = true;
+            Caller.Width = 150;
+            // 
+            // AssignedTo
+            // 
+            AssignedTo.DataPropertyName = "AssignedTo";
+            AssignedTo.HeaderText = "Atribuido a";
+            AssignedTo.Name = "AssignedTo";
+            AssignedTo.ReadOnly = true;
+            AssignedTo.Width = 150;
+            // 
+            // Priority
+            // 
+            Priority.DataPropertyName = "Priority";
+            Priority.HeaderText = "Prioridade";
+            Priority.Name = "Priority";
+            Priority.ReadOnly = true;
+            // 
+            // CreatedFormatado
+            // 
+            CreatedFormatado.DataPropertyName = "CreatedFormatado";
+            CreatedFormatado.HeaderText = "Criado em";
+            CreatedFormatado.Name = "CreatedFormatado";
+            CreatedFormatado.ReadOnly = true;
+            // 
+            // ShortDescription
+            // 
+            ShortDescription.DataPropertyName = "ShortDescription";
+            ShortDescription.HeaderText = "Descrição";
+            ShortDescription.Name = "ShortDescription";
+            ShortDescription.ReadOnly = true;
+            // 
+            // ConfigurationItem
+            // 
+            ConfigurationItem.DataPropertyName = "ConfigurationItem";
+            ConfigurationItem.HeaderText = "Item de Configuração";
+            ConfigurationItem.Name = "ConfigurationItem";
+            ConfigurationItem.ReadOnly = true;
+            ConfigurationItem.Width = 150;
+            // 
+            // Email
+            // 
+            Email.DataPropertyName = "Email";
+            Email.HeaderText = "E-mail";
+            Email.Name = "Email";
+            Email.ReadOnly = true;
+            Email.Width = 200;
+            // 
             // FormMain
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -505,5 +618,16 @@
         private Button btnShowCalendarFim;
         private TextBox txtDtFim;
         private System.Windows.Forms.Timer timerFade;
+        private DataGridViewTextBoxColumn Id;
+        private DataGridViewTextBoxColumn Number;
+        private DataGridViewTextBoxColumn AssignmentGroup;
+        private DataGridViewTextBoxColumn State;
+        private DataGridViewTextBoxColumn Caller;
+        private DataGridViewTextBoxColumn AssignedTo;
+        private DataGridViewTextBoxColumn Priority;
+        private DataGridViewTextBoxColumn CreatedFormatado;
+        private DataGridViewTextBoxColumn ShortDescription;
+        private DataGridViewTextBoxColumn ConfigurationItem;
+        private DataGridViewTextBoxColumn Email;
     }
 }

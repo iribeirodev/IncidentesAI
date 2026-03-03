@@ -3,24 +3,45 @@ using System.Text;
 using Microsoft.Data.Sqlite;
 using ExcelDataReader;
 
+
 namespace IncidentesAI.Services;
 
+/// <summary>
+/// Serviço responsável pela configuração e manutenção do banco de dados de incidentes.
+/// Permite criar a estrutura inicial das tabelas, importar dados a partir de planilhas Excel
+/// e cancelar operações em andamento.
+/// </summary>
 public class IncidenteConfigService
 {
     private readonly string _dbPath;
     private bool _cancelRequested;
 
+    #region Construtor
+    /// <summary>
+    /// Inicializa o serviço com o caminho do banco de dados.
+    /// Se o caminho não contiver "Data Source", adiciona automaticamente.
+    /// </summary>
+    /// <param name="dbPath">Caminho do arquivo SQLite ou string de conexão.</param>
     public IncidenteConfigService(string dbPath) 
         => _dbPath = dbPath.Contains("Data Source") ? dbPath : $"Data Source={dbPath}";
+    #endregion
 
+    #region Métodos Públicos
+    /// <summary>
+    /// Solicita o cancelamento da operação em andamento (ex.: importação de planilha).
+    /// </summary>
     public void CancelarOperacao() => _cancelRequested = true;
 
+    /// <summary>
+    /// Cria o banco de dados e as tabelas necessárias, caso não existam.
+    /// Inclui a tabela de incidentes e a tabela de status internos.
+    /// </summary>
     public void CriarBancoDeDados()
     {
         using var connection = new SqliteConnection(_dbPath);
          connection.Open();
 
-        string sql = @"
+        string commandText = @"
                 CREATE TABLE IF NOT EXISTS Incidentes (
                     Id INTEGER PRIMARY KEY AUTOINCREMENT,
                     Number TEXT NOT NULL,
@@ -36,10 +57,10 @@ public class IncidenteConfigService
                 ) STRICT;";
 
 
-        using var cmd = new SqliteCommand(sql, connection);
+        using var cmd = new SqliteCommand(commandText, connection);
          cmd.ExecuteNonQuery();
 
-        string sqlStatus = @"
+        string commandStatus = @"
         CREATE TABLE IF NOT EXISTS StatusInternos (
             NumeroIncidente TEXT PRIMARY KEY, 
             StatusInterno TEXT, 
@@ -47,10 +68,22 @@ public class IncidenteConfigService
             DataAtualizacao TEXT
         ) STRICT;";
 
-        using var cmdStatus = new SqliteCommand(sqlStatus, connection);
+        using var cmdStatus = new SqliteCommand(commandStatus, connection);
         cmdStatus.ExecuteNonQuery();
     }
 
+    /// <summary>
+    /// Importa dados de incidentes a partir de uma planilha Excel para o banco de dados.
+    /// Permite limpar dados existentes antes da importação e reporta progresso para a UI.
+    /// </summary>
+    /// <param name="excelPath">Caminho do arquivo Excel a ser importado.</param>
+    /// <param name="reportProgress">Ação de callback para reportar progresso (linhas processadas, total).</param>
+    /// <param name="limparDados">Indica se os dados existentes devem ser removidos antes da importação.</param>
+    /// <remarks>
+    /// - A operação pode ser cancelada chamando <see cref="CancelarOperacao"/>.
+    /// - O progresso é reportado a cada 10 linhas ou na última linha.
+    /// - Os dados são inseridos em transação para garantir consistência.
+    /// </remarks>
     public void ImportarPlanilha(string excelPath, Action<int, int> reportProgress, bool limparDados)
     {
         _cancelRequested = false;
@@ -79,10 +112,16 @@ public class IncidenteConfigService
 
         using var transaction = connection.BeginTransaction();
 
-        string sql = @"INSERT INTO Incidentes (Number, AssignmentGroup, State, Caller, AssignedTo, Priority, Created, ShortDescription, ConfigurationItem, Email) 
-                           VALUES (@Number, @AG, @State, @Caller, @AssignedTo, @Priority, @Created, @Desc, @CI, @Email)";
+        string commandText = """
+                        INSERT INTO Incidentes (
+                                Number, AssignmentGroup, State, Caller, AssignedTo, 
+                                Priority, Created, ShortDescription, ConfigurationItem, Email) 
+                        VALUES (
+                                @Number, @AG, @State, @Caller, @AssignedTo, 
+                                @Priority, @Created, @Desc, @CI, @Email)
+                    """;
 
-        using var command = new SqliteCommand(sql, connection, transaction);
+        using var command = new SqliteCommand(commandText, connection, transaction);
 
         command.Parameters.Add("@Number", SqliteType.Text);
         command.Parameters.Add("@AG", SqliteType.Text);
@@ -127,4 +166,5 @@ public class IncidenteConfigService
 
          transaction.Commit();
     }
+    #endregion
 }

@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using IncidentesAI.Helpers;
 using IncidentesAI.Services;
 
 namespace IncidentesAI
@@ -8,6 +9,7 @@ namespace IncidentesAI
         private string _numeroIncidente;
         private readonly AnotacaoDataService _anotacaoService;
 
+        #region Constructor
         public FormAnotacoes(string numeroIncidente)
         {
             InitializeComponent();
@@ -18,7 +20,9 @@ namespace IncidentesAI
 
             _numeroIncidente = numeroIncidente;
         }
+        #endregion
 
+        #region Eventos de UI
         private void FormAnotacoes_Load(object sender, EventArgs e)
         {
             txtNumero.Text = _numeroIncidente;
@@ -45,32 +49,21 @@ namespace IncidentesAI
         {
             if (string.IsNullOrWhiteSpace(cboStatus.Text))
             {
-                MessageBox.Show("O campo 'Status Interno' é obrigatório.");
+                UIHelper.MostrarAviso("O campo 'Status Interno' é obrigatório.");
                 return;
             }
 
             if (string.IsNullOrEmpty(txtObservacao.Text))
             {
-                MessageBox.Show("O campo 'Observação' é obrigatório.");
+                UIHelper.MostrarAviso("O campo 'Observação' é obrigatório.");
                 return;
             }
 
             _anotacaoService.SalvarAnotacao(txtNumero.Text, cboStatus.Text, txtObservacao.Text);
 
-            MessageBox.Show("Dados salvos com sucesso!");
+            UIHelper.MostrarSucesso("Anotações aplicadas ao incidente.");
 
             this.Close();
-        }
-
-        private void CarregarSugestoesDeStatus()
-        {
-            var status = _anotacaoService.ObterStatusExistentes();
-
-            cboStatus.Items.Clear();
-            foreach (var item in status)
-            {
-                cboStatus.Items.Add(item);
-            }
         }
 
         private void btnRemover_Click(object sender, EventArgs e)
@@ -85,10 +78,22 @@ namespace IncidentesAI
             {
                 _anotacaoService.RemoverAnotacao(txtNumero.Text);
 
-                MessageBox.Show("Anotações removidas com sucesso!");
+                UIHelper.MostrarSucesso("Anotações removidas com sucesso!");
 
                 this.Close();
             }
         }
+        #endregion
+
+        #region Métodos Private
+        private void CarregarSugestoesDeStatus()
+        {
+            var status = _anotacaoService.ObterStatusExistentes();
+
+            cboStatus.Items.Clear();
+            foreach (var item in status)
+                cboStatus.Items.Add(item);
+        }
+        #endregion
     }
 }

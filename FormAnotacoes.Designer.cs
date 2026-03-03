@@ -44,7 +44,7 @@
             // 
             // panelControles
             // 
-            panelControles.BackColor = Color.DimGray;
+            panelControles.BackColor = Color.FromArgb(30, 30, 30);
             panelControles.Controls.Add(label4);
             panelControles.Controls.Add(lblDataAtualizacao);
             panelControles.Controls.Add(txtObservacao);
@@ -55,17 +55,17 @@
             panelControles.Controls.Add(txtNumero);
             panelControles.Controls.Add(btnAplicar);
             panelControles.Controls.Add(label1);
-            panelControles.Location = new Point(10, 9);
+            panelControles.Location = new Point(11, 9);
             panelControles.Name = "panelControles";
-            panelControles.Size = new Size(652, 344);
+            panelControles.Size = new Size(581, 281);
             panelControles.TabIndex = 1;
             // 
             // label4
             // 
             label4.AutoSize = true;
             label4.BackColor = Color.Transparent;
-            label4.ForeColor = Color.Orange;
-            label4.Location = new Point(78, 248);
+            label4.ForeColor = Color.Gainsboro;
+            label4.Location = new Point(49, 190);
             label4.Name = "label4";
             label4.Size = new Size(106, 15);
             label4.TabIndex = 9;
@@ -73,11 +73,11 @@
             // 
             // lblDataAtualizacao
             // 
-            lblDataAtualizacao.BackColor = Color.Black;
-            lblDataAtualizacao.BorderStyle = BorderStyle.Fixed3D;
+            lblDataAtualizacao.BackColor = Color.FromArgb(45, 45, 48);
+            lblDataAtualizacao.BorderStyle = BorderStyle.FixedSingle;
             lblDataAtualizacao.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            lblDataAtualizacao.ForeColor = Color.Sienna;
-            lblDataAtualizacao.Location = new Point(205, 244);
+            lblDataAtualizacao.ForeColor = Color.Orange;
+            lblDataAtualizacao.Location = new Point(176, 186);
             lblDataAtualizacao.Name = "lblDataAtualizacao";
             lblDataAtualizacao.Size = new Size(369, 23);
             lblDataAtualizacao.TabIndex = 8;
@@ -85,9 +85,10 @@
             // 
             // txtObservacao
             // 
-            txtObservacao.BackColor = Color.Black;
-            txtObservacao.ForeColor = Color.Sienna;
-            txtObservacao.Location = new Point(205, 150);
+            txtObservacao.BackColor = Color.FromArgb(45, 45, 48);
+            txtObservacao.BorderStyle = BorderStyle.FixedSingle;
+            txtObservacao.ForeColor = Color.FromArgb(241, 241, 241);
+            txtObservacao.Location = new Point(176, 93);
             txtObservacao.MaxLength = 250;
             txtObservacao.Multiline = true;
             txtObservacao.Name = "txtObservacao";
@@ -97,10 +98,11 @@
             // 
             // cboStatus
             // 
-            cboStatus.BackColor = Color.Black;
-            cboStatus.ForeColor = Color.Sienna;
+            cboStatus.BackColor = Color.FromArgb(45, 45, 48);
+            cboStatus.FlatStyle = FlatStyle.Flat;
+            cboStatus.ForeColor = Color.FromArgb(241, 241, 241);
             cboStatus.FormattingEnabled = true;
-            cboStatus.Location = new Point(205, 94);
+            cboStatus.Location = new Point(176, 57);
             cboStatus.Name = "cboStatus";
             cboStatus.Size = new Size(369, 23);
             cboStatus.TabIndex = 6;
@@ -110,8 +112,8 @@
             // 
             label3.AutoSize = true;
             label3.BackColor = Color.Transparent;
-            label3.ForeColor = Color.Orange;
-            label3.Location = new Point(78, 153);
+            label3.ForeColor = Color.Gainsboro;
+            label3.Location = new Point(49, 95);
             label3.Name = "label3";
             label3.Size = new Size(69, 15);
             label3.TabIndex = 5;
@@ -121,8 +123,8 @@
             // 
             label2.AutoSize = true;
             label2.BackColor = Color.Transparent;
-            label2.ForeColor = Color.Orange;
-            label2.Location = new Point(78, 97);
+            label2.ForeColor = Color.Gainsboro;
+            label2.Location = new Point(49, 61);
             label2.Name = "label2";
             label2.Size = new Size(80, 15);
             label2.TabIndex = 4;
@@ -134,7 +136,7 @@
             btnRemover.Cursor = Cursors.Hand;
             btnRemover.FlatStyle = FlatStyle.Flat;
             btnRemover.ForeColor = Color.White;
-            btnRemover.Location = new Point(329, 295);
+            btnRemover.Location = new Point(293, 227);
             btnRemover.Name = "btnRemover";
             btnRemover.Size = new Size(136, 34);
             btnRemover.TabIndex = 3;
@@ -145,9 +147,10 @@
             // 
             // txtNumero
             // 
-            txtNumero.BackColor = Color.Black;
-            txtNumero.ForeColor = Color.Sienna;
-            txtNumero.Location = new Point(205, 41);
+            txtNumero.BackColor = Color.FromArgb(45, 45, 48);
+            txtNumero.BorderStyle = BorderStyle.FixedSingle;
+            txtNumero.ForeColor = Color.FromArgb(241, 241, 241);
+            txtNumero.Location = new Point(176, 21);
             txtNumero.MaxLength = 15;
             txtNumero.Name = "txtNumero";
             txtNumero.Size = new Size(151, 23);
@@ -160,7 +163,7 @@
             btnAplicar.Cursor = Cursors.Hand;
             btnAplicar.FlatStyle = FlatStyle.Flat;
             btnAplicar.ForeColor = Color.White;
-            btnAplicar.Location = new Point(187, 295);
+            btnAplicar.Location = new Point(151, 227);
             btnAplicar.Name = "btnAplicar";
             btnAplicar.Size = new Size(136, 34);
             btnAplicar.TabIndex = 1;
@@ -173,8 +176,8 @@
             // 
             label1.AutoSize = true;
             label1.BackColor = Color.Transparent;
-            label1.ForeColor = Color.Orange;
-            label1.Location = new Point(78, 41);
+            label1.ForeColor = Color.Gainsboro;
+            label1.Location = new Point(49, 23);
             label1.Name = "label1";
             label1.Size = new Size(51, 15);
             label1.TabIndex = 0;
@@ -184,8 +187,8 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.Gray;
-            ClientSize = new Size(672, 363);
+            BackColor = Color.FromArgb(18, 18, 18);
+            ClientSize = new Size(602, 301);
             Controls.Add(panelControles);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;

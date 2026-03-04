@@ -437,8 +437,9 @@ public partial class FormMain : Form
 
         SalvarPerguntaNoHistorico(userPrompt);
         AdicionarTextoFormatado("Usuário", userPrompt, Color.Orange);
+
         btnProcessar.Enabled = false;
-        lblStatus.Text = "Consultando Mistral AI...";
+        lblStatus.Text = "Consultando IA...";
         Cursor = Cursors.WaitCursor;
 
         try
@@ -446,8 +447,20 @@ public partial class FormMain : Form
             string caminhoDb = Properties.Settings.Default.UltimoCaminhoBanco;
             var dataService = new IncidenteDataService(caminhoDb);
 
-            // Usa a função com corte automático
-            string contextoDados = dataService.ObterContextoParaIA(_numeroIncidentesConsiderar, 800);
+            // Verifica se é pergunta de ferramenta
+            string promptLower = userPrompt.ToLower();
+
+            bool perguntaTooling =
+                promptLower.Contains("gráfico") ||
+                promptLower.Contains("grafico") ||
+                promptLower.Contains("pizza") ||
+                promptLower.Contains("barras") ||
+                promptLower.Contains("chart");
+
+            string contextoDados = "";
+            // Só envia contexto se for análise textual
+            if (!perguntaTooling)
+                contextoDados = dataService.ObterContextoParaIA(_numeroIncidentesConsiderar);
 
             string systemMessage = Properties.Settings.Default.PromptIA;
 
@@ -673,10 +686,46 @@ public partial class FormMain : Form
         }));
     }
 
+    [KernelFunction]
+    [Description("Gera gráfico agrupando incidentes visíveis por um campo. Campos válidos: State, AssignedTo, Caller, ConfigurationItem.")]
+    public string GerarGraficoPorCampo(
+        string tipo,
+        string campo,
+        string titulo,
+        int? topN = null)
+    {
+        return (string)this.Invoke(new Func<string>(() =>
+        {
+            var incidentes = dgvIncidentes.Rows
+                                        .Cast<DataGridViewRow>()
+                                        .Where(r => !r.IsNewRow)
+                                        .Select(r => r.Cells[campo].Value?.ToString())
+                                        .Where(v => !string.IsNullOrWhiteSpace(v));
+
+            int limite = topN ?? 10;
+            limite = Math.Clamp(limite, 1, 50);
+
+            var agrupado = incidentes
+                    .GroupBy(v => v)
+                    .Select(g => new { Label = g.Key, Total = g.Count() })
+                    .OrderByDescending(x => x.Total)
+                    .Take(limite)
+                    .ToList();
+
+            string labels = string.Join(",", agrupado.Select(x => x.Label));
+            string valores = string.Join(",", agrupado.Select(x => x.Total));
+
+            return GerarGraficoJanelaSeparada(tipo, labels, valores, titulo);
+        }));
+    }
 
     [KernelFunction]
     [Description("Gera um gráfico em uma janela separada. Tipos: 'pie' (pizza), 'bar' (barra). O parâmetro 'titulo' deve ser um resumo do que o gráfico representa.")]
-    public string GerarGraficoJanelaSeparada(string tipo, string labelsCsv, string valoresCsv, string titulo)
+    public string GerarGraficoJanelaSeparada(
+        string tipo, 
+        string labelsCsv, 
+        string valoresCsv, 
+        string titulo)
     {
         return (string)this.Invoke(new Func<string>(() =>
         {

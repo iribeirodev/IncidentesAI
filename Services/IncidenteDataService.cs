@@ -179,26 +179,26 @@ public class IncidenteDataService
     /// reduz a lista até caber.
     /// </summary>
     /// <param name="top">Número máximo de incidentes a incluir.</param>
-    /// <param name="limiteTokens">Limite máximo estimado de tokens.</param>
     /// <returns>Texto formatado com os incidentes selecionados.</returns>
-    public string ObterContextoParaIA(int top = 30, int limiteTokens = 800)
+    public string ObterContextoParaIA(int top = 10)
     {
         using var connection = new SqliteConnection(_connectionString);
         connection.Open();
 
         string cmdText = $@"SELECT 
-                            Number, 
-                            State, 
-                            strftime('%d/%m/%Y %H:%M:%S', Created) AS Created, 
-                            ShortDescription, 
-                            AssignedTo, 
-                            Caller
-                        FROM 
-                            Incidentes 
-                        ORDER BY 
-                            Created DESC LIMIT {top}";
+                                Number, 
+                                State, 
+                                strftime('%d/%m/%Y %H:%M:%S', Created) AS Created, 
+                                ShortDescription, 
+                                AssignedTo, 
+                                Caller
+                            FROM 
+                                Incidentes 
+                            ORDER BY 
+                                Created DESC LIMIT {top}";
 
         using var cmd = new SqliteCommand(cmdText, connection);
+        cmd.Parameters.AddWithValue("@top", top);
         using var reader = cmd.ExecuteReader();
 
         var linhas = new List<string>();
@@ -216,25 +216,28 @@ public class IncidenteDataService
                 .Replace("\r", " ")
                 .Replace("\t", " ")
                 .Trim();
+            desc = (desc.Length > 120) ? desc.Substring(0, 120) : desc;
 
             linhas.Add($"{number} | {state} | {created} | {assigned} | {caller} | {desc}");
         }
 
-        // Junta tudo em texto delimitado
-        string contexto = string.Join("\n", linhas);
+        return string.Join("\n", linhas);
 
-        // Estima tokens
-        int tokensEstimados = EstimarTokens(contexto);
+        //// Junta tudo em texto delimitado
+        //string contexto = string.Join("\n", linhas);
 
-        // Se exceder limite, corta a lista até caber
-        while (tokensEstimados > limiteTokens && linhas.Count > 0)
-        {
-            linhas.RemoveAt(linhas.Count - 1); // remove último incidente
-            contexto = string.Join("\n", linhas);
-            tokensEstimados = EstimarTokens(contexto);
-        }
+        //// Estima tokens
+        //int tokensEstimados = EstimarTokens(contexto);
 
-        return contexto;
+        //// Se exceder limite, corta a lista até caber
+        //while (tokensEstimados > limiteTokens && linhas.Count > 0)
+        //{
+        //    linhas.RemoveAt(linhas.Count - 1); // remove último incidente
+        //    contexto = string.Join("\n", linhas);
+        //    tokensEstimados = EstimarTokens(contexto);
+        //}
+
+        //return contexto;
     }
 
     /// <summary>

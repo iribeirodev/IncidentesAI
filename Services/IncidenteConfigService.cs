@@ -2,6 +2,7 @@
 using System.Text;
 using Microsoft.Data.Sqlite;
 using ExcelDataReader;
+using IncidentesAI.Helpers;
 
 
 namespace IncidentesAI.Services;
@@ -11,20 +12,10 @@ namespace IncidentesAI.Services;
 /// Permite criar a estrutura inicial das tabelas, importar dados a partir de planilhas Excel
 /// e cancelar operações em andamento.
 /// </summary>
-public class IncidenteConfigService
+public class IncidenteConfigService(string DbPath)
 {
-    private readonly string _dbPath;
     private bool _cancelRequested;
 
-    #region Construtor
-    /// <summary>
-    /// Inicializa o serviço com o caminho do banco de dados.
-    /// Se o caminho não contiver "Data Source", adiciona automaticamente.
-    /// </summary>
-    /// <param name="dbPath">Caminho do arquivo SQLite ou string de conexão.</param>
-    public IncidenteConfigService(string dbPath) 
-        => _dbPath = dbPath.Contains("Data Source") ? dbPath : $"Data Source={dbPath}";
-    #endregion
 
     #region Métodos Públicos
     /// <summary>
@@ -38,7 +29,7 @@ public class IncidenteConfigService
     /// </summary>
     public void CriarBancoDeDados()
     {
-        using var connection = new SqliteConnection(_dbPath);
+        using var connection = new SqliteConnection(DbPath);
          connection.Open();
 
         string commandText = @"
@@ -88,6 +79,8 @@ public class IncidenteConfigService
     {
         _cancelRequested = false;
 
+        using var connection = DbUtils.OpenConnection(DbPath);
+
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
         using var stream = File.Open(excelPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
@@ -101,8 +94,7 @@ public class IncidenteConfigService
         DataTable table = result.Tables[0];
         int totalLinhas = table.Rows.Count;
 
-        using var connection = new SqliteConnection(_dbPath);
-         connection.Open();
+        connection.Open();
 
         if (limparDados)
         {

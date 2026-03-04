@@ -1,5 +1,7 @@
 ﻿using Microsoft.Data.Sqlite;
 using IncidentesAI.Model;
+using IncidentesAI.Helpers;
+using System.Runtime.InteropServices;
 
 
 namespace IncidentesAI.Services;
@@ -10,19 +12,9 @@ namespace IncidentesAI.Services;
 /// filtragem, exclusão e preparação de contexto para IA.
 /// </summary>
 
-public class IncidenteDataService
+public class IncidenteDataService(string DbPath)
 {
     private readonly string _connectionString;
-
-    #region Construtor
-    /// <summary>
-    /// Inicializa o serviço com o caminho do banco de dados.
-    /// Se o caminho não contiver "Data Source", adiciona automaticamente.
-    /// </summary>
-    /// <param name="dbPath">Caminho do arquivo SQLite ou string de conexão.</param>
-    public IncidenteDataService(string dbPath)
-        => _connectionString = dbPath.Contains("Data Source") ? dbPath : $"Data Source={dbPath}";
-    #endregion
 
     #region Métodos Públicos
 
@@ -36,7 +28,8 @@ public class IncidenteDataService
     {
         var incidentes = new List<Incidente>();
 
-        using var connection = new SqliteConnection(_connectionString);
+        using var connection = DbUtils.OpenConnection(DbPath);
+
         connection.Open();
 
         string commandText = """

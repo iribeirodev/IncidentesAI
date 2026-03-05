@@ -1,7 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
 using IncidentesAI.Model;
 using IncidentesAI.Helpers;
-using System.Runtime.InteropServices;
 
 
 namespace IncidentesAI.Services;
@@ -14,8 +13,6 @@ namespace IncidentesAI.Services;
 
 public class IncidenteDataService(string DbPath)
 {
-    private readonly string _connectionString;
-
     #region Métodos Públicos
 
     /// <summary>
@@ -29,8 +26,6 @@ public class IncidenteDataService(string DbPath)
         var incidentes = new List<Incidente>();
 
         using var connection = DbUtils.OpenConnection(DbPath);
-
-        connection.Open();
 
         string commandText = """
             SELECT 
@@ -85,25 +80,25 @@ public class IncidenteDataService(string DbPath)
     }
 
     /// <summary>
-    /// Obtém a lista de status únicos presentes nos incidentes.
+    /// Obtém a lista de valores únicos de uma coluna da tabela Incidentes.
     /// </summary>
-    /// <returns>Lista de strings com os status distintos.</returns>
-    public List<string> ObterStatusUnicos()
+    /// <param name="columnName">Nome da coluna a consultar.</param>
+    /// <returns>Lista de strings com os valores distintos.</returns>
+    public List<string> ObterValoresUnicos(string columnName)
     {
         var lista = new List<string>();
-        using var connection = new SqliteConnection(_connectionString);
-        connection.Open();
+        using var connection = DbUtils.OpenConnection(DbPath);
 
-        string cmdText = """
-            SELECT 
-                DISTINCT State 
-            FROM 
-                Incidentes 
-            WHERE 
-                State IS NOT NULL 
-            ORDER BY 
-                State ASC
-            """;
+        string cmdText = $"""
+        SELECT 
+            DISTINCT {columnName}
+        FROM 
+            Incidentes
+        WHERE 
+            {columnName} IS NOT NULL
+        ORDER BY 
+            {columnName} ASC
+        """;
 
         using var cmd = new SqliteCommand(cmdText, connection);
         using var reader = cmd.ExecuteReader();
@@ -112,59 +107,6 @@ public class IncidenteDataService(string DbPath)
         return lista;
     }
 
-    /// <summary>
-    /// Obtém a lista de solicitantes (callers) únicos presentes nos incidentes.
-    /// </summary>
-    /// <returns>Lista de strings com os solicitantes distintos.</returns>
-    public List<string> ObterCallersUnicos()
-    {
-        var lista = new List<string>();
-        using var connection = new SqliteConnection(_connectionString);
-        connection.Open();
-
-        string cmdText = """
-            SELECT DISTINCT Caller 
-            FROM 
-                Incidentes 
-            WHERE 
-                Caller IS NOT NULL 
-            ORDER BY 
-                Caller
-            """;
-
-        using var cmd = new SqliteCommand(cmdText, connection);
-        using var reader = cmd.ExecuteReader();
-        while (reader.Read()) lista.Add(reader.GetString(0));
-
-        return lista;
-    }
-
-    /// <summary>
-    /// Obtém a lista de itens de configuração (Apps) únicos presentes nos incidentes.
-    /// </summary>
-    /// <returns>Lista de strings com os itens de configuração distintos.</returns>
-    public List<string> ObterItensConfiguracaoUnicos()
-    {
-        var lista = new List<string>();
-        using var connection = new SqliteConnection(_connectionString);
-        connection.Open();
-
-        string cmdText = """
-            SELECT DISTINCT ConfigurationItem 
-            FROM 
-                Incidentes 
-            WHERE 
-                ConfigurationItem IS NOT NULL 
-            ORDER BY 
-                ConfigurationItem
-            """;
-
-        using var cmd = new SqliteCommand(cmdText, connection);
-        using var reader = cmd.ExecuteReader();
-        while (reader.Read()) lista.Add(reader.GetString(0));
-
-        return lista;
-    }
 
     /// <summary>
     /// Gera um texto de contexto para ser usado pela IA, contendo os incidentes
@@ -175,8 +117,7 @@ public class IncidenteDataService(string DbPath)
     /// <returns>Texto formatado com os incidentes selecionados.</returns>
     public string ObterContextoParaIA(int top = 10)
     {
-        using var connection = new SqliteConnection(_connectionString);
-        connection.Open();
+        using var connection = DbUtils.OpenConnection(DbPath);
 
         string cmdText = $@"SELECT 
                                 Number, 
@@ -215,22 +156,6 @@ public class IncidenteDataService(string DbPath)
         }
 
         return string.Join("\n", linhas);
-
-        //// Junta tudo em texto delimitado
-        //string contexto = string.Join("\n", linhas);
-
-        //// Estima tokens
-        //int tokensEstimados = EstimarTokens(contexto);
-
-        //// Se exceder limite, corta a lista até caber
-        //while (tokensEstimados > limiteTokens && linhas.Count > 0)
-        //{
-        //    linhas.RemoveAt(linhas.Count - 1); // remove último incidente
-        //    contexto = string.Join("\n", linhas);
-        //    tokensEstimados = EstimarTokens(contexto);
-        //}
-
-        //return contexto;
     }
 
     /// <summary>
@@ -239,8 +164,7 @@ public class IncidenteDataService(string DbPath)
     /// <param name="id">Identificador único do incidente.</param>
     public void ExcluirIncidentePorId(int id)
     {
-        using var connection = new SqliteConnection(_connectionString);
-        connection.Open();
+        using var connection = DbUtils.OpenConnection(DbPath);
 
         string sql = "DELETE FROM Incidentes WHERE Id = @Id";
 

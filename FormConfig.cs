@@ -30,6 +30,9 @@ public partial class FormConfig : Form
         }
         catch
         {
+            txtCaminhoBanco.ForeColor = Color.Red;
+            toolTip1.SetToolTip(txtCaminhoBanco, "Banco de dados não encontrado no caminho específico.");
+            btnImportar.Enabled = false;
         }
 
         dgvImported.DefaultCellStyle.ForeColor = Color.Black;
@@ -51,10 +54,9 @@ public partial class FormConfig : Form
 
     private bool CamposValidos()
     {
-        if (!string.IsNullOrWhiteSpace(txtCaminhoPlanilha.Text) && !string.IsNullOrWhiteSpace(txtCaminhoBanco.Text))
+        if ((string.IsNullOrEmpty(txtCaminhoBanco.Text)) || (string.IsNullOrEmpty(txtCaminhoPlanilha.Text)))
             return false;
 
-        UIHelper.MostrarAviso("Selecione os caminhos antes de importar.");
         return true;
     }
 
@@ -104,7 +106,11 @@ public partial class FormConfig : Form
 
     private void btnImportar_Click(object sender, EventArgs e)
     {
-        if (CamposValidos()) return;
+        if (!CamposValidos())
+        {
+            UIHelper.MostrarAviso("Selecione os caminhos antes de importar.");
+            return;
+        }
 
         btnImportar.Enabled = false;
 

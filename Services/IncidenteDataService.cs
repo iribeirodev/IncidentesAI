@@ -107,9 +107,38 @@ public class IncidenteDataService(string DbPath)
         return lista;
     }
 
+    /// <summary>
+    /// Gera um contexto para ser usado pela IA, contendo apenas os incidentes
+    /// filtrados na interface. Se não houver incidentes, retorna uma mensagem
+    /// indicando que não há registros disponíveis.
+    /// </summary>
+    /// <param name="incidentesFiltrados">Lista de incidentes filtrados a incluir.</param>
+    /// <returns>Texto formatado com os incidentes selecionados.</returns>
+    public string ObterContextoFiltradoParaIA(List<Incidente> incidentesFiltrados)
+    {
+        if (incidentesFiltrados == null || !incidentesFiltrados.Any())
+            return "Nenhum incidente filtrado disponível.";
+
+        var linhas = new List<string>();
+        foreach (var i in incidentesFiltrados)
+        {
+            var desc = (i.ShortDescription ?? "")
+                .Replace("|", " ")
+                .Replace("\n", " ")
+                .Replace("\r", " ")
+                .Replace("\t", " ")
+                .Trim();
+
+            desc = (desc.Length > 120) ? desc.Substring(0, 120) : desc;
+
+            linhas.Add($"{i.Number} | {i.State} | {i.ConfigurationItem} | {i.Created:dd/MM/yyyy HH:mm:ss} | {i.AssignedTo} | {i.Caller} | {desc}");
+        }
+
+        return string.Join("\n", linhas);
+    }
 
     /// <summary>
-    /// Gera um texto de contexto para ser usado pela IA, contendo os incidentes
+    /// Gera um contexto para ser usado pela IA, contendo os incidentes
     /// mais recentes até o limite especificado. Se o texto exceder o limite de tokens,
     /// reduz a lista até caber.
     /// </summary>
@@ -144,6 +173,7 @@ public class IncidenteDataService(string DbPath)
             var created = reader["Created"]?.ToString();
             var assigned = reader["AssignedTo"]?.ToString();
             var caller = reader["Caller"]?.ToString();
+            var ci = reader["ConfigurationItem"]?.ToString();
             var desc = (reader["ShortDescription"]?.ToString() ?? "")
                 .Replace("|", " ")
                 .Replace("\n", " ")
@@ -152,7 +182,7 @@ public class IncidenteDataService(string DbPath)
                 .Trim();
             desc = (desc.Length > 120) ? desc.Substring(0, 120) : desc;
 
-            linhas.Add($"{number} | {state} | {created} | {assigned} | {caller} | {desc}");
+            linhas.Add($"{number} | {state} | {ci} | {created} | {assigned} | {caller} | {desc}");
         }
 
         return string.Join("\n", linhas);

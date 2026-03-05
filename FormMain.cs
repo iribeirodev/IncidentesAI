@@ -15,26 +15,45 @@ namespace IncidentesAI;
 
 public partial class FormMain : Form
 {
-    // Instância principal do Kernel da IA, responsável por processar prompts e invocar plugins.
+    /// <summary>
+    /// Instância principal do Kernel da IA, responsável por processar prompts e invocar plugins. 
+    /// </summary>
     private Kernel _kernel;
 
-    // Lista de perguntas feitas pelo usuário, carregadas do histórico e atualizadas em tempo real.
+    /// <summary>
+    /// Lista de perguntas feitas pelo usuário, carregadas do histórico e atualizadas em tempo real. 
+    /// </summary>
     private List<string> _historicoPerguntas = new List<string>();
 
-    // Índice atual dentro da lista de histórico de perguntas, usado para navegação (up/down).
+    /// <summary>
+    /// Índice atual dentro da lista de histórico de perguntas, usado para navegação (up/down). 
+    /// </summary>
     private int _indiceHistorico = -1;
 
-    // Caminho completo do arquivo de histórico de perguntas(historico.txt).
+    /// <summary>
+    /// Caminho completo do arquivo de histórico de perguntas(historico.txt). 
+    /// </summary>
     private readonly string _caminhoArquivoHistorico = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "historico.txt");
 
-    // Quantidade de incidentes a considerar ao carregar dados do banco.
+    /// <summary>
+    /// Quantidade de incidentes a considerar ao carregar dados do banco. 
+    /// </summary>
     private int _numeroIncidentesConsiderar;
-    
-    // Lista original de todos os incidentes carregados da base de dados. Usada como fonte principal para aplicar filtros.
+
+    /// <summary>
+    /// Lista original de todos os incidentes carregados da base de dados. Usada como fonte principal para aplicar filtros. 
+    /// </summary>
     private List<Incidente> _todosIncidentes;
-    
-    // Flag usada para alternar a ordenação ascendente/descendente na coluna de datas.
+
+    /// <summary>
+    /// Flag usada para alternar a ordenação ascendente/descendente na coluna de datas. 
+    /// </summary>
     private bool sortAscending = true;
+
+    /// <summary>
+    /// Flag usada para sinalizar que os dados da grid estão filtrados.
+    /// </summary>
+    private bool isFiltered = false;
 
     #region Construtor
     public FormMain()
@@ -256,6 +275,8 @@ public partial class FormMain : Form
         var listaFiltrada = filtrados.ToList();
         dgvIncidentes.DataSource = listaFiltrada;
 
+        isFiltered = true;
+
         // Atualização da Label de Contagem
         if (!listaFiltrada.Any())
         {
@@ -402,6 +423,8 @@ public partial class FormMain : Form
         chkFiltrarData.Checked = false;
 
         FiltrarDados();
+
+        isFiltered = false;
     }
 
     private void chkFiltrarData_CheckedChanged(object sender, EventArgs e)
@@ -457,10 +480,17 @@ public partial class FormMain : Form
                 promptLower.Contains("barras") ||
                 promptLower.Contains("chart");
 
-            string contextoDados = "";
             // Só envia contexto se for análise textual
-            if (!perguntaTooling)
-                contextoDados = dataService.ObterContextoParaIA(_numeroIncidentesConsiderar);
+            string contextoDados = "";
+            if (isFiltered)
+            {
+                var listaFiltrada = (List<Incidente>)dgvIncidentes.DataSource;
+                contextoDados = dataService.ObterContextoFiltradoParaIA(listaFiltrada);
+            } else
+            {
+                if (!perguntaTooling)
+                    contextoDados = dataService.ObterContextoParaIA(_numeroIncidentesConsiderar);
+            }
 
             string systemMessage = Properties.Settings.Default.PromptIA;
 

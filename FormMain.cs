@@ -169,19 +169,19 @@ public partial class FormMain : Form
         {
             var dataService = new IncidenteDataService(caminhoDb);
 
-            var itensCI = dataService.ObterItensConfiguracaoUnicos();
+            var itensCI = dataService.ObterValoresUnicos("ConfigurationItem");
             cboConfigurationItem.Items.Clear();
             cboConfigurationItem.Items.Add("--- Todos ---");
             cboConfigurationItem.Items.AddRange(itensCI.ToArray());
             cboConfigurationItem.SelectedIndex = 0;
 
-            var itensStatus = dataService.ObterStatusUnicos();
+            var itensStatus = dataService.ObterValoresUnicos("State");
             cboStatus.Items.Clear();
             cboStatus.Items.Add("--- Todos ---");
             cboStatus.Items.AddRange(itensStatus.ToArray());
             cboStatus.SelectedIndex = 0;
 
-            var itensCaller = dataService.ObterCallersUnicos();
+            var itensCaller = dataService.ObterValoresUnicos("Caller");
             cboCaller.Items.Clear();
             cboCaller.Items.Add("--- Todos ---");
             cboCaller.Items.AddRange(itensCaller.ToArray());

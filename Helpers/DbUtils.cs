@@ -19,11 +19,27 @@ namespace IncidentesAI.Helpers
                 throw new FileNotFoundException("Banco de dados não encontrado.", dbPath);
 
             // Usa URI para abrir em modo leitura/escrita sem criar novo
-            string connectionString = $"Data Source=file:{dbPath}?mode=rw;Cache=Shared;Uri=True";
+            string connectionString = $"Data Source=file:{dbPath};Mode=ReadWrite";
 
             var connection = new SqliteConnection(connectionString);
             connection.Open();
             return connection;
         }
+
+
+        /// <summary>
+        /// Abre uma conexão SQLite específica para criação de um novo database.
+        /// </summary>
+        /// <param name="dbPath">Caminho do arquivo do banco de dados.</param>
+        /// <returns>Conexão SQLite pronta para uso.</returns>
+        public static SqliteConnection OpenConnectionToCreate(string dbPath)
+        {
+            string connectionString = $"Data Source={dbPath};Mode=ReadWriteCreate";
+
+            var connection = new SqliteConnection(connectionString);
+            connection.Open();
+            return connection;
+        }
+
     }
 }

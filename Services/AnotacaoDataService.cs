@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using Microsoft.Data.Sqlite;
 using IncidentesAI.DTO;
+using IncidentesAI.Helpers;
 
 
 namespace IncidentesAI.Services;
@@ -9,20 +10,8 @@ namespace IncidentesAI.Services;
 /// Serviço responsável por gerenciar anotações internas relacionadas a incidentes.
 /// Permite salvar, remover e consultar anotações.
 /// </summary>
-public class AnotacaoDataService
+public class AnotacaoDataService(string DbPath)
 {
-    private readonly string _connectionString;
-
-    #region Construtor
-    /// <summary>
-    /// Inicializa o serviço com o caminho do banco de dados.
-    /// Se o caminho não contiver "Data Source", adiciona automaticamente.
-    /// </summary>
-    /// <param name="dbPath">Caminho do arquivo SQLite ou string de conexão.</param>
-    public AnotacaoDataService(string dbPath) => 
-        _connectionString = dbPath.Contains("Data Source") ? dbPath : $"Data Source={dbPath}";
-    #endregion
-
     #region Métodos Públicos
     /// <summary>
     /// Salva ou atualiza uma anotação para um incidente específico.
@@ -33,8 +22,7 @@ public class AnotacaoDataService
     /// <param name="observacao">Observação ou comentário adicional.</param>
     public void SalvarAnotacao(string numero, string status, string observacao)
     {
-        using var conn = new SqliteConnection(_connectionString);
-        conn.Open();
+        using var conn = DbUtils.OpenConnection(DbPath);
 
         string commandText = @"INSERT OR REPLACE INTO StatusInternos (
                                     NumeroIncidente, StatusInterno, Observacao, DataAtualizacao) 
@@ -55,8 +43,7 @@ public class AnotacaoDataService
     /// <param name="numero">Número do incidente cuja anotação será removida.</param>
     public void RemoverAnotacao(string numero)
     {
-        using var conn = new SqliteConnection(_connectionString);
-        conn.Open();
+        using var conn = DbUtils.OpenConnection(DbPath);
 
         string commandText = "DELETE FROM StatusInternos WHERE NumeroIncidente = @num";
         using var cmd = new SqliteCommand(commandText, conn);
@@ -71,8 +58,7 @@ public class AnotacaoDataService
     public DataTable ObterDadosAnotacao(string numeroIncidente)
     {
         DataTable dt = new DataTable();
-        using var conn = new SqliteConnection(_connectionString);
-         conn.Open();
+        using var conn = DbUtils.OpenConnection(DbPath);
 
         string commandText = """
             SELECT 
@@ -100,8 +86,7 @@ public class AnotacaoDataService
     /// <returns>Objeto <see cref="AnotacaoDTO"/> com os dados da anotação, ou null se não encontrado.</returns>
     public AnotacaoDTO ObterDadosAnotacaoParaExportacao(string numeroIncidente)
     {
-        using var conn = new SqliteConnection(_connectionString);
-        conn.Open();
+        using var conn = DbUtils.OpenConnection(DbPath);
 
         string commandText = """
                 SELECT 
@@ -137,8 +122,7 @@ public class AnotacaoDataService
     public List<string> ObterStatusExistentes()
     {
         var lista = new List<string>();
-        using var conn = new SqliteConnection(_connectionString);
-         conn.Open();
+        using var conn = DbUtils.OpenConnection(DbPath);
 
         string commandText = """
             SELECT 

@@ -29,8 +29,7 @@ public class IncidenteConfigService(string DbPath)
     /// </summary>
     public void CriarBancoDeDados()
     {
-        using var connection = new SqliteConnection(DbPath);
-         connection.Open();
+        using var connection = DbUtils.OpenConnectionToCreate(DbPath);
 
         string commandText = @"
                 CREATE TABLE IF NOT EXISTS Incidentes (
@@ -94,12 +93,10 @@ public class IncidenteConfigService(string DbPath)
         DataTable table = result.Tables[0];
         int totalLinhas = table.Rows.Count;
 
-        connection.Open();
-
         if (limparDados)
         {
             using var deleteCmd = new SqliteCommand("DELETE FROM Incidentes", connection);
-             deleteCmd.ExecuteNonQuery();
+            deleteCmd.ExecuteNonQuery();
         }
 
         using var transaction = connection.BeginTransaction();

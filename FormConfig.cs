@@ -31,7 +31,7 @@ public partial class FormConfig : Form
         catch
         {
             txtCaminhoBanco.ForeColor = Color.Red;
-            toolTip1.SetToolTip(txtCaminhoBanco, "Banco de dados não encontrado no caminho específico.");
+            toolTip1.SetToolTip(txtCaminhoBanco, "Banco de dados não encontrado no caminho específico ou erro ao abrir uma conexão.");
             btnImportar.Enabled = false;
         }
 

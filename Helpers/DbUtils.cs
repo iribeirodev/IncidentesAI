@@ -1,4 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
+using Microsoft.Data.SqlClient;
+using System.Configuration;
 
 namespace IncidentesAI.Helpers
 {
@@ -22,6 +24,14 @@ namespace IncidentesAI.Helpers
             string connectionString = $"Data Source=file:{dbPath};Mode=ReadWrite";
 
             var connection = new SqliteConnection(connectionString);
+            connection.Open();
+            return connection;
+        }
+
+        public static SqlConnection OpenConnection()
+        {
+            var connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            var connection = new SqlConnection(connectionString);
             connection.Open();
             return connection;
         }

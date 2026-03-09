@@ -1,7 +1,8 @@
-﻿using System.Data;
-using Microsoft.Data.Sqlite;
-using IncidentesAI.DTO;
+﻿using IncidentesAI.DTO;
 using IncidentesAI.Helpers;
+using Microsoft.Data.SqlClient;
+using Microsoft.Data.Sqlite;
+using System.Data;
 
 
 namespace IncidentesAI.Services;
@@ -20,22 +21,48 @@ public class AnotacaoDataService(string DbPath)
     /// <param name="numero">Número do incidente.</param>
     /// <param name="status">Status interno associado ao incidente.</param>
     /// <param name="observacao">Observação ou comentário adicional.</param>
-    public void SalvarAnotacao(string numero, string status, string observacao)
+    public void SalvarAnotacao(
+        string numero, 
+        string status, 
+        string observacao)
     {
-        using var conn = DbUtils.OpenConnection(DbPath);
+        using var conn = DbUtils.OpenConnection();
 
-        string commandText = @"INSERT OR REPLACE INTO StatusInternos (
-                                    NumeroIncidente, StatusInterno, Observacao, DataAtualizacao) 
-                                VALUES (
-                                    @num, @status, @obs, datetime('now', 'localtime'))";
+        // Primeiro tenta atualizar
+        string updateText = @"
+        UPDATE dbo.StatusInternos
+        SET StatusInterno = @status,
+            Observacao = @obs,
+            DataAtualizacao = GETDATE()
+        WHERE NumeroIncidente = @num";
 
-        using var cmd = new SqliteCommand(commandText, conn);
-        cmd.Parameters.AddWithValue("@num", numero ?? (object)DBNull.Value);
-        cmd.Parameters.AddWithValue("@status", status ?? (object)DBNull.Value);
-        cmd.Parameters.AddWithValue("@obs", observacao ?? (object)DBNull.Value);
+        using (var updateCmd = new SqlCommand(updateText, conn))
+        {
+            updateCmd.Parameters.AddWithValue("@num", numero ?? (object)DBNull.Value);
+            updateCmd.Parameters.AddWithValue("@status", status ?? (object)DBNull.Value);
+            updateCmd.Parameters.AddWithValue("@obs", observacao ?? (object)DBNull.Value);
 
-        cmd.ExecuteNonQuery();
+            int rowsAffected = updateCmd.ExecuteNonQuery();
+
+            // Se não atualizou nada, insere
+            if (rowsAffected == 0)
+            {
+                string insertText = @"
+                INSERT INTO dbo.StatusInternos 
+                    (NumeroIncidente, StatusInterno, Observacao, DataAtualizacao)
+                VALUES 
+                    (@num, @status, @obs, GETDATE())";
+
+                using var insertCmd = new SqlCommand(insertText, conn);
+                insertCmd.Parameters.AddWithValue("@num", numero ?? (object)DBNull.Value);
+                insertCmd.Parameters.AddWithValue("@status", status ?? (object)DBNull.Value);
+                insertCmd.Parameters.AddWithValue("@obs", observacao ?? (object)DBNull.Value);
+
+                insertCmd.ExecuteNonQuery();
+            }
+        }
     }
+
 
     /// <summary>
     /// Remove a anotação associada a um incidente específico.
@@ -43,10 +70,10 @@ public class AnotacaoDataService(string DbPath)
     /// <param name="numero">Número do incidente cuja anotação será removida.</param>
     public void RemoverAnotacao(string numero)
     {
-        using var conn = DbUtils.OpenConnection(DbPath);
+        using var conn = DbUtils.OpenConnection();
 
-        string commandText = "DELETE FROM StatusInternos WHERE NumeroIncidente = @num";
-        using var cmd = new SqliteCommand(commandText, conn);
+        string commandText = "DELETE FROM dbo.StatusInternos WHERE NumeroIncidente = @num";
+        using var cmd = new SqlCommand(commandText, conn);
         cmd.Parameters.AddWithValue("@num", numero);
         cmd.ExecuteNonQuery();
     }
@@ -58,21 +85,20 @@ public class AnotacaoDataService(string DbPath)
     public DataTable ObterDadosAnotacao(string numeroIncidente)
     {
         DataTable dt = new DataTable();
-        using var conn = DbUtils.OpenConnection(DbPath);
+        using var conn = DbUtils.OpenConnection();
 
-        string commandText = """
+        string commandText = @"
             SELECT 
                 NumeroIncidente, StatusInterno, DataAtualizacao, Observacao 
             FROM 
-                StatusInternos 
+                dbo.StatusInternos 
             WHERE 
-                NumeroIncidente = @num
-            """;
+                NumeroIncidente = @num";
 
-        using var cmd = new SqliteCommand(commandText, conn);
+        using var cmd = new SqlCommand(commandText, conn);
         cmd.Parameters.AddWithValue("@num", numeroIncidente);
 
-        using var reader =  cmd.ExecuteReader();
+        using var reader = cmd.ExecuteReader();
         dt.Load(reader);
 
         return dt;
@@ -86,18 +112,17 @@ public class AnotacaoDataService(string DbPath)
     /// <returns>Objeto <see cref="AnotacaoDTO"/> com os dados da anotação, ou null se não encontrado.</returns>
     public AnotacaoDTO ObterDadosAnotacaoParaExportacao(string numeroIncidente)
     {
-        using var conn = DbUtils.OpenConnection(DbPath);
+        using var conn = DbUtils.OpenConnection();
 
-        string commandText = """
-                SELECT 
-                    NumeroIncidente, StatusInterno, Observacao 
-                FROM 
-                   StatusInternos 
-                WHERE 
-                    NumeroIncidente = @num
-            """;
+        string commandText = @"
+            SELECT 
+                NumeroIncidente, StatusInterno, Observacao 
+            FROM 
+                dbo.StatusInternos 
+            WHERE 
+                NumeroIncidente = @num";
 
-        using var cmd = new SqliteCommand(commandText, conn);
+        using var cmd = new SqlCommand(commandText, conn);
         cmd.Parameters.AddWithValue("@num", numeroIncidente);
 
         using var reader = cmd.ExecuteReader();
@@ -122,23 +147,18 @@ public class AnotacaoDataService(string DbPath)
     public List<string> ObterStatusExistentes()
     {
         var lista = new List<string>();
-        using var conn = DbUtils.OpenConnection(DbPath);
+        using var conn = DbUtils.OpenConnection();
 
-        string commandText = """
-            SELECT 
-                DISTINCT StatusInterno 
-            FROM 
-                StatusInternos 
-            WHERE 
-                StatusInterno IS NOT NULL 
-            ORDER BY 
-                StatusInterno
-            """;
+        string commandText = @"
+            SELECT DISTINCT StatusInterno 
+            FROM dbo.StatusInternos 
+            WHERE StatusInterno IS NOT NULL 
+            ORDER BY StatusInterno";
 
-        using var cmd = new SqliteCommand(commandText, conn);
-        using var reader =  cmd.ExecuteReader();
+        using var cmd = new SqlCommand(commandText, conn);
+        using var reader = cmd.ExecuteReader();
 
-        while ( reader.Read())
+        while (reader.Read())
             lista.Add(reader.GetString(0));
 
         return lista;

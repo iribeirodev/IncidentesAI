@@ -31,11 +31,6 @@
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormConfig));
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            panel1 = new Panel();
-            btnEscolherCaminho = new Button();
-            txtCaminhoBanco = new TextBox();
-            btnCriarDatabase = new Button();
-            label1 = new Label();
             panel2 = new Panel();
             progressBar0 = new IncidentesAI.Components.AnimatedProgressBar();
             btnEscolherCaminhoPlanilha = new Button();
@@ -55,88 +50,27 @@
             label5 = new Label();
             lblModelo = new Label();
             label6 = new Label();
-            label7 = new Label();
             label9 = new Label();
             label11 = new Label();
             label12 = new Label();
             label4 = new Label();
             dgvImported = new DataGridView();
-            btnRemoverSelecionadas = new Button();
-            btnDesmarcarTodas = new Button();
-            panel1.SuspendLayout();
+            Id = new DataGridViewTextBoxColumn();
+            Number = new DataGridViewTextBoxColumn();
+            State = new DataGridViewTextBoxColumn();
+            Caller = new DataGridViewTextBoxColumn();
+            AssignedTo = new DataGridViewTextBoxColumn();
+            Priority = new DataGridViewTextBoxColumn();
+            Created = new DataGridViewTextBoxColumn();
+            ConfigurationItem = new DataGridViewTextBoxColumn();
+            Email = new DataGridViewTextBoxColumn();
+            ShortDescription = new DataGridViewTextBoxColumn();
             panel2.SuspendLayout();
             panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)trackBarNumeroIncidentes).BeginInit();
             panel4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvImported).BeginInit();
             SuspendLayout();
-            // 
-            // panel1
-            // 
-            panel1.BackColor = Color.FromArgb(30, 30, 30);
-            panel1.Controls.Add(btnEscolherCaminho);
-            panel1.Controls.Add(txtCaminhoBanco);
-            panel1.Controls.Add(btnCriarDatabase);
-            panel1.Controls.Add(label1);
-            panel1.Location = new Point(22, 51);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(573, 89);
-            panel1.TabIndex = 0;
-            // 
-            // btnEscolherCaminho
-            // 
-            btnEscolherCaminho.BackgroundImageLayout = ImageLayout.Stretch;
-            btnEscolherCaminho.Cursor = Cursors.Hand;
-            btnEscolherCaminho.FlatAppearance.BorderSize = 0;
-            btnEscolherCaminho.FlatAppearance.MouseOverBackColor = Color.FromArgb(50, 50, 50);
-            btnEscolherCaminho.FlatStyle = FlatStyle.Flat;
-            btnEscolherCaminho.Image = (Image)resources.GetObject("btnEscolherCaminho.Image");
-            btnEscolherCaminho.Location = new Point(514, 8);
-            btnEscolherCaminho.Name = "btnEscolherCaminho";
-            btnEscolherCaminho.Size = new Size(35, 31);
-            btnEscolherCaminho.TabIndex = 3;
-            btnEscolherCaminho.TabStop = false;
-            btnEscolherCaminho.UseVisualStyleBackColor = true;
-            btnEscolherCaminho.Click += btnEscolherCaminho_Click;
-            // 
-            // txtCaminhoBanco
-            // 
-            txtCaminhoBanco.BackColor = Color.FromArgb(45, 45, 48);
-            txtCaminhoBanco.BorderStyle = BorderStyle.FixedSingle;
-            txtCaminhoBanco.ForeColor = Color.Silver;
-            txtCaminhoBanco.Location = new Point(139, 14);
-            txtCaminhoBanco.Name = "txtCaminhoBanco";
-            txtCaminhoBanco.ReadOnly = true;
-            txtCaminhoBanco.Size = new Size(369, 23);
-            txtCaminhoBanco.TabIndex = 2;
-            txtCaminhoBanco.TabStop = false;
-            // 
-            // btnCriarDatabase
-            // 
-            btnCriarDatabase.BackColor = Color.SteelBlue;
-            btnCriarDatabase.Cursor = Cursors.Hand;
-            btnCriarDatabase.FlatAppearance.BorderSize = 0;
-            btnCriarDatabase.FlatStyle = FlatStyle.Flat;
-            btnCriarDatabase.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnCriarDatabase.ForeColor = Color.White;
-            btnCriarDatabase.Location = new Point(218, 43);
-            btnCriarDatabase.Name = "btnCriarDatabase";
-            btnCriarDatabase.Size = new Size(136, 34);
-            btnCriarDatabase.TabIndex = 1;
-            btnCriarDatabase.TabStop = false;
-            btnCriarDatabase.Text = "Criar Database";
-            btnCriarDatabase.UseVisualStyleBackColor = false;
-            btnCriarDatabase.Click += btnCriarDatabase_Click;
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.ForeColor = Color.Silver;
-            label1.Location = new Point(12, 19);
-            label1.Name = "label1";
-            label1.Size = new Size(102, 15);
-            label1.TabIndex = 0;
-            label1.Text = "Local Selecionado";
             // 
             // panel2
             // 
@@ -147,14 +81,14 @@
             panel2.Controls.Add(btnImportar);
             panel2.Controls.Add(txtCaminhoPlanilha);
             panel2.Controls.Add(label2);
-            panel2.Location = new Point(22, 205);
+            panel2.Location = new Point(46, 46);
             panel2.Name = "panel2";
-            panel2.Size = new Size(573, 139);
+            panel2.Size = new Size(573, 126);
             panel2.TabIndex = 1;
             // 
             // progressBar0
             // 
-            progressBar0.BackColor = Color.FromArgb(20, 20, 20);
+            progressBar0.BackColor = Color.Silver;
             progressBar0.ForeColor = Color.WhiteSmoke;
             progressBar0.Location = new Point(59, 78);
             progressBar0.Name = "progressBar0";
@@ -181,7 +115,7 @@
             // 
             lblStatusImportacao.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             lblStatusImportacao.ForeColor = Color.SteelBlue;
-            lblStatusImportacao.Location = new Point(24, 113);
+            lblStatusImportacao.Location = new Point(26, 104);
             lblStatusImportacao.Name = "lblStatusImportacao";
             lblStatusImportacao.Size = new Size(525, 17);
             lblStatusImportacao.TabIndex = 10;
@@ -238,9 +172,9 @@
             panel3.Controls.Add(lblNumeroIncidentes);
             panel3.Controls.Add(trackBarNumeroIncidentes);
             panel3.Controls.Add(label3);
-            panel3.Location = new Point(657, 46);
+            panel3.Location = new Point(641, 46);
             panel3.Name = "panel3";
-            panel3.Size = new Size(567, 94);
+            panel3.Size = new Size(567, 126);
             panel3.TabIndex = 2;
             // 
             // lblExplicacao
@@ -249,7 +183,7 @@
             lblExplicacao.BackColor = Color.Transparent;
             lblExplicacao.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             lblExplicacao.ForeColor = Color.Silver;
-            lblExplicacao.Location = new Point(14, 59);
+            lblExplicacao.Location = new Point(14, 78);
             lblExplicacao.Name = "lblExplicacao";
             lblExplicacao.Size = new Size(535, 13);
             lblExplicacao.TabIndex = 8;
@@ -305,9 +239,9 @@
             panel4.Controls.Add(label5);
             panel4.Controls.Add(lblModelo);
             panel4.Controls.Add(label6);
-            panel4.Location = new Point(660, 205);
+            panel4.Location = new Point(345, 218);
             panel4.Name = "panel4";
-            panel4.Size = new Size(564, 139);
+            panel4.Size = new Size(564, 108);
             panel4.TabIndex = 3;
             // 
             // lblEndpoint
@@ -315,7 +249,7 @@
             lblEndpoint.AutoSize = true;
             lblEndpoint.BackColor = Color.Transparent;
             lblEndpoint.ForeColor = Color.White;
-            lblEndpoint.Location = new Point(141, 83);
+            lblEndpoint.Location = new Point(174, 73);
             lblEndpoint.Name = "lblEndpoint";
             lblEndpoint.Size = new Size(0, 15);
             lblEndpoint.TabIndex = 8;
@@ -325,7 +259,7 @@
             label5.AutoSize = true;
             label5.BackColor = Color.Transparent;
             label5.ForeColor = Color.Silver;
-            label5.Location = new Point(21, 83);
+            label5.Location = new Point(54, 73);
             label5.Name = "label5";
             label5.Size = new Size(55, 15);
             label5.TabIndex = 7;
@@ -336,7 +270,7 @@
             lblModelo.AutoSize = true;
             lblModelo.BackColor = Color.Transparent;
             lblModelo.ForeColor = Color.White;
-            lblModelo.Location = new Point(141, 28);
+            lblModelo.Location = new Point(174, 18);
             lblModelo.Name = "lblModelo";
             lblModelo.Size = new Size(0, 15);
             lblModelo.TabIndex = 6;
@@ -346,143 +280,165 @@
             label6.AutoSize = true;
             label6.BackColor = Color.Transparent;
             label6.ForeColor = Color.Silver;
-            label6.Location = new Point(21, 28);
+            label6.Location = new Point(54, 18);
             label6.Name = "label6";
             label6.Size = new Size(48, 15);
             label6.TabIndex = 5;
             label6.Text = "Modelo";
             // 
-            // label7
-            // 
-            label7.AutoSize = true;
-            label7.Font = new Font("Segoe UI Variable Display Semib", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label7.Location = new Point(22, 9);
-            label7.Name = "label7";
-            label7.Size = new Size(266, 28);
-            label7.TabIndex = 4;
-            label7.Text = "Configuração do Database";
-            // 
             // label9
             // 
             label9.AutoSize = true;
-            label9.Font = new Font("Segoe UI Variable Display Semib", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label9.Location = new Point(22, 157);
+            label9.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label9.Location = new Point(44, 23);
             label9.Name = "label9";
-            label9.Size = new Size(377, 28);
+            label9.Size = new Size(279, 20);
             label9.TabIndex = 6;
             label9.Text = "Importação de Planilha do ServiceNow";
             // 
             // label11
             // 
             label11.AutoSize = true;
-            label11.Font = new Font("Segoe UI Variable Display Semib", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label11.Location = new Point(653, 9);
+            label11.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label11.Location = new Point(639, 23);
             label11.Name = "label11";
-            label11.Size = new Size(202, 28);
+            label11.Size = new Size(150, 20);
             label11.TabIndex = 8;
             label11.Text = "Limite de Incidentes";
             // 
             // label12
             // 
             label12.AutoSize = true;
-            label12.Font = new Font("Segoe UI Variable Display Semib", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label12.Location = new Point(657, 157);
+            label12.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label12.Location = new Point(343, 192);
             label12.Name = "label12";
-            label12.Size = new Size(237, 28);
+            label12.Size = new Size(176, 20);
             label12.TabIndex = 9;
             label12.Text = "Informações do Modelo";
             // 
             // label4
             // 
             label4.AutoSize = true;
-            label4.Font = new Font("Segoe UI Variable Display Semib", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label4.Location = new Point(22, 360);
+            label4.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label4.Location = new Point(46, 331);
             label4.Name = "label4";
-            label4.Size = new Size(227, 28);
+            label4.Size = new Size(167, 20);
             label4.TabIndex = 10;
             label4.Text = "Incidentes Importados";
             // 
             // dgvImported
             // 
             dgvImported.AllowUserToAddRows = false;
+            dgvImported.AllowUserToDeleteRows = false;
             dgvImported.AllowUserToResizeRows = false;
             dgvImported.BackgroundColor = Color.FromArgb(30, 30, 30);
             dgvImported.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvImported.Columns.AddRange(new DataGridViewColumn[] { Id, Number, State, Caller, AssignedTo, Priority, Created, ConfigurationItem, Email, ShortDescription });
             dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = Color.Gainsboro;
+            dataGridViewCellStyle1.BackColor = Color.Black;
             dataGridViewCellStyle1.Font = new Font("Segoe UI", 8F, FontStyle.Regular, GraphicsUnit.Point, 0);
             dataGridViewCellStyle1.ForeColor = Color.White;
-            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Control;
-            dataGridViewCellStyle1.SelectionForeColor = Color.Black;
+            dataGridViewCellStyle1.SelectionBackColor = Color.RoyalBlue;
+            dataGridViewCellStyle1.SelectionForeColor = Color.White;
             dataGridViewCellStyle1.WrapMode = DataGridViewTriState.False;
             dgvImported.DefaultCellStyle = dataGridViewCellStyle1;
             dgvImported.GridColor = Color.DimGray;
-            dgvImported.Location = new Point(22, 396);
+            dgvImported.Location = new Point(46, 354);
             dgvImported.MultiSelect = false;
             dgvImported.Name = "dgvImported";
             dgvImported.ReadOnly = true;
             dgvImported.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            dgvImported.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvImported.Size = new Size(1202, 193);
+            dgvImported.SelectionMode = DataGridViewSelectionMode.CellSelect;
+            dgvImported.Size = new Size(1162, 219);
             dgvImported.TabIndex = 11;
             dgvImported.RowPostPaint += dgvImported_RowPostPaint;
             dgvImported.RowPrePaint += dgvImported_RowPrePaint;
             dgvImported.KeyDown += dgvImported_KeyDown;
             // 
-            // btnRemoverSelecionadas
+            // Id
             // 
-            btnRemoverSelecionadas.BackColor = Color.Crimson;
-            btnRemoverSelecionadas.Cursor = Cursors.Hand;
-            btnRemoverSelecionadas.Enabled = false;
-            btnRemoverSelecionadas.FlatAppearance.BorderSize = 0;
-            btnRemoverSelecionadas.FlatStyle = FlatStyle.Flat;
-            btnRemoverSelecionadas.Font = new Font("Segoe UI", 8.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnRemoverSelecionadas.ForeColor = Color.White;
-            btnRemoverSelecionadas.Location = new Point(1079, 595);
-            btnRemoverSelecionadas.Name = "btnRemoverSelecionadas";
-            btnRemoverSelecionadas.Size = new Size(145, 24);
-            btnRemoverSelecionadas.TabIndex = 14;
-            btnRemoverSelecionadas.TabStop = false;
-            btnRemoverSelecionadas.Text = "Remover Selecionadas";
-            btnRemoverSelecionadas.UseVisualStyleBackColor = false;
-            btnRemoverSelecionadas.Click += btnRemoverSelecionadas_Click;
+            Id.DataPropertyName = "Id";
+            Id.HeaderText = "Id";
+            Id.Name = "Id";
+            Id.ReadOnly = true;
             // 
-            // btnDesmarcarTodas
+            // Number
             // 
-            btnDesmarcarTodas.BackColor = Color.SteelBlue;
-            btnDesmarcarTodas.Cursor = Cursors.Hand;
-            btnDesmarcarTodas.Enabled = false;
-            btnDesmarcarTodas.FlatAppearance.BorderSize = 0;
-            btnDesmarcarTodas.FlatStyle = FlatStyle.Flat;
-            btnDesmarcarTodas.Font = new Font("Segoe UI", 8.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnDesmarcarTodas.ForeColor = Color.White;
-            btnDesmarcarTodas.Location = new Point(897, 595);
-            btnDesmarcarTodas.Name = "btnDesmarcarTodas";
-            btnDesmarcarTodas.Size = new Size(145, 24);
-            btnDesmarcarTodas.TabIndex = 15;
-            btnDesmarcarTodas.TabStop = false;
-            btnDesmarcarTodas.Text = "Desmarcar Todas";
-            btnDesmarcarTodas.UseVisualStyleBackColor = false;
-            btnDesmarcarTodas.Click += btnDesmarcarTodas_Click;
+            Number.DataPropertyName = "Number";
+            Number.HeaderText = "Number";
+            Number.Name = "Number";
+            Number.ReadOnly = true;
+            // 
+            // State
+            // 
+            State.DataPropertyName = "State";
+            State.HeaderText = "State";
+            State.Name = "State";
+            State.ReadOnly = true;
+            // 
+            // Caller
+            // 
+            Caller.DataPropertyName = "Caller";
+            Caller.HeaderText = "Caller";
+            Caller.Name = "Caller";
+            Caller.ReadOnly = true;
+            // 
+            // AssignedTo
+            // 
+            AssignedTo.DataPropertyName = "AssignedTo";
+            AssignedTo.HeaderText = "AssignedTo";
+            AssignedTo.Name = "AssignedTo";
+            AssignedTo.ReadOnly = true;
+            // 
+            // Priority
+            // 
+            Priority.DataPropertyName = "Priority";
+            Priority.HeaderText = "Priority";
+            Priority.Name = "Priority";
+            Priority.ReadOnly = true;
+            // 
+            // Created
+            // 
+            Created.DataPropertyName = "Created";
+            Created.HeaderText = "Created";
+            Created.Name = "Created";
+            Created.ReadOnly = true;
+            // 
+            // ConfigurationItem
+            // 
+            ConfigurationItem.DataPropertyName = "ConfigurationItem";
+            ConfigurationItem.HeaderText = "ConfigurationItem";
+            ConfigurationItem.Name = "ConfigurationItem";
+            ConfigurationItem.ReadOnly = true;
+            // 
+            // Email
+            // 
+            Email.DataPropertyName = "Email";
+            Email.HeaderText = "Email";
+            Email.Name = "Email";
+            Email.ReadOnly = true;
+            // 
+            // ShortDescription
+            // 
+            ShortDescription.DataPropertyName = "ShortDescription";
+            ShortDescription.HeaderText = "ShortDescription";
+            ShortDescription.Name = "ShortDescription";
+            ShortDescription.ReadOnly = true;
             // 
             // FormConfig
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(18, 18, 18);
-            ClientSize = new Size(1253, 644);
-            Controls.Add(btnDesmarcarTodas);
-            Controls.Add(btnRemoverSelecionadas);
+            ClientSize = new Size(1253, 585);
             Controls.Add(dgvImported);
             Controls.Add(label4);
             Controls.Add(label12);
             Controls.Add(label11);
             Controls.Add(label9);
-            Controls.Add(label7);
             Controls.Add(panel4);
             Controls.Add(panel3);
             Controls.Add(panel2);
-            Controls.Add(panel1);
             ForeColor = Color.White;
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
@@ -493,8 +449,6 @@
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Configurações do Sistema";
             Load += FormConfig_Load;
-            panel1.ResumeLayout(false);
-            panel1.PerformLayout();
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
             panel3.ResumeLayout(false);
@@ -508,13 +462,7 @@
         }
 
         #endregion
-
-        private Panel panel1;
-        private Button btnCriarDatabase;
-        private Label label1;
         private Panel panel2;
-        private Button btnEscolherCaminho;
-        private TextBox txtCaminhoBanco;
         private TextBox txtCaminhoPlanilha;
         private Label label2;
         private Button btnImportar;
@@ -529,7 +477,6 @@
         private ToolTip toolTip1;
         private Panel panel4;
         private Label label6;
-        private Label label7;
         private Label label9;
         private Label label11;
         private Label label12;
@@ -539,7 +486,15 @@
         private Components.AnimatedProgressBar progressBar0;
         private Label label4;
         private DataGridView dgvImported;
-        private Button btnRemoverSelecionadas;
-        private Button btnDesmarcarTodas;
+        private DataGridViewTextBoxColumn Id;
+        private DataGridViewTextBoxColumn Number;
+        private DataGridViewTextBoxColumn State;
+        private DataGridViewTextBoxColumn Caller;
+        private DataGridViewTextBoxColumn AssignedTo;
+        private DataGridViewTextBoxColumn Priority;
+        private DataGridViewTextBoxColumn Created;
+        private DataGridViewTextBoxColumn ConfigurationItem;
+        private DataGridViewTextBoxColumn Email;
+        private DataGridViewTextBoxColumn ShortDescription;
     }
 }

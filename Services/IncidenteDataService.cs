@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.Sqlite;
+﻿using Microsoft.Data.SqlClient;
 using IncidentesAI.Model;
 using IncidentesAI.Helpers;
 
@@ -11,7 +11,7 @@ namespace IncidentesAI.Services;
 /// filtragem, exclusão e preparação de contexto para IA.
 /// </summary>
 
-public class IncidenteDataService(string DbPath)
+public class IncidenteDataService//(string DbPath)
 {
     #region Métodos Públicos
 
@@ -25,32 +25,32 @@ public class IncidenteDataService(string DbPath)
     {
         var incidentes = new List<Incidente>();
 
-        using var connection = DbUtils.OpenConnection(DbPath);
+        using var connection = DbUtils.OpenConnection(); //DbUtils.OpenConnection(DbPath);
 
         string commandText = """
             SELECT 
-                Id, 
-                "Number", 
-                AssignmentGroup, 
-                State, 
-                Caller, 
-                AssignedTo, 
-                Priority, 
-                Created, 
-                strftime('%d/%m/%Y %H:%M:%S', Created) AS CreatedFormatado,
-                ShortDescription, 
-                ConfigurationItem, 
-                Email
+                id, 
+                number, 
+                assignment_group, 
+                state, 
+                caller, 
+                assigned_to, 
+                priority, 
+                created, 
+                FORMAT(created, 'dd/MM/yyyy HH:mm:ss') AS CreatedFormatado,
+                short_description, 
+                configuration_item, 
+                email
             FROM 
-                Incidentes
+                dbo.Incidentes
             ORDER BY 
-                datetime(Created) DESC
+                created DESC
         """;
 
         if (numeroIncidentesConsiderar > 0)
-            commandText += $" LIMIT {numeroIncidentesConsiderar}";
+            commandText += $" OFFSET 0 ROWS FETCH NEXT {numeroIncidentesConsiderar} ROWS ONLY";
 
-        using var cmd = new SqliteCommand(commandText, connection);
+        using var cmd = new SqlCommand(commandText, connection);
         using var reader = cmd.ExecuteReader();
 
         while (reader.Read())
@@ -64,11 +64,7 @@ public class IncidenteDataService(string DbPath)
                 Caller = reader[4] as string ?? string.Empty,
                 AssignedTo = reader[5] as string ?? string.Empty,
                 Priority = reader[6] as string ?? string.Empty,
-                Created = DateTime.TryParse(
-                            reader[7]?.ToString(), 
-                            out var dt) 
-                        ? dt 
-                        : DateTime.MinValue,
+                Created = reader.IsDBNull(7) ? DateTime.MinValue : reader.GetDateTime(7),
                 CreatedFormatado = reader[8] as string ?? string.Empty,
                 ShortDescription = reader[9] as string ?? string.Empty,
                 ConfigurationItem = reader[10] as string ?? string.Empty,
@@ -87,7 +83,7 @@ public class IncidenteDataService(string DbPath)
     public List<string> ObterValoresUnicos(string columnName)
     {
         var lista = new List<string>();
-        using var connection = DbUtils.OpenConnection(DbPath);
+        using var connection = DbUtils.OpenConnection(); //(DbPath);
 
         string cmdText = $"""
         SELECT 
@@ -100,7 +96,7 @@ public class IncidenteDataService(string DbPath)
             {columnName} ASC
         """;
 
-        using var cmd = new SqliteCommand(cmdText, connection);
+        using var cmd = new SqlCommand(cmdText, connection);
         using var reader = cmd.ExecuteReader();
         while (reader.Read()) lista.Add(reader.GetString(0));
 
@@ -146,21 +142,23 @@ public class IncidenteDataService(string DbPath)
     /// <returns>Texto formatado com os incidentes selecionados.</returns>
     public string ObterContextoParaIA(int top = 10)
     {
-        using var connection = DbUtils.OpenConnection(DbPath);
+        using var connection = DbUtils.OpenConnection(); //(DbPath);
 
-        string cmdText = $@"SELECT 
-                                Number, 
-                                State, 
-                                strftime('%d/%m/%Y %H:%M:%S', Created) AS Created, 
-                                ShortDescription, 
-                                AssignedTo, 
-                                Caller
-                            FROM 
-                                Incidentes 
-                            ORDER BY 
-                                Created DESC LIMIT {top}";
+        string cmdText = $@"
+            SELECT TOP {top}
+                number, 
+                state, 
+                FORMAT(created, 'dd/MM/yyyy HH:mm:ss') AS created, 
+                short_description, 
+                assigned_to, 
+                configuration_item,
+                caller
+            FROM 
+                dbo.Incidentes 
+            ORDER BY 
+                number DESC";
 
-        using var cmd = new SqliteCommand(cmdText, connection);
+        using var cmd = new SqlCommand(cmdText, connection);
         cmd.Parameters.AddWithValue("@top", top);
         using var reader = cmd.ExecuteReader();
 
@@ -168,18 +166,19 @@ public class IncidenteDataService(string DbPath)
 
         while (reader.Read())
         {
-            var number = reader["Number"]?.ToString();
-            var state = reader["State"]?.ToString();
-            var created = reader["Created"]?.ToString();
-            var assigned = reader["AssignedTo"]?.ToString();
-            var caller = reader["Caller"]?.ToString();
-            var ci = reader["ConfigurationItem"]?.ToString();
-            var desc = (reader["ShortDescription"]?.ToString() ?? "")
+            var number = reader["number"]?.ToString();
+            var state = reader["state"]?.ToString();
+            var created = reader["created"]?.ToString();
+            var assigned = reader["assigned_to"]?.ToString();
+            var caller = reader["caller"]?.ToString();
+            var ci = reader["configuration_item"]?.ToString();
+            var desc = (reader["short_description"]?.ToString() ?? "")
                 .Replace("|", " ")
                 .Replace("\n", " ")
                 .Replace("\r", " ")
                 .Replace("\t", " ")
                 .Trim();
+
             desc = (desc.Length > 120) ? desc.Substring(0, 120) : desc;
 
             linhas.Add($"{number} | {state} | {ci} | {created} | {assigned} | {caller} | {desc}");
@@ -194,11 +193,11 @@ public class IncidenteDataService(string DbPath)
     /// <param name="id">Identificador único do incidente.</param>
     public void ExcluirIncidentePorId(int id)
     {
-        using var connection = DbUtils.OpenConnection(DbPath);
+        using var connection = DbUtils.OpenConnection();
 
         string sql = "DELETE FROM Incidentes WHERE Id = @Id";
 
-        using var cmd = new SqliteCommand(sql, connection);
+        using var cmd = new SqlCommand(sql, connection);
         cmd.Parameters.AddWithValue("@Id", id);
 
         cmd.ExecuteNonQuery();

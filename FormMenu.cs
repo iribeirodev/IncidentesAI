@@ -49,7 +49,9 @@ public partial class FormMenu : Form
         => new FormMain().ShowDialog();
 
     private void lblConfiguracoes_Click(object sender, EventArgs e)
-        => new FormConfig().ShowDialog();
+    {
+        new FormConfig().ShowDialog();
+    }
 
     private void Sair_Click(object sender, EventArgs e)
         => Application.Exit();

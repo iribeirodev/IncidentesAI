@@ -74,7 +74,7 @@ public partial class FormMain : Form
     }
     #endregion
 
-    #region Métodos Públicos
+    #region Métodos Principais
 
     /// <summary>
     /// Configura e inicializa o Kernel da IA utilizado no sistema.
@@ -127,7 +127,11 @@ public partial class FormMain : Form
     {
         if (string.IsNullOrWhiteSpace(pergunta)) return;
 
+        var perguntaExistente = _historicoPerguntas.Any(_ => _.Equals(pergunta));
+
         // Adiciona na lista e reseta o índice para o final
+        if (perguntaExistente) return;
+
         _historicoPerguntas.Add(pergunta);
         _indiceHistorico = _historicoPerguntas.Count;
 
@@ -149,8 +153,8 @@ public partial class FormMain : Form
     {
         try
         {
-            string caminhoDb = Properties.Settings.Default.UltimoCaminhoBanco;
-            var dataService = new IncidenteDataService(caminhoDb);
+            //string caminhoDb = Properties.Settings.Default.UltimoCaminhoBanco;
+            var dataService = new IncidenteDataService(); //(caminhoDb);
             _todosIncidentes = dataService.ObterTodosIncidentes(_numeroIncidentesConsiderar);
 
             dgvIncidentes.AlternatingRowsDefaultCellStyle.BackColor = Color.Empty;
@@ -179,16 +183,11 @@ public partial class FormMain : Form
     /// </remarks>
     private void PreencherCombosFiltro()
     {
-        string caminhoDb = Properties.Settings.Default.UltimoCaminhoBanco;
-
-        if (string.IsNullOrEmpty(caminhoDb) || !System.IO.File.Exists(caminhoDb))
-            return;
-
         try
         {
-            var dataService = new IncidenteDataService(caminhoDb);
+            var dataService = new IncidenteDataService();
 
-            var itensCI = dataService.ObterValoresUnicos("ConfigurationItem");
+            var itensCI = dataService.ObterValoresUnicos("configuration_item");
             cboConfigurationItem.Items.Clear();
             cboConfigurationItem.Items.Add("--- Todos ---");
             cboConfigurationItem.Items.AddRange(itensCI.ToArray());
@@ -304,8 +303,8 @@ public partial class FormMain : Form
     /// Ao final, rola automaticamente o controle para mostrar a nova entrada.
     /// </remarks>
     private void AdicionarTextoFormatado(
-        string autor, 
-        string texto, 
+        string autor,
+        string texto,
         Color corTexto)
     {
         string dataHora = $"[{DateTime.Now:HH:mm}] ";
@@ -400,13 +399,49 @@ public partial class FormMain : Form
         btnShowCalendarInicio.Enabled = habilitado;
         btnShowCalendarFim.Enabled = habilitado;
     }
+
+    /// <summary>
+    /// Verifica se a pergunta está relacionada a incidentes.
+    /// </summary>
+    /// <param name="pergunta">Texto da pergunta feita pelo usuário.</param>
+    /// <returns>
+    /// "INCIDENTE" se a pergunta contém palavras-chave relacionadas,
+    /// ou "FORA DO ESCOPO" caso contrário.
+    /// </returns>
+    private string ClassificarPergunta(string pergunta)
+    {
+        // Carrega lista de palavras-chave do Properties.Settings
+        var palavrasChaveConfig = Properties.Settings.Default.PalavrasChaveIncidentes;
+        var palavrasChave = new HashSet<string>(
+            palavrasChaveConfig.Split(',', StringSplitOptions.RemoveEmptyEntries),
+            StringComparer.OrdinalIgnoreCase
+        );
+
+        // Verifica se a pergunta contém alguma palavra-chave
+        bool relacionado = palavrasChave.Any(p => pergunta.Contains(p, StringComparison.OrdinalIgnoreCase));
+
+        return relacionado ? "INCIDENTE" : "FORA_ESCOPO";
+    }
     #endregion
 
     #region Eventos de UI
     private void FormMain_Load(object sender, EventArgs e)
     {
         timerFade.Start();
-        CarregarDados();
+        try
+        {
+            Cursor = Cursors.WaitCursor;
+            CarregarDados();
+        }
+        catch (Exception exc)
+        {
+
+            UIHelper.MostrarErro($"Erro ao carregar os incidentes: {exc.Message}");
+        } 
+        finally
+        {
+            Cursor = Cursors.Default;
+        }
     }
 
     private void btnFiltrar_Click(object sender, EventArgs e) => FiltrarDados();
@@ -454,12 +489,22 @@ public partial class FormMain : Form
         string userPrompt = txtPergunta.Text;
         if (string.IsNullOrWhiteSpace(userPrompt))
         {
-            MessageBox.Show("Por favor, digite uma pergunta ou comando.");
+            UIHelper.MostrarAviso("Por favor, digite uma pergunta ou comando.");
             return;
         }
 
-        SalvarPerguntaNoHistorico(userPrompt);
         AdicionarTextoFormatado("Usuário", userPrompt, Color.Orange);
+
+        switch (ClassificarPergunta(userPrompt))
+        {
+            case "FORA_ESCOPO":
+                AdicionarTextoFormatado("IncidentesAI", "Pergunta fora do escopo de incidentes.", Color.Red);
+                return;
+            case "INCIDENTE":
+                break;
+        }
+
+        SalvarPerguntaNoHistorico(userPrompt);
 
         btnProcessar.Enabled = false;
         lblStatus.Text = "Consultando IA...";
@@ -467,8 +512,8 @@ public partial class FormMain : Form
 
         try
         {
-            string caminhoDb = Properties.Settings.Default.UltimoCaminhoBanco;
-            var dataService = new IncidenteDataService(caminhoDb);
+            //string caminhoDb = Properties.Settings.Default.UltimoCaminhoBanco;
+            var dataService = new IncidenteDataService(); //(caminhoDb);
 
             // Verifica se é pergunta de ferramenta
             string promptLower = userPrompt.ToLower();
@@ -486,7 +531,8 @@ public partial class FormMain : Form
             {
                 var listaFiltrada = (List<Incidente>)dgvIncidentes.DataSource;
                 contextoDados = dataService.ObterContextoFiltradoParaIA(listaFiltrada);
-            } else
+            }
+            else
             {
                 if (!perguntaTooling)
                     contextoDados = dataService.ObterContextoParaIA(_numeroIncidentesConsiderar);
@@ -656,6 +702,20 @@ public partial class FormMain : Form
             headerBounds, centerFormat);
     }
 
+    private void btnLimparHistorico_Click(object sender, EventArgs e)
+    {
+        // Limpa a lista em memória
+        _historicoPerguntas.Clear();
+        _indiceHistorico = -1;
+
+        // Limpa o arquivo (sobrescreve com vazio)
+        File.WriteAllText(_caminhoArquivoHistorico, string.Empty);
+
+        UIHelper.MostrarSucesso("Histórico de perguntas limpo com sucesso.");
+
+        txtPergunta.Text = "";
+    }
+
     private void timerFade_Tick(object sender, EventArgs e)
     {
         if (this.Opacity < 1)
@@ -666,7 +726,6 @@ public partial class FormMain : Form
     #endregion
 
     #region Kernel Functions para IA
-
     [KernelFunction]
     [Description("Gera um arquivo Excel com os dados exatamente como estão visíveis na tabela da tela (colunas em português e filtros aplicados).")]
     public string ExportarTabelaParaExcel()
@@ -752,9 +811,9 @@ public partial class FormMain : Form
     [KernelFunction]
     [Description("Gera um gráfico em uma janela separada. Tipos: 'pie' (pizza), 'bar' (barra). O parâmetro 'titulo' deve ser um resumo do que o gráfico representa.")]
     public string GerarGraficoJanelaSeparada(
-        string tipo, 
-        string labelsCsv, 
-        string valoresCsv, 
+        string tipo,
+        string labelsCsv,
+        string valoresCsv,
         string titulo)
     {
         return (string)this.Invoke(new Func<string>(() =>
@@ -849,5 +908,6 @@ public partial class FormMain : Form
         }));
     }
     #endregion
+
 
 }

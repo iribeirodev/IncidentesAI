@@ -109,5 +109,18 @@ Dados dos Incidentes:")]
                 this["NumeroIncidentes"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"incidente,incidentes,ticket,tickets,chamado,chamados,ocorrência,ocorrências,problema,problemas,erro,falha,bug,number,descrição,shortdescription,status,state,caller,solicitante,assignedto,responsável,configurationitem,item de configuração,app,aplicativo,sistema,serviço,contar,total,quantidade,listar,agrupar,filtrar,exportar,excel,planilha,csv,gráfico,gráficos,chart,pizza,barras,pie,bar,resumo,análise,padrões,tendência,histórico,dados,contexto
+")]
+        public string PalavrasChaveIncidentes {
+            get {
+                return ((string)(this["PalavrasChaveIncidentes"]));
+            }
+            set {
+                this["PalavrasChaveIncidentes"] = value;
+            }
+        }
     }
 }

@@ -29,11 +29,22 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             dgvIncidentes = new DataGridView();
+            Id = new DataGridViewTextBoxColumn();
+            Number = new DataGridViewTextBoxColumn();
+            AssignmentGroup = new DataGridViewTextBoxColumn();
+            State = new DataGridViewTextBoxColumn();
+            Caller = new DataGridViewTextBoxColumn();
+            AssignedTo = new DataGridViewTextBoxColumn();
+            Priority = new DataGridViewTextBoxColumn();
+            CreatedFormatado = new DataGridViewTextBoxColumn();
+            ShortDescription = new DataGridViewTextBoxColumn();
+            ConfigurationItem = new DataGridViewTextBoxColumn();
+            Email = new DataGridViewTextBoxColumn();
             panel1 = new Panel();
             btnShowCalendarFim = new Button();
             txtDtFim = new TextBox();
@@ -54,6 +65,7 @@
             label2 = new Label();
             label1 = new Label();
             panel2 = new Panel();
+            btnLimparHistorico = new Button();
             btnHistoricoDown = new Button();
             btnHistoricoUp = new Button();
             btnPrompt = new Button();
@@ -62,17 +74,6 @@
             txtPergunta = new TextBox();
             txtHistorico = new RichTextBox();
             timerFade = new System.Windows.Forms.Timer(components);
-            Id = new DataGridViewTextBoxColumn();
-            Number = new DataGridViewTextBoxColumn();
-            AssignmentGroup = new DataGridViewTextBoxColumn();
-            State = new DataGridViewTextBoxColumn();
-            Caller = new DataGridViewTextBoxColumn();
-            AssignedTo = new DataGridViewTextBoxColumn();
-            Priority = new DataGridViewTextBoxColumn();
-            CreatedFormatado = new DataGridViewTextBoxColumn();
-            ShortDescription = new DataGridViewTextBoxColumn();
-            ConfigurationItem = new DataGridViewTextBoxColumn();
-            Email = new DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)dgvIncidentes).BeginInit();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
@@ -84,29 +85,29 @@
             dgvIncidentes.AllowUserToDeleteRows = false;
             dgvIncidentes.AllowUserToResizeColumns = false;
             dgvIncidentes.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.BackColor = Color.Transparent;
-            dgvIncidentes.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle4.BackColor = Color.Transparent;
+            dgvIncidentes.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle4;
             dgvIncidentes.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             dgvIncidentes.BackgroundColor = Color.FromArgb(30, 30, 30);
             dgvIncidentes.BorderStyle = BorderStyle.None;
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = Color.WhiteSmoke;
-            dataGridViewCellStyle2.Font = new Font("Segoe UI", 8.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle2.ForeColor = Color.Black;
-            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
-            dgvIncidentes.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = Color.WhiteSmoke;
+            dataGridViewCellStyle5.Font = new Font("Segoe UI", 8.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle5.ForeColor = Color.Black;
+            dataGridViewCellStyle5.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = DataGridViewTriState.True;
+            dgvIncidentes.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
             dgvIncidentes.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvIncidentes.Columns.AddRange(new DataGridViewColumn[] { Id, Number, AssignmentGroup, State, Caller, AssignedTo, Priority, CreatedFormatado, ShortDescription, ConfigurationItem, Email });
-            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = Color.FromArgb(37, 37, 38);
-            dataGridViewCellStyle3.Font = new Font("Segoe UI", 9F);
-            dataGridViewCellStyle3.ForeColor = Color.White;
-            dataGridViewCellStyle3.SelectionBackColor = Color.FromArgb(9, 71, 113);
-            dataGridViewCellStyle3.SelectionForeColor = Color.White;
-            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.False;
-            dgvIncidentes.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = Color.FromArgb(37, 37, 38);
+            dataGridViewCellStyle6.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle6.ForeColor = Color.White;
+            dataGridViewCellStyle6.SelectionBackColor = Color.FromArgb(9, 71, 113);
+            dataGridViewCellStyle6.SelectionForeColor = Color.White;
+            dataGridViewCellStyle6.WrapMode = DataGridViewTriState.False;
+            dgvIncidentes.DefaultCellStyle = dataGridViewCellStyle6;
             dgvIncidentes.EnableHeadersVisualStyles = false;
             dgvIncidentes.GridColor = Color.FromArgb(50, 50, 50);
             dgvIncidentes.Location = new Point(31, 391);
@@ -118,6 +119,93 @@
             dgvIncidentes.CellDoubleClick += dgvIncidentes_CellDoubleClick;
             dgvIncidentes.ColumnHeaderMouseClick += dgvIncidentes_ColumnHeaderMouseClick;
             dgvIncidentes.RowPostPaint += dgvIncidentes_RowPostPaint;
+            // 
+            // Id
+            // 
+            Id.DataPropertyName = "Id";
+            Id.Frozen = true;
+            Id.HeaderText = "Id";
+            Id.Name = "Id";
+            Id.ReadOnly = true;
+            Id.Width = 60;
+            // 
+            // Number
+            // 
+            Number.DataPropertyName = "Number";
+            Number.Frozen = true;
+            Number.HeaderText = "Número";
+            Number.Name = "Number";
+            Number.ReadOnly = true;
+            Number.Width = 90;
+            // 
+            // AssignmentGroup
+            // 
+            AssignmentGroup.DataPropertyName = "AssignmentGroup";
+            AssignmentGroup.HeaderText = "Grupo de Atribuição";
+            AssignmentGroup.Name = "AssignmentGroup";
+            AssignmentGroup.ReadOnly = true;
+            AssignmentGroup.Width = 150;
+            // 
+            // State
+            // 
+            State.DataPropertyName = "State";
+            State.HeaderText = "Status";
+            State.Name = "State";
+            State.ReadOnly = true;
+            State.Width = 80;
+            // 
+            // Caller
+            // 
+            Caller.DataPropertyName = "Caller";
+            Caller.HeaderText = "Solicitante";
+            Caller.Name = "Caller";
+            Caller.ReadOnly = true;
+            Caller.Width = 150;
+            // 
+            // AssignedTo
+            // 
+            AssignedTo.DataPropertyName = "AssignedTo";
+            AssignedTo.HeaderText = "Atribuido a";
+            AssignedTo.Name = "AssignedTo";
+            AssignedTo.ReadOnly = true;
+            AssignedTo.Width = 150;
+            // 
+            // Priority
+            // 
+            Priority.DataPropertyName = "Priority";
+            Priority.HeaderText = "Prioridade";
+            Priority.Name = "Priority";
+            Priority.ReadOnly = true;
+            // 
+            // CreatedFormatado
+            // 
+            CreatedFormatado.DataPropertyName = "CreatedFormatado";
+            CreatedFormatado.HeaderText = "Criado em";
+            CreatedFormatado.Name = "CreatedFormatado";
+            CreatedFormatado.ReadOnly = true;
+            // 
+            // ShortDescription
+            // 
+            ShortDescription.DataPropertyName = "ShortDescription";
+            ShortDescription.HeaderText = "Descrição";
+            ShortDescription.Name = "ShortDescription";
+            ShortDescription.ReadOnly = true;
+            // 
+            // ConfigurationItem
+            // 
+            ConfigurationItem.DataPropertyName = "ConfigurationItem";
+            ConfigurationItem.HeaderText = "Item de Configuração";
+            ConfigurationItem.Name = "ConfigurationItem";
+            ConfigurationItem.ReadOnly = true;
+            ConfigurationItem.Width = 150;
+            // 
+            // Email
+            // 
+            Email.DataPropertyName = "Email";
+            Email.HeaderText = "E-mail";
+            Email.Name = "Email";
+            Email.ReadOnly = true;
+            Email.Width = 200;
             // 
             // panel1
             // 
@@ -359,6 +447,7 @@
             // 
             panel2.Anchor = AnchorStyles.Right;
             panel2.BackColor = Color.FromArgb(30, 30, 30);
+            panel2.Controls.Add(btnLimparHistorico);
             panel2.Controls.Add(btnHistoricoDown);
             panel2.Controls.Add(btnHistoricoUp);
             panel2.Controls.Add(btnPrompt);
@@ -371,6 +460,24 @@
             panel2.Size = new Size(329, 566);
             panel2.TabIndex = 4;
             // 
+            // btnLimparHistorico
+            // 
+            btnLimparHistorico.BackColor = Color.FromArgb(45, 45, 48);
+            btnLimparHistorico.Cursor = Cursors.Hand;
+            btnLimparHistorico.FlatAppearance.BorderColor = Color.FromArgb(80, 80, 80);
+            btnLimparHistorico.FlatAppearance.MouseOverBackColor = Color.SteelBlue;
+            btnLimparHistorico.FlatStyle = FlatStyle.Flat;
+            btnLimparHistorico.Font = new Font("Segoe UI Symbol", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnLimparHistorico.ForeColor = Color.Crimson;
+            btnLimparHistorico.Location = new Point(294, 62);
+            btnLimparHistorico.Name = "btnLimparHistorico";
+            btnLimparHistorico.Size = new Size(21, 19);
+            btnLimparHistorico.TabIndex = 15;
+            btnLimparHistorico.Text = "x";
+            btnLimparHistorico.UseCompatibleTextRendering = true;
+            btnLimparHistorico.UseVisualStyleBackColor = false;
+            btnLimparHistorico.Click += btnLimparHistorico_Click;
+            // 
             // btnHistoricoDown
             // 
             btnHistoricoDown.BackColor = Color.FromArgb(45, 45, 48);
@@ -379,7 +486,7 @@
             btnHistoricoDown.FlatAppearance.MouseOverBackColor = Color.SteelBlue;
             btnHistoricoDown.FlatStyle = FlatStyle.Flat;
             btnHistoricoDown.Font = new Font("Arial", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            btnHistoricoDown.Location = new Point(293, 51);
+            btnHistoricoDown.Location = new Point(294, 39);
             btnHistoricoDown.Name = "btnHistoricoDown";
             btnHistoricoDown.Size = new Size(21, 19);
             btnHistoricoDown.TabIndex = 14;
@@ -396,7 +503,7 @@
             btnHistoricoUp.FlatAppearance.MouseOverBackColor = Color.SteelBlue;
             btnHistoricoUp.FlatStyle = FlatStyle.Flat;
             btnHistoricoUp.Font = new Font("Arial", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            btnHistoricoUp.Location = new Point(293, 26);
+            btnHistoricoUp.Location = new Point(294, 15);
             btnHistoricoUp.Name = "btnHistoricoUp";
             btnHistoricoUp.Size = new Size(21, 19);
             btnHistoricoUp.TabIndex = 13;
@@ -414,7 +521,7 @@
             btnPrompt.FlatStyle = FlatStyle.Flat;
             btnPrompt.Font = new Font("Segoe UI Emoji", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             btnPrompt.ForeColor = Color.SteelBlue;
-            btnPrompt.Location = new Point(290, 82);
+            btnPrompt.Location = new Point(290, 92);
             btnPrompt.Name = "btnPrompt";
             btnPrompt.Size = new Size(24, 24);
             btnPrompt.TabIndex = 12;
@@ -426,9 +533,9 @@
             // 
             lblStatus.Font = new Font("Segoe UI", 8F, FontStyle.Regular, GraphicsUnit.Point, 0);
             lblStatus.ForeColor = Color.SteelBlue;
-            lblStatus.Location = new Point(14, 543);
+            lblStatus.Location = new Point(14, 538);
             lblStatus.Name = "lblStatus";
-            lblStatus.Size = new Size(298, 16);
+            lblStatus.Size = new Size(298, 19);
             lblStatus.TabIndex = 11;
             lblStatus.TextAlign = ContentAlignment.MiddleCenter;
             // 
@@ -438,7 +545,7 @@
             btnProcessar.FlatAppearance.BorderSize = 0;
             btnProcessar.FlatStyle = FlatStyle.Flat;
             btnProcessar.ForeColor = Color.White;
-            btnProcessar.Location = new Point(90, 82);
+            btnProcessar.Location = new Point(95, 90);
             btnProcessar.Name = "btnProcessar";
             btnProcessar.Size = new Size(139, 26);
             btnProcessar.TabIndex = 10;
@@ -450,11 +557,12 @@
             // 
             txtPergunta.BackColor = Color.FromArgb(45, 45, 48);
             txtPergunta.BorderStyle = BorderStyle.FixedSingle;
-            txtPergunta.ForeColor = Color.FromArgb(241, 241, 241);
-            txtPergunta.Location = new Point(13, 24);
+            txtPergunta.Font = new Font("Segoe UI Variable Text Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            txtPergunta.ForeColor = Color.Gold;
+            txtPergunta.Location = new Point(14, 16);
             txtPergunta.Multiline = true;
             txtPergunta.Name = "txtPergunta";
-            txtPergunta.Size = new Size(274, 52);
+            txtPergunta.Size = new Size(274, 66);
             txtPergunta.TabIndex = 5;
             // 
             // txtHistorico
@@ -462,9 +570,9 @@
             txtHistorico.BackColor = Color.FromArgb(45, 45, 48);
             txtHistorico.BorderStyle = BorderStyle.FixedSingle;
             txtHistorico.ForeColor = Color.White;
-            txtHistorico.Location = new Point(14, 114);
+            txtHistorico.Location = new Point(14, 127);
             txtHistorico.Name = "txtHistorico";
-            txtHistorico.Size = new Size(303, 420);
+            txtHistorico.Size = new Size(303, 402);
             txtHistorico.TabIndex = 4;
             txtHistorico.Text = "";
             // 
@@ -472,93 +580,6 @@
             // 
             timerFade.Interval = 10;
             timerFade.Tick += timerFade_Tick;
-            // 
-            // Id
-            // 
-            Id.DataPropertyName = "Id";
-            Id.Frozen = true;
-            Id.HeaderText = "Id";
-            Id.Name = "Id";
-            Id.ReadOnly = true;
-            Id.Width = 60;
-            // 
-            // Number
-            // 
-            Number.DataPropertyName = "Number";
-            Number.Frozen = true;
-            Number.HeaderText = "Número";
-            Number.Name = "Number";
-            Number.ReadOnly = true;
-            Number.Width = 90;
-            // 
-            // AssignmentGroup
-            // 
-            AssignmentGroup.DataPropertyName = "AssignmentGroup";
-            AssignmentGroup.HeaderText = "Grupo de Atribuição";
-            AssignmentGroup.Name = "AssignmentGroup";
-            AssignmentGroup.ReadOnly = true;
-            AssignmentGroup.Width = 150;
-            // 
-            // State
-            // 
-            State.DataPropertyName = "State";
-            State.HeaderText = "Status";
-            State.Name = "State";
-            State.ReadOnly = true;
-            State.Width = 80;
-            // 
-            // Caller
-            // 
-            Caller.DataPropertyName = "Caller";
-            Caller.HeaderText = "Solicitante";
-            Caller.Name = "Caller";
-            Caller.ReadOnly = true;
-            Caller.Width = 150;
-            // 
-            // AssignedTo
-            // 
-            AssignedTo.DataPropertyName = "AssignedTo";
-            AssignedTo.HeaderText = "Atribuido a";
-            AssignedTo.Name = "AssignedTo";
-            AssignedTo.ReadOnly = true;
-            AssignedTo.Width = 150;
-            // 
-            // Priority
-            // 
-            Priority.DataPropertyName = "Priority";
-            Priority.HeaderText = "Prioridade";
-            Priority.Name = "Priority";
-            Priority.ReadOnly = true;
-            // 
-            // CreatedFormatado
-            // 
-            CreatedFormatado.DataPropertyName = "CreatedFormatado";
-            CreatedFormatado.HeaderText = "Criado em";
-            CreatedFormatado.Name = "CreatedFormatado";
-            CreatedFormatado.ReadOnly = true;
-            // 
-            // ShortDescription
-            // 
-            ShortDescription.DataPropertyName = "ShortDescription";
-            ShortDescription.HeaderText = "Descrição";
-            ShortDescription.Name = "ShortDescription";
-            ShortDescription.ReadOnly = true;
-            // 
-            // ConfigurationItem
-            // 
-            ConfigurationItem.DataPropertyName = "ConfigurationItem";
-            ConfigurationItem.HeaderText = "Item de Configuração";
-            ConfigurationItem.Name = "ConfigurationItem";
-            ConfigurationItem.ReadOnly = true;
-            ConfigurationItem.Width = 150;
-            // 
-            // Email
-            // 
-            Email.DataPropertyName = "Email";
-            Email.HeaderText = "E-mail";
-            Email.Name = "Email";
-            Email.ReadOnly = true;
-            Email.Width = 200;
             // 
             // FormMain
             // 
@@ -629,5 +650,6 @@
         private DataGridViewTextBoxColumn ShortDescription;
         private DataGridViewTextBoxColumn ConfigurationItem;
         private DataGridViewTextBoxColumn Email;
+        private Button btnLimparHistorico;
     }
 }

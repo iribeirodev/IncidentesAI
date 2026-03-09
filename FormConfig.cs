@@ -11,9 +11,13 @@ public partial class FormConfig : Form
     // Configurações
     private static Properties.Settings Settings => Properties.Settings.Default;
     private List<long> idsParaExcluir = new List<long>();
+    private readonly ConfigHelper configHelper;
 
     public FormConfig()
     {
+        string path = Path.Combine(Application.StartupPath, "Config", "config.dat");
+        configHelper = new ConfigHelper(path);
+
         InitializeComponent();
         CarregarConfiguracoes();
 
@@ -26,16 +30,19 @@ public partial class FormConfig : Form
 
         try
         {
+            Cursor.Current = Cursors.WaitCursor;
+
+            dgvImported.AutoGenerateColumns = false;
             CarregarIncidentesImportados();
         }
-        catch
+        catch(Exception ex ) 
         {
-            txtCaminhoBanco.ForeColor = Color.Red;
-            toolTip1.SetToolTip(txtCaminhoBanco, "Banco de dados não encontrado no caminho específico ou erro ao abrir uma conexão.");
-            btnImportar.Enabled = false;
+            UIHelper.MostrarErro(ex.Message);
         }
-
-        dgvImported.DefaultCellStyle.ForeColor = Color.Black;
+        finally
+        {
+            Cursor.Current = Cursors.Default;
+        }
 
         DotNetEnv.Env.Load();
 
@@ -45,41 +52,31 @@ public partial class FormConfig : Form
 
     private void CarregarConfiguracoes()
     {
-        txtCaminhoBanco.Text = Settings.UltimoCaminhoBanco;
-        txtCaminhoPlanilha.Text = Settings.UltimoCaminhoExcel;
-        trackBarNumeroIncidentes.Value = Settings.NumeroIncidentes;
-        lblNumeroIncidentes.Text = trackBarNumeroIncidentes.Value.ToString();
-        AtualizarStatus(Settings.DataUltimaImportacao);
+        int numeroIncidentes;
+
+        txtCaminhoPlanilha.Text = configHelper.GetValue("CaminhoPlanilha");
+        
+        if (!int.TryParse(configHelper.GetValue("NumeroIncidentes"), out numeroIncidentes))
+            numeroIncidentes = 0;
+
+        trackBarNumeroIncidentes.Value = numeroIncidentes;
+        lblNumeroIncidentes.Text = configHelper.GetValue("NumeroIncidentes");
+
+        AtualizarStatus(configHelper.GetValue("DataUltimaImportacao"));
     }
 
     private bool CamposValidos()
     {
-        if ((string.IsNullOrEmpty(txtCaminhoBanco.Text)) || (string.IsNullOrEmpty(txtCaminhoPlanilha.Text)))
+        if (string.IsNullOrEmpty(txtCaminhoPlanilha.Text))
             return false;
 
         return true;
     }
 
-    private void AtualizarCaminhoBanco(string path)
-    {
-        txtCaminhoBanco.Text = path;
-        Settings.UltimoCaminhoBanco = path;
-        Settings.Save();
-    }
-
-    private void AtualizarCaminhoExcel(string path)
-    {
-        txtCaminhoPlanilha.Text = path;
-        Settings.UltimoCaminhoExcel = path;
-        Settings.Save();
-    }
-
     private void SalvarLogImportacao()
     {
         string data = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
-        Settings.DataUltimaImportacao = data;
-        Settings.Save();
-        AtualizarStatus(data);
+        configHelper.SetValue("DataUltimaImportacao", data);
     }
 
     private void AtualizarStatus(string data)
@@ -89,26 +86,17 @@ public partial class FormConfig : Form
         lblStatusImportacao.ForeColor = temData ? Color.Orange : Color.Sienna;
     }
 
-    private void btnCriarDatabase_Click(object sender, EventArgs e)
-    {
-        if (string.IsNullOrWhiteSpace(txtCaminhoBanco.Text))
-        {
-            UIHelper.MostrarAviso("Por favor, selecione primeiro onde deseja salvar o banco.");
-            return;
-        }
-
-        UIHelper.Executar(() =>
-        {
-            new IncidenteConfigService(txtCaminhoBanco.Text).CriarBancoDeDados();
-            UIHelper.MostrarSucesso("Arquivo de banco de dados criado com sucesso!");
-        });
-    }
-
     private void btnImportar_Click(object sender, EventArgs e)
     {
         if (!CamposValidos())
         {
-            UIHelper.MostrarAviso("Selecione os caminhos antes de importar.");
+            UIHelper.MostrarAviso("Selecione o caminho antes de importar.");
+            return;
+        }
+
+        if (!File.Exists(txtCaminhoPlanilha.Text))
+        {
+            UIHelper.MostrarAviso("Planilha não encontrada no caminho especificado.");
             return;
         }
 
@@ -116,7 +104,7 @@ public partial class FormConfig : Form
 
         UIHelper.Executar(() =>
         {
-            new IncidenteConfigService(txtCaminhoBanco.Text)
+            new IncidenteConfigService()
                 .ImportarPlanilha(txtCaminhoPlanilha.Text, (atual, total) =>
                 {
                     progressBar0.Maximum = total;
@@ -131,25 +119,22 @@ public partial class FormConfig : Form
 
         SalvarLogImportacao();
         CarregarIncidentesImportados();
-        //dgvImported.Invalidate();
         AtualizarBotoesGrid();
         UIHelper.MostrarSucesso("Dados atualizados com sucesso!");
 
-        btnImportar.Enabled = true;
-    }
+        progressBar0.Value = 0;
 
-    private void btnEscolherCaminho_Click(object sender, EventArgs e)
-    {
-        using var dialog = new FolderBrowserDialog();
-        if (dialog.ShowDialog() == DialogResult.OK)
-            AtualizarCaminhoBanco(Path.Combine(dialog.SelectedPath, "incidentes.db"));
+        btnImportar.Enabled = true;
     }
 
     private void btnEscolherCaminhoPlanilha_Click(object sender, EventArgs e)
     {
         using var dialog = new OpenFileDialog { Filter = "Arquivos Excel|*.xlsx;*.xls;*.csv" };
         if (dialog.ShowDialog() == DialogResult.OK)
-            AtualizarCaminhoExcel(dialog.FileName);
+        {
+            txtCaminhoPlanilha.Text = dialog.FileName;
+            configHelper.SetValue("CaminhoPlanilha", dialog.FileName);
+        }   
     }
 
     private void FormConfig_Load(object sender, EventArgs e)
@@ -174,8 +159,7 @@ public partial class FormConfig : Form
 
     private void CarregarIncidentesImportados()
     {
-        string caminhoDb = Properties.Settings.Default.UltimoCaminhoBanco;
-        var dataService = new IncidenteDataService(caminhoDb);
+        var dataService = new IncidenteDataService(); 
 
         var incidentes = dataService.ObterTodosIncidentes(numeroIncidentesConsiderar: 0);
         dgvImported.DataSource = incidentes;
@@ -185,8 +169,6 @@ public partial class FormConfig : Form
     {
         bool temItensMarcados = idsParaExcluir.Count > 0;
 
-        btnDesmarcarTodas.Enabled = temItensMarcados;
-        btnRemoverSelecionadas.Enabled = temItensMarcados;
     }
 
     private void DesmarcarLinhasGrid()
@@ -222,27 +204,27 @@ public partial class FormConfig : Form
 
     private void dgvImported_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
     {
-        // Ignora o cabeçalho
-        if (e.RowIndex < 0) return;
+        //// Ignora o cabeçalho
+        //if (e.RowIndex < 0) return;
 
-        var cellValue = dgvImported.Rows[e.RowIndex].Cells["ID"].Value;
+        //var cellValue = dgvImported.Rows[e.RowIndex].Cells["ID"].Value;
 
-        if (cellValue != null && cellValue != DBNull.Value && idsParaExcluir.Contains(Convert.ToInt64(cellValue)))
-        {
-            dgvImported.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Red;
-            dgvImported.Rows[e.RowIndex].DefaultCellStyle.ForeColor = Color.White;
+        //if (cellValue != null && cellValue != DBNull.Value && idsParaExcluir.Contains(Convert.ToInt64(cellValue)))
+        //{
+        //    dgvImported.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Red;
+        //    dgvImported.Rows[e.RowIndex].DefaultCellStyle.ForeColor = Color.White;
 
-            dgvImported.Rows[e.RowIndex].DefaultCellStyle.SelectionBackColor = Color.Red;
-            dgvImported.Rows[e.RowIndex].DefaultCellStyle.SelectionForeColor = Color.White;
-        }
-        else
-        {
-            dgvImported.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.White;
-            dgvImported.Rows[e.RowIndex].DefaultCellStyle.ForeColor = Color.Black;
+        //    dgvImported.Rows[e.RowIndex].DefaultCellStyle.SelectionBackColor = Color.Red;
+        //    dgvImported.Rows[e.RowIndex].DefaultCellStyle.SelectionForeColor = Color.White;
+        //}
+        //else
+        //{
+        //    dgvImported.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.White;
+        //    dgvImported.Rows[e.RowIndex].DefaultCellStyle.ForeColor = Color.Black;
 
-            dgvImported.Rows[e.RowIndex].DefaultCellStyle.SelectionBackColor = SystemColors.Highlight;
-            dgvImported.Rows[e.RowIndex].DefaultCellStyle.SelectionForeColor = SystemColors.HighlightText;
-        }
+        //    dgvImported.Rows[e.RowIndex].DefaultCellStyle.SelectionBackColor = SystemColors.Highlight;
+        //    dgvImported.Rows[e.RowIndex].DefaultCellStyle.SelectionForeColor = SystemColors.HighlightText;
+        //}
     }
 
     private void btnDesmarcarTodas_Click(object sender, EventArgs e)
@@ -265,8 +247,8 @@ public partial class FormConfig : Form
         {
             try
             {
-                string caminhoDb = Properties.Settings.Default.UltimoCaminhoBanco;
-                var dataService = new IncidenteDataService(caminhoDb);
+                //string caminhoDb = Properties.Settings.Default.UltimoCaminhoBanco;
+                var dataService = new IncidenteDataService(); //(caminhoDb);
 
                 idsParaExcluir.ForEach(id =>
                 {
